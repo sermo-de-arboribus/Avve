@@ -1,5 +1,7 @@
 package avve.services;
 
+import java.io.Closeable;
+
 /**
  * This interface abstracts file access to allow for unit testing with dependency injection.
  * 
@@ -25,4 +27,6 @@ public interface FileService
 	 * @throws SecurityException - If a security manager exists and its java.lang.SecurityManager.checkRead(java.lang.String) method denies read access to the file
 	 */
 	boolean isDirectory(String filepath);
+	
+	void safeClose(Closeable closeable);
 }

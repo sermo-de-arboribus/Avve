@@ -3,6 +3,8 @@ package avve.epubhandling;
 import static org.mockito.Mockito.*;
 
 import java.io.*;
+
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import avve.services.FileService;
@@ -15,12 +17,13 @@ public class EpubFileTest
 	{
 		// Arrange
 		FileService mockedFileService = mock(FileServiceImpl.class);
+		Logger logger = mock(Logger.class);
 		
 		String filepath = "my filepath";
 		when(mockedFileService.fileExists(filepath)).thenReturn(false);
 		when(mockedFileService.isDirectory(filepath)).thenReturn(false);
 		
 		// Act
-		EpubFile epubFile = new EpubFile(filepath, mockedFileService);
+		EpubFile epubFile = new EpubFile(filepath, mockedFileService, logger);
 	}
 }
