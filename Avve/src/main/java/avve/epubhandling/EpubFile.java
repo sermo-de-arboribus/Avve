@@ -1,5 +1,10 @@
 package avve.epubhandling;
 
+import avve.services.FileService;
+import avve.services.XmlService;
+
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,14 +13,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.logging.log4j.Logger;
-
-import avve.services.FileService;
 import nu.xom.Attribute;
-import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Node;
@@ -23,9 +23,15 @@ import nu.xom.Nodes;
 import nu.xom.ParsingException;
 import nu.xom.XPathContext;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.Logger;
+import org.xml.sax.SAXException;
+
+
 public class EpubFile
 {
 	// constants
+	private static final int BUFFER_SIZE = 8192;
 	private static final XPathContext epubContainerNamespace = new XPathContext("cnt", "urn:oasis:names:tc:opendocument:xmlns:container");
 	private static final XPathContext opfNamespace = new XPathContext("opf", "http://www.idpf.org/2007/opf");
 	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
@@ -35,6 +41,7 @@ public class EpubFile
 	private String filePath;
 	private FileService fileService;
 	private Logger logger;
+	private XmlService xmlService;
 	
 	/**
 	 * Constructor, checks if file exists and therefore might throw an IOException
@@ -52,23 +59,30 @@ public class EpubFile
 		this.filePath = filePath;
 		this.fileService = fileService;
 		this.logger = logger;
+		this.xmlService = new XmlService(fileService, logger);
 	}
 	
 	public String extractPlainText()
 	{
 		StringBuffer sb = new StringBuffer();
 		
-		ZipFile zippedEpub = null;
 		try
 		{
-			// retrieve the root file of this EPUB container
-			zippedEpub = new ZipFile(filePath);
-			String pathToOebpsFile = getOebpsFilePath(zippedEpub);
-			List<String> pathsToContentFiles = getContentFilePaths(zippedEpub, pathToOebpsFile);
+		    // unzip to temp folder
+		    String tempDir = FilenameUtils.concat(System.getProperty("java.io.tmpdir"), "avve");
+		    fileService.createDirectory(tempDir);
+		    unzipEpubToTempFolder(tempDir);
+		    
+		    // read text from Epub
+			String pathToOebpsFile = getOebpsFilePath(tempDir);
+			List<String> pathsToContentFiles = getPlainTextFromContentFiles(pathToOebpsFile);
 			for(String chapter : pathsToContentFiles)
 			{
 				sb.append(chapter);
 			}
+			
+			// clear temp folder
+			fileService.clearFolder(tempDir);
 		}
 		catch (IOException exc)
 		{
@@ -78,66 +92,63 @@ public class EpubFile
 		{
 			logger.error(exc.getLocalizedMessage(), exc);
 		}
-		finally
+		catch (SAXException exc)
 		{
-			if(null != zippedEpub)
-			{
-				fileService.safeClose(zippedEpub);
-			}
+			logger.error(exc.getLocalizedMessage(), exc);
 		}
 		
 		return sb.toString();
 	}
 
-	private List<String> getContentFilePaths(ZipFile zippedEpub, String pathToOebpsFile) throws IOException, ParsingException
+	private List<String> getPlainTextFromContentFiles(String pathToOebpsFile) throws IOException, ParsingException, SAXException
 	{
 		logger.trace(infoMessagesBundle.getString("startReadingOebpsSpine") + " " + pathToOebpsFile);
 		
 		List<String> resultList = new ArrayList<String>();
 		
-		ZipEntry oebpsFile = zippedEpub.getEntry(pathToOebpsFile);
 		String oebpsDirectoryPath = FilenameUtils.getFullPath(pathToOebpsFile);
 		
-		Builder xmlParser = new Builder();
-		
-		Document parsedOebpsFile = xmlParser.build(zippedEpub.getInputStream(oebpsFile));
-		Nodes spine = parsedOebpsFile.query("/opf:package/opf:spine/opf:itemref/@idref", opfNamespace);
-		
-		
-		logger.trace(String.format(infoMessagesBundle.getString("numberOfSpineItemsFound"), spine.size()));
-		
-		// iterate over all spine items in document order
-		for(int i = 0; i < spine.size(); i++)
+		try(InputStream instream = fileService.createFileInputStream(pathToOebpsFile))
 		{
-			Attribute spineEntry = (Attribute)spine.get(i);
-			Nodes contentFilepathNodes = parsedOebpsFile.query("/opf:package/opf:manifest/opf:item[@id = '" + spineEntry.getValue() + "']", opfNamespace);
-			// check if nodes contains exactly one item, if not: log a debug message
-			if(contentFilepathNodes.size() != 1)
+			Document parsedOebpsFile = xmlService.build(instream);
+			Nodes spine = parsedOebpsFile.query("/opf:package/opf:spine/opf:itemref/@idref", opfNamespace);
+
+			logger.trace(String.format(infoMessagesBundle.getString("numberOfSpineItemsFound"), spine.size()));
+			
+			// iterate over all spine items in document order
+			for(int i = 0; i < spine.size(); i++)
 			{
-				logger.debug(errorMessagesBundle.getString("CantDetermineOebpsEntryForItemId"));
+				Attribute spineEntry = (Attribute)spine.get(i);
+				Nodes contentFilepathNodes = parsedOebpsFile.query("/opf:package/opf:manifest/opf:item[@id = '" + spineEntry.getValue() + "']", opfNamespace);
+				// check if nodes contains exactly one item, if not: log a debug message
+				if(contentFilepathNodes.size() != 1)
+				{
+					logger.debug(errorMessagesBundle.getString("CantDetermineOebpsEntryForItemId"));
+				}
+				
+				// open the current content (HTML) document
+				String relativeContentFilepath = ((Element)contentFilepathNodes.get(0)).getAttributeValue("href");
+				String contentFilepath = FilenameUtils.concat(oebpsDirectoryPath, relativeContentFilepath);
+				
+				logger.trace(String.format(infoMessagesBundle.getString("workingOnContentItem"), contentFilepath));
+			
+				try(InputStream inputStream = fileService.createFileInputStream(contentFilepath))
+				{
+					Document contentDocument = xmlService.build(inputStream);
+					// simply get the text value of the HTML file, so HTML tags get automatically stripped.
+					resultList.add(contentDocument.getValue());
+				}
 			}
-			
-			// open the current content (HTML) document
-			String relativeContentFilepath = ((Element)contentFilepathNodes.get(0)).getAttributeValue("href");
-			String contentFilepath = FilenameUtils.concat(oebpsDirectoryPath, relativeContentFilepath);
-			
-			logger.trace(String.format(infoMessagesBundle.getString("workingOnContentItem"), contentFilepath));
-		
-			ZipEntry contentFile = zippedEpub.getEntry(contentFilepath);
-			InputStream inputStream = zippedEpub.getInputStream(contentFile);
-			Document contentDocument = xmlParser.build(inputStream);
-			// simply get the text value of the HTML file, so HTML tags get automatically stripped.
-			resultList.add(contentDocument.getValue());
 		}
-		
 		return resultList;
 	}
 
-	private String getOebpsFilePath(ZipFile zippedEpub) throws IOException, ParsingException
-	{
-		ZipEntry zippedContainerFile = zippedEpub.getEntry("META-INF/container.xml");
-		Builder xmlParser = new Builder();
-		Document parsedContainerFile = xmlParser.build(zippedEpub.getInputStream(zippedContainerFile));
+	private String getOebpsFilePath(String epubDir) throws IOException, ParsingException, SAXException
+	{		
+		// use a non-validating reader that ignores external dtds... 
+		// TODO: may lead to problems with parsing of HTML entities like &auml; Better to provide a local version for HTML DTDs
+
+		Document parsedContainerFile = xmlService.build(FilenameUtils.concat(epubDir, "META-INF/container.xml"));
 		Nodes rootfileNodes = parsedContainerFile.query("/cnt:container/cnt:rootfiles/cnt:rootfile[@media-type='application/oebps-package+xml']", epubContainerNamespace);
 		if(rootfileNodes.size() == 0)
 		{
@@ -145,6 +156,48 @@ public class EpubFile
 		}
 		Node rootFileNode = rootfileNodes.get(0);
 		
-		return ((Element)rootFileNode).getAttribute("full-path").getValue();
+		// the absolute filepath to the OEBPS file is the tempDir plus the full-path given in the container-file
+		return FilenameUtils.concat(epubDir, ((Element)rootFileNode).getAttribute("full-path").getValue());
+	}
+	
+	private void unzipEpubToTempFolder(String tempDir) throws IOException
+	{
+        if (!fileService.fileExists(tempDir))
+        {
+        	fileService.createDirectory(tempDir);
+        }
+        ZipInputStream zippedInputStream = new ZipInputStream(new FileInputStream(filePath));
+        ZipEntry nextZipEntry = zippedInputStream.getNextEntry();
+
+        while (nextZipEntry != null)
+        {
+            String filePath = FilenameUtils.concat(tempDir, nextZipEntry.getName());
+            if (nextZipEntry.isDirectory())
+            {
+                // handle directories
+                fileService.createDirectory(filePath);
+            }
+            else 
+            {
+                // handle files
+                unzipSingleFile(zippedInputStream, filePath);
+            }
+            zippedInputStream.closeEntry();
+            nextZipEntry = zippedInputStream.getNextEntry();
+        }
+        zippedInputStream.close();
+	}
+
+	private void unzipSingleFile(ZipInputStream zippedInputStream, String destinationPath) throws IOException
+	{
+		try(BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileService.createFileOutputStream(destinationPath)))
+		{
+			byte[] bytesIn = new byte[BUFFER_SIZE];
+			int read = 0;
+	        while ((read = zippedInputStream.read(bytesIn)) != -1)
+	        {
+	        	bufferedOutputStream.write(bytesIn, 0, read);
+	        }
+		}
 	}
 }

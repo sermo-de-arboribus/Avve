@@ -55,6 +55,9 @@ public class EpubExtractor
 		{
 			logger.error(exc.getLocalizedMessage(), exc);
 		}
+		finally
+		{
+			logger.info(infoMessagesBundle.getString("programFinished"));
+		}
 	}
-
 }
