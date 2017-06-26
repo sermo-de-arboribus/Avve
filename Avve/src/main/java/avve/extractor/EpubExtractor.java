@@ -45,11 +45,11 @@ public class EpubExtractor
 		
 		// read input file
 		FileService fileService = new FileServiceImpl();
+		String plainText = "";
 		try
 		{
 			EpubFile epubFile = new EpubFile(cliArguments.getOptionValue("i"), fileService, logger);
-			String plainText = epubFile.extractPlainText();
-			logger.trace(plainText);
+			plainText = epubFile.extractPlainText();
 		}
 		catch (IOException exc)
 		{
@@ -59,5 +59,12 @@ public class EpubExtractor
 		{
 			logger.info(infoMessagesBundle.getString("programFinished"));
 		}
+		
+		// Pre-process the text data
+		plainText = plainText.toLowerCase(new Locale("de", "DE"));
+		
+		DataPreprocessorService textPreprocessor = new DataPreprocessorService(logger);
+		String preprocessingResult = textPreprocessor.preProcessText(plainText);
+		logger.trace(preprocessingResult);
 	}
 }
