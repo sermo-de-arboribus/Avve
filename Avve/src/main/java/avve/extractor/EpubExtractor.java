@@ -1,6 +1,9 @@
 package avve.extractor;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -10,6 +13,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,22 +46,19 @@ public class EpubExtractor
 			formatter.printHelp("Avve", header, options, footer, true);
 			logger.error(exc.getLocalizedMessage(), exc);
 		}
+		String inputFile = cliArguments.getOptionValue("i");
 		
 		// read input file
 		FileService fileService = new FileServiceImpl();
 		String plainText = "";
 		try
 		{
-			EpubFile epubFile = new EpubFile(cliArguments.getOptionValue("i"), fileService, logger);
+			EpubFile epubFile = new EpubFile(inputFile, fileService, logger);
 			plainText = epubFile.extractPlainText();
 		}
 		catch (IOException exc)
 		{
 			logger.error(exc.getLocalizedMessage(), exc);
-		}
-		finally
-		{
-			logger.info(infoMessagesBundle.getString("programFinished"));
 		}
 		
 		// Pre-process the text data
@@ -65,6 +66,25 @@ public class EpubExtractor
 		
 		DataPreprocessorService textPreprocessor = new DataPreprocessorService(logger);
 		String preprocessingResult = textPreprocessor.preProcessText(plainText);
-		logger.trace(preprocessingResult);
+		
+		// save the processing result
+		fileService.createDirectory("output");
+		String outputFile = "output/" + FilenameUtils.getBaseName(inputFile) + ".txt";
+		try
+		{
+			OutputStream out = fileService.createFileOutputStream(outputFile);
+			PrintStream printStream = new PrintStream(out);
+			printStream.print(preprocessingResult);
+			printStream.close();
+		}
+		catch (FileNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally
+		{
+			logger.info(infoMessagesBundle.getString("programFinished"));
+		}
 	}
 }
