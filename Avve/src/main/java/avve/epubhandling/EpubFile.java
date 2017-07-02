@@ -39,6 +39,7 @@ public class EpubFile
 	
 	// private instance fields
 	private String filePath;
+	private String language;
 	private FileService fileService;
 	private Logger logger;
 	private XmlService xmlService;
@@ -60,6 +61,7 @@ public class EpubFile
 		this.fileService = fileService;
 		this.logger = logger;
 		this.xmlService = new XmlService(fileService, logger);
+		opfNamespace.addNamespace("dc", "http://purl.org/dc/elements/1.1/");
 	}
 	
 	public String extractPlainText()
@@ -99,6 +101,15 @@ public class EpubFile
 		
 		return sb.toString();
 	}
+	
+	public String getLanguageCode()
+	{
+		if(language == null)
+		{
+			return "";
+		}
+		return language;
+	}
 
 	private List<String> getPlainTextFromContentFiles(String pathToOebpsFile) throws IOException, ParsingException, SAXException
 	{
@@ -111,6 +122,7 @@ public class EpubFile
 		try(InputStream instream = fileService.createFileInputStream(pathToOebpsFile))
 		{
 			Document parsedOebpsFile = xmlService.build(instream);
+			determineLanguage(parsedOebpsFile);
 			Nodes spine = parsedOebpsFile.query("/opf:package/opf:spine/opf:itemref/@idref", opfNamespace);
 
 			logger.trace(String.format(infoMessagesBundle.getString("numberOfSpineItemsFound"), spine.size()));
@@ -143,7 +155,16 @@ public class EpubFile
 		return resultList;
 	}
 
-	private String getOebpsFilePath(String epubDir) throws IOException, ParsingException, SAXException
+	private void determineLanguage(final Document parsedOebpsFile)
+	{
+		Nodes dublinCoreLanguage = parsedOebpsFile.query("/opf:package/opf:metadata/dc:language", opfNamespace);
+		if(dublinCoreLanguage != null && dublinCoreLanguage.size() > 0)
+		{
+			language = dublinCoreLanguage.get(0).getValue().substring(0,2);
+		}
+	}
+
+	private String getOebpsFilePath(final String epubDir) throws IOException, ParsingException, SAXException
 	{		
 		// use a non-validating reader that ignores external dtds... 
 		// TODO: may lead to problems with parsing of HTML entities like &auml; Better to provide a local version for HTML DTDs
@@ -160,7 +181,7 @@ public class EpubFile
 		return FilenameUtils.concat(epubDir, ((Element)rootFileNode).getAttribute("full-path").getValue());
 	}
 	
-	private void unzipEpubToTempFolder(String tempDir) throws IOException
+	private void unzipEpubToTempFolder(final String tempDir) throws IOException
 	{
         if (!fileService.fileExists(tempDir))
         {
@@ -188,7 +209,7 @@ public class EpubFile
         zippedInputStream.close();
 	}
 
-	private void unzipSingleFile(ZipInputStream zippedInputStream, String destinationPath) throws IOException
+	private void unzipSingleFile(final ZipInputStream zippedInputStream, final String destinationPath) throws IOException
 	{
 		try(BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileService.createFileOutputStream(destinationPath)))
 		{

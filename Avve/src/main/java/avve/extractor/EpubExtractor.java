@@ -19,9 +19,12 @@ import org.apache.logging.log4j.Logger;
 
 import avve.epubhandling.EpubFile;
 import avve.services.*;
+import avve.textpreprocess.TextStatistics;
+import avve.textpreprocess.TextStatisticsImpl;
 
 public class EpubExtractor
 {
+	private static final String language = "de";
 	private static final Logger logger = LogManager.getLogger();
 	private static final ResourceBundle errorMessageBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
@@ -51,40 +54,55 @@ public class EpubExtractor
 		// read input file
 		FileService fileService = new FileServiceImpl();
 		String plainText = "";
+		String languageCode = null;
 		try
 		{
 			EpubFile epubFile = new EpubFile(inputFile, fileService, logger);
 			plainText = epubFile.extractPlainText();
+			languageCode = epubFile.getLanguageCode();
 		}
 		catch (IOException exc)
 		{
 			logger.error(exc.getLocalizedMessage(), exc);
 		}
 		
-		// Pre-process the text data
-		plainText = plainText.toLowerCase(new Locale("de", "DE"));
-		
-		DataPreprocessorService textPreprocessor = new DataPreprocessorService(logger);
-		String preprocessingResult = textPreprocessor.preProcessText(plainText);
-		
-		// save the processing result
-		fileService.createDirectory("output");
-		String outputFile = "output/" + FilenameUtils.getBaseName(inputFile) + ".txt";
-		try
+		if(languageCode.equals(language))
 		{
-			OutputStream out = fileService.createFileOutputStream(outputFile);
-			PrintStream printStream = new PrintStream(out);
-			printStream.print(preprocessingResult);
-			printStream.close();
+			// Pre-process the text data
+			DataPreprocessorService textPreprocessor = new DataPreprocessorService(logger);
+			TextStatistics statistics = new TextStatisticsImpl(logger);
+					
+			String preprocessingResult = textPreprocessor.preProcessText(plainText, statistics);
+			
+			// save the processing result
+			fileService.createDirectory("output");
+			String outputFile = "output/" + FilenameUtils.getBaseName(inputFile) + ".txt";
+			String outputStatistics = "output/" + FilenameUtils.getBaseName(inputFile) + "_statistics.txt";
+			try
+			{
+				OutputStream out1 = fileService.createFileOutputStream(outputFile);
+				PrintStream printStream = new PrintStream(out1);
+				printStream.print(preprocessingResult);
+				printStream.close();
+				
+				OutputStream out2 = fileService.createFileOutputStream(outputStatistics);
+				printStream = new PrintStream(out2);
+				printStream.print(statistics.toString());
+				printStream.close();
+			}
+			catch (FileNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			finally
+			{
+				logger.info(infoMessagesBundle.getString("programFinished"));
+			}
 		}
-		catch (FileNotFoundException e)
+		else
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally
-		{
-			logger.info(infoMessagesBundle.getString("programFinished"));
+			logger.error(String.format(errorMessageBundle.getString("InvalidLanguage"), languageCode));
 		}
 	}
 }

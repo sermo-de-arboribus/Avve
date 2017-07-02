@@ -2,18 +2,14 @@ package avve.textpreprocess;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import org.apache.logging.log4j.Logger;
 
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 
+import org.apache.logging.log4j.Logger;
+
 public class SentenceDetectorPreprocessor implements TextPreprocessor
-{
-	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
-	
+{	
 	private Logger logger;
 	private SentenceModel model;
 	
@@ -26,24 +22,20 @@ public class SentenceDetectorPreprocessor implements TextPreprocessor
 		}
 		catch (IOException exc)
 		{
-			// TODO Auto-generated catch block
+			this.logger.error(exc.getLocalizedMessage());
 			exc.printStackTrace();
 		}
 	}
 
 	@Override
-	public String process(String inputText)
+	public String[] process(String inputText, TextStatistics statistics)
 	{
 		SentenceDetectorME sentenceDetector = new SentenceDetectorME(model);
 		String[] sentences = sentenceDetector.sentDetect(inputText);
-		StringBuilder sb = new StringBuilder();
 		
-		for(String sentence : sentences)
-		{
-			sb.append(sentence);
-			sb.append(System.lineSeparator());
-		}
+		String numberOfSentences = "number of sentences: " + sentences.length;
+		statistics.appendStatistics(this.getClass(), numberOfSentences);
 		
-		return sb.toString();
+		return sentences;
 	}
 }

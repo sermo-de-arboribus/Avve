@@ -1,9 +1,7 @@
 package avve.textpreprocess;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.Map.Entry;
 
 import org.apache.logging.log4j.Logger;
 
@@ -12,16 +10,16 @@ public class WordFrequencyPreprocessor implements TextPreprocessor
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	
 	private Logger logger;
-	private Hashtable<String, Integer> wordCount;
+	private HashMap<String, Integer> wordCount;
 	
 	public WordFrequencyPreprocessor(Logger logger)
 	{
 		this.logger = logger;
-		wordCount = new Hashtable<String, Integer>();
+		wordCount = new HashMap<String, Integer>();
 	}
 
 	@Override
-	public String process(String inputText)
+	public String[] process(String inputText, TextStatistics statistics)
 	{
 		logger.trace(infoMessagesBundle.getString("avve.textpreprocess.wordFrequencyProcessorStart"));
 		
@@ -39,22 +37,41 @@ public class WordFrequencyPreprocessor implements TextPreprocessor
 			}
 		}
 		
-		Enumeration<String> keys = wordCount.keys();
+		List<Entry<String, Integer>> sortedWordCount = sortByComparator(wordCount);
+		
 		StringBuilder sb = new StringBuilder();
 		int numberOfKeys = 0;
 		
-		while(keys.hasMoreElements())
+		for(Entry<String, Integer> entry : sortedWordCount)
 		{
-			String key = keys.nextElement();
-			sb.append(key.hashCode() + " : ");
-			sb.append(wordCount.get(key));
-			sb.append(" [ " + key + " ]");
+			sb.append(entry.getKey().hashCode() + " : ");
+			sb.append(entry.getValue());
+			sb.append(" [ " + entry.getKey() + " ]");
 			sb.append(System.lineSeparator());
 			numberOfKeys++;
 		}
 		
 		logger.trace(String.format(infoMessagesBundle.getString("avve.textpreprocess.wordFrequencyCounted"), numberOfKeys));
 
-		return sb.toString();
+		statistics.appendStatistics(this.getClass(), sb.toString());
+		return new String[] { inputText };
 	}
+	
+    private static List<Entry<String, Integer>> sortByComparator(Map<String, Integer> unsortMap)
+    {
+
+        List<Entry<String, Integer>> list = new LinkedList<Entry<String, Integer>>(unsortMap.entrySet());
+
+        // Sorting the list based on values
+        Collections.sort(list, new Comparator<Entry<String, Integer>>()
+        {
+            public int compare(Entry<String, Integer> o1,
+                    Entry<String, Integer> o2)
+            {
+            	return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+        
+        return list;
+    }
 }
