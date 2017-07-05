@@ -41,6 +41,12 @@ public class DataPreprocessorService
 			intermediateText = String.join(System.lineSeparator(), processorResult);
 		}
 		
+		// handle POS tagging separately
+		PartOfSpeechTagger posTagger = new PartOfSpeechTagger(logger);
+		
+		String[] pos = posTagger.process(intermediateText, statistics);
+		intermediateText = intermediateText + System.lineSeparator() + String.join(" | ", pos);
+		
 		return intermediateText;
 	}
 }

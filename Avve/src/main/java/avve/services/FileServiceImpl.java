@@ -6,43 +6,61 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
 public class FileServiceImpl implements FileService
 {
-	public boolean fileExists(String filepath)
+	@Override
+	public boolean fileExists(final String filepath)
 	{
 		return new File(filepath).exists();
 	}
 
-	public boolean isDirectory(String filepath)
+	@Override
+	public boolean isDirectory(final String filepath)
 	{
 		return new File(filepath).isDirectory();
 	}
 	
-	public void clearFolder(String dirpath) throws IOException
+	@Override
+	public void clearFolder(final String dirpath) throws IOException
 	{
 		FileUtils.deleteDirectory(new File(dirpath));
 	}
 	
-	public boolean createDirectory(String dirpath)
+	@Override
+	public boolean createDirectory(final String dirpath)
 	{
 		File directory = new File(dirpath);
 		return directory.mkdirs();
 	}
 	
-	public FileInputStream createFileInputStream(String filepath) throws FileNotFoundException
+	@Override
+	public FileInputStream createFileInputStream(final String filepath) throws FileNotFoundException
 	{
 		return new FileInputStream(filepath);
 	}
 	
-	public FileOutputStream createFileOutputStream(String filepath) throws FileNotFoundException
+	@Override
+	public FileOutputStream createFileOutputStream(final String filepath) throws FileNotFoundException
 	{
 		return new FileOutputStream(filepath);
 	}
 	
-	public void safeClose(Closeable closeable)
+	@Override
+	public Collection<File> listFilesInDirectory(final String directoryPath)
+	{
+		Collection<File> result = FileUtils.listFiles(new File(directoryPath), null, false);
+		
+		return result;
+	}
+	
+	@Override
+	public void safeClose(final Closeable closeable)
 	{
 		try
 		{

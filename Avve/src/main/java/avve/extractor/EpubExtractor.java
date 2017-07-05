@@ -7,12 +7,7 @@ import java.io.PrintStream;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +30,7 @@ public class EpubExtractor
 		CommandLineParser cliParser = new DefaultParser();
 		Options options = new Options();
 		options.addOption("i", "input", true, infoMessagesBundle.getString("explainInputOption"));
+		options.addOption("wg", "warengruppe", false, infoMessagesBundle.getString("explainWarengruppeOption"));
 		CommandLine cliArguments = null;
 		try
 		{
@@ -76,10 +72,13 @@ public class EpubExtractor
 			
 			// save the processing result
 			fileService.createDirectory("output");
-			String outputFile = "output/" + FilenameUtils.getBaseName(inputFile) + ".txt";
-			String outputStatistics = "output/" + FilenameUtils.getBaseName(inputFile) + "_statistics.txt";
+			String outputFile = "output/text/" + FilenameUtils.getBaseName(inputFile) + ".txt";
+			String outputStatistics = "output/stats/" + FilenameUtils.getBaseName(inputFile) + "_statistics.txt";
 			try
 			{
+				fileService.createDirectory("output/text/");
+				fileService.createDirectory("output/stats/");
+				
 				OutputStream out1 = fileService.createFileOutputStream(outputFile);
 				PrintStream printStream = new PrintStream(out1);
 				printStream.print(preprocessingResult);
@@ -87,6 +86,10 @@ public class EpubExtractor
 				
 				OutputStream out2 = fileService.createFileOutputStream(outputStatistics);
 				printStream = new PrintStream(out2);
+				if(cliArguments.hasOption("wg"))
+				{
+					printStream.print("warengruppe: " + cliArguments.getOptionValue("wg"));
+				}
 				printStream.print(statistics.toString());
 				printStream.close();
 			}
