@@ -1,6 +1,8 @@
 package avve.textpreprocess;
 
+import avve.epubhandling.EbookContentData;
+
 public interface TextPreprocessor
 {
-	String[] process(String inputText, TextStatistics statistics);
+	void process(EbookContentData contentData);
 }

@@ -160,7 +160,7 @@ public class EpubFile
 		Nodes dublinCoreLanguage = parsedOebpsFile.query("/opf:package/opf:metadata/dc:language", opfNamespace);
 		if(dublinCoreLanguage != null && dublinCoreLanguage.size() > 0)
 		{
-			language = dublinCoreLanguage.get(0).getValue().substring(0,2);
+			language = dublinCoreLanguage.get(0).getValue().substring(0,2).toLowerCase();
 		}
 	}
 

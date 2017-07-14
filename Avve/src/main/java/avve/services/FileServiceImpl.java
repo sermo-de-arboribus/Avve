@@ -6,11 +6,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 public class FileServiceImpl implements FileService
 {
@@ -48,6 +47,11 @@ public class FileServiceImpl implements FileService
 	@Override
 	public FileOutputStream createFileOutputStream(final String filepath) throws FileNotFoundException
 	{
+		String directory = FilenameUtils.getFullPath(filepath);
+		if(!fileExists(directory))
+		{
+			createDirectory(directory);
+		}
 		return new FileOutputStream(filepath);
 	}
 	
@@ -70,5 +74,12 @@ public class FileServiceImpl implements FileService
 		{
 			;
 		}
+	}
+
+	@Override
+	public Collection<File> getFilesFromAllSubdirectories(String basePath)
+	{
+		Collection<File> result = FileUtils.listFiles(new File(basePath), null, true);
+		return result;
 	}
 }

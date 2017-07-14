@@ -2,14 +2,20 @@ package avve.textpreprocess;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
 
 import org.apache.logging.log4j.Logger;
 
+import avve.epubhandling.EbookContentData;
+
 public class SentenceDetectorPreprocessor implements TextPreprocessor
 {	
+	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
+	
 	private Logger logger;
 	private SentenceModel model;
 	
@@ -28,14 +34,13 @@ public class SentenceDetectorPreprocessor implements TextPreprocessor
 	}
 
 	@Override
-	public String[] process(String inputText, TextStatistics statistics)
+	public void process(EbookContentData ebookContentData)
 	{
+		logger.info(infoMessagesBundle.getString("avve.textpreprocess.sentenceDetectorStarted"));
+		
 		SentenceDetectorME sentenceDetector = new SentenceDetectorME(model);
-		String[] sentences = sentenceDetector.sentDetect(inputText);
+		ebookContentData.setSentences(sentenceDetector.sentDetect(ebookContentData.getPlainText()));
 		
-		String numberOfSentences = "number of sentences: " + sentences.length;
-		statistics.appendStatistics(this.getClass(), numberOfSentences);
-		
-		return sentences;
+		logger.info(infoMessagesBundle.getString("avve.textpreprocess.numberOfSentencesDetected"));
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.Logger;
 
+import avve.epubhandling.EbookContentData;
 import avve.textpreprocess.*;
 
 public class DataPreprocessorService
@@ -17,11 +18,11 @@ public class DataPreprocessorService
 		this.logger = logservice;
 		this.preprocessors = new ArrayList<TextPreprocessor>();
 		
-		// TODO: for the time being, just configure the services here; if useful, refactor later to an approach using external configuration
+		
 		preprocessors.add(new SentenceDetectorPreprocessor(logger));
 		preprocessors.add(new TextTokenizer(logger));
 		preprocessors.add(new WordFrequencyPreprocessor(logger));
-		preprocessors.add(new ToLowerCasePreprocessor());
+		preprocessors.add(new ToLowerCasePreprocessor(logger));
 	}
 
 	/**
@@ -31,22 +32,15 @@ public class DataPreprocessorService
 	 * @param statistics The object to hold statistical information on the text being processed.
 	 * @return The processed and usually transformed text representation
 	 */
-	public String preProcessText(String plainText, TextStatistics statistics)
+	public void preProcessText(EbookContentData ebookContentData)
 	{
-		String intermediateText = plainText;
+		// TODO: for the time being, just configure the services here; if useful, refactor later to an approach using external configuration
 		
-		for(TextPreprocessor tp : preprocessors)
-		{
-			String[] processorResult = tp.process(intermediateText, statistics);
-			intermediateText = String.join(System.lineSeparator(), processorResult);
-		}
-		
-		// handle POS tagging separately
-		PartOfSpeechTagger posTagger = new PartOfSpeechTagger(logger);
-		
-		String[] pos = posTagger.process(intermediateText, statistics);
-		intermediateText = intermediateText + System.lineSeparator() + String.join(" | ", pos);
-		
-		return intermediateText;
+		new SentenceDetectorPreprocessor(logger).process(ebookContentData);
+		new TextTokenizer(logger).process(ebookContentData);
+		new WordFrequencyPreprocessor(logger).process(ebookContentData);
+		new ToLowerCasePreprocessor(logger).process(ebookContentData);
+		new PartOfSpeechTagger(logger).process(ebookContentData);
+		new Lemmatizer(logger).process(ebookContentData);
 	}
 }

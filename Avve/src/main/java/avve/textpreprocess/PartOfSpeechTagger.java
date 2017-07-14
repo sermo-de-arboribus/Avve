@@ -2,12 +2,13 @@ package avve.textpreprocess;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.SortedMap;
 
 import org.apache.logging.log4j.Logger;
 
+import avve.epubhandling.EbookContentData;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 
@@ -36,47 +37,31 @@ public class PartOfSpeechTagger implements TextPreprocessor
 	}
 	
 	@Override
-	public String[] process(String inputText, TextStatistics statistics)
+	public void process(EbookContentData ebookContentData)
 	{
-		TextTokenizer tokenizer = new TextTokenizer(this.logger);
-		String[] tokens = tokenizer.process(inputText, statistics);
-		
-		return process(tokens, statistics);
-	}
-
-	public String[] process(String[] inputTokens, TextStatistics statistics)
-	{
-		String partOfSpeechTags[] = tagger.tag(inputTokens);
-		
-		HashMap<String, Integer> posMap = new HashMap<>();
-		
-		for(String tag : partOfSpeechTags)
+		if(ebookContentData.getTokens() == null || ebookContentData.getTokens().length == 0)
 		{
-			if(posMap.containsKey(tag))
-			{
-				posMap.put(tag, posMap.get(tag) + 1);
-			}
-			else
-			{
-				posMap.put(tag, 1);
-			}
+			this.logger.error(errorMessageBundle.getString("avve.textpreprocess.noTokensAvailable"));
 		}
-		
-		StringBuilder sb = new StringBuilder();
-		int numberOfKeys = 0;
-		
-		for(String key : posMap.keySet())
+		else
 		{
-			sb.append(key + " : ");
-			sb.append(posMap.get(key));
-			sb.append(System.lineSeparator());
-			numberOfKeys++;
+			ebookContentData.setPartsOfSpeech(tagger.tag(ebookContentData.getTokens()));
+			
+			SortedMap<String, Integer> posMap = ebookContentData.getPartsOfSpeechFrequencies();
+			
+			for(String tag : ebookContentData.getPartsOfSpeech())
+			{
+				if(posMap.containsKey(tag))
+				{
+					posMap.put(tag, posMap.get(tag) + 1);
+				}
+				else
+				{
+					posMap.put(tag, 1);
+				}
+			}
+			
+			logger.trace(String.format(infoMessagesBundle.getString("avve.textpreprocess.partOfSpeechTaggerDifferentPos"), posMap.keySet().size()));
 		}
-		
-		logger.trace(String.format(infoMessagesBundle.getString("avve.textpreprocess.partOfSpeechTaggerDifferentPos"), numberOfKeys));
-
-		statistics.appendStatistics(this.getClass(), sb.toString());
-		
-		return partOfSpeechTags;
 	}
 }

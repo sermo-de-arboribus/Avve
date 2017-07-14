@@ -2,17 +2,19 @@ package avve.textpreprocess;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.Logger;
 
+import avve.epubhandling.EbookContentData;
 import avve.textpreprocess.TextPreprocessor;
-import avve.textpreprocess.TextStatistics;
-import opennlp.tools.tokenize.Tokenizer;
-import opennlp.tools.tokenize.TokenizerME;
-import opennlp.tools.tokenize.TokenizerModel;
+import opennlp.tools.tokenize.*;
 
 public class TextTokenizer implements TextPreprocessor
 {
+	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
+	
 	private Logger logger;
 	private Tokenizer tokenizer;
 	
@@ -33,12 +35,12 @@ public class TextTokenizer implements TextPreprocessor
 	}
 
 	@Override
-	public String[] process(String inputText, TextStatistics statistics)
+	public void process(EbookContentData ebookContentData)
 	{
-		String[] tokens = tokenizer.tokenize(inputText);
+		logger.info(infoMessagesBundle.getString("avve.textpreprocess.tokenizingText"));
 		
-		statistics.appendStatistics(this.getClass(), "number of tokens: " + tokens.length);
+		ebookContentData.setTokens(tokenizer.tokenize(ebookContentData.getPlainText()));
 		
-		return tokens;
+		logger.info(String.format(infoMessagesBundle.getString("avve.textpreprocess.numberOfTokensDetected"), ebookContentData.getTokens().length));
 	}
 }

@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * This interface abstracts file access to allow for unit testing with dependency injection.
@@ -46,4 +45,6 @@ public interface FileService
 	Collection<File> listFilesInDirectory(String directoryPath);
 	
 	void safeClose(Closeable closeable);
+
+	Collection<File> getFilesFromAllSubdirectories(String basePath);
 }
