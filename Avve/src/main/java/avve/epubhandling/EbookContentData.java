@@ -6,6 +6,7 @@ import java.util.TreeMap;
 public class EbookContentData
 {
 	private String plainText;
+	private String warengruppe;
 	private String[] sentences;
 	private String[] tokens;
 	private String[] lemmas;
@@ -14,9 +15,10 @@ public class EbookContentData
 	private SortedMap<String, Integer> wordFrequencies;
 	private SortedMap<String, Integer> partsOfSpeechFrequencies;
 	
-	public EbookContentData(String plainText)
+	public EbookContentData(String plainText, String warengruppe)
 	{
-		this. plainText = plainText;
+		this.plainText = plainText;
+		this.warengruppe = warengruppe;
 		lemmaFrequencies = new TreeMap<String, Integer>();
 		wordFrequencies = new TreeMap<String, Integer>();
 		partsOfSpeechFrequencies = new TreeMap<String, Integer>();
@@ -51,6 +53,11 @@ public class EbookContentData
 	public String[] getPartsOfSpeech()
 	{
 		return partsOfSpeech;
+	}
+
+	public String getWarengruppe()
+	{
+		return warengruppe;
 	}
 	
 	public SortedMap<String, Integer> getWordFrequencies()

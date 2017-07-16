@@ -24,11 +24,10 @@ public class EpubExtractor
 	private static final Logger logger = LogManager.getLogger();
 	private static final ResourceBundle errorMessageBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
+	private static FileService fileService = new FileServiceImpl();
 	
 	public static void main(String[] args)
 	{
-		FileService fileService = new FileServiceImpl();
-		
 		// parse and validate command line options
 		CommandLine cliArguments = parseCommandLineArguments(args);
 		
@@ -80,37 +79,25 @@ public class EpubExtractor
 				}
 				
 				String outputDirForFiles = "output/text/" + warengruppe;
-				String outputDirForStatistics = "output/stats/" + warengruppe;
+				String outputDirForAttributes = "output/stats/" + warengruppe;
 				
 				String outputFile = outputDirForFiles + FilenameUtils.getBaseName(inputFile.getAbsolutePath()) + ".txt";
-				String outputStatistics = outputDirForStatistics + FilenameUtils.getBaseName(inputFile.getAbsolutePath()) + ".txt";
+				String outputAttributes = outputDirForAttributes + FilenameUtils.getBaseName(inputFile.getAbsolutePath()) + ".txt";
+				
+				PrintStream printStream = null;
+				
 				try
 				{
 					fileService.createDirectory(outputDirForFiles);
-					fileService.createDirectory(outputDirForStatistics);
+					fileService.createDirectory(outputDirForAttributes);
 					
 					OutputStream out1 = fileService.createFileOutputStream(outputFile);
-					PrintStream printStream = new PrintStream(out1);
+					printStream = new PrintStream(out1);
 					printStream.print(ebookContentData.getPlainText());
 					printStream.close();
 					
-					OutputStream out2 = fileService.createFileOutputStream(outputStatistics);
-					printStream = new PrintStream(out2);
-					if(cliArguments.hasOption("wg"))
-					{
-						printStream.print("warengruppe: " + cliArguments.getOptionValue("wg"));
-						printStream.print(System.lineSeparator());
-					}
-					
-					StringBuilder sb = new StringBuilder();
-					sb.append(ebookContentData.getLemmaFrequencies() + System.lineSeparator());
-					sb.append(ebookContentData.getPartsOfSpeechFrequencies() + System.lineSeparator());
-					sb.append(ebookContentData.getWordFrequencies() + System.lineSeparator());
-					sb.append(ebookContentData.getSentences().length + System.lineSeparator());
-					sb.append(ebookContentData.getTokens().length + System.lineSeparator());
-					
-					printStream.print(sb.toString());
-					printStream.close();
+					XrffFile xrffFile = new XrffFile(outputAttributes, fileService);
+					xrffFile.saveEbookContentData(ebookContentData);
 				}
 				catch (FileNotFoundException e)
 				{
@@ -119,7 +106,7 @@ public class EpubExtractor
 				}
 				finally
 				{
-					;
+					fileService.safeClose(printStream);
 				}
 			}
 			else
