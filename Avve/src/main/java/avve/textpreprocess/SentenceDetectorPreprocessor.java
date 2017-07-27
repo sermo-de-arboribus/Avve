@@ -41,6 +41,6 @@ public class SentenceDetectorPreprocessor implements TextPreprocessor
 		SentenceDetectorME sentenceDetector = new SentenceDetectorME(model);
 		ebookContentData.setSentences(sentenceDetector.sentDetect(ebookContentData.getPlainText()));
 		
-		logger.info(infoMessagesBundle.getString("avve.textpreprocess.numberOfSentencesDetected"));
+		logger.info(String.format(infoMessagesBundle.getString("avve.textpreprocess.numberOfSentencesDetected"), ebookContentData.getSentences().length));
 	}
 }

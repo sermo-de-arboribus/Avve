@@ -45,19 +45,29 @@ public class PartOfSpeechTagger implements TextPreprocessor
 		}
 		else
 		{
-			ebookContentData.setPartsOfSpeech(tagger.tag(ebookContentData.getTokens()));
+			String[][] partsOfSpeech = new String[ebookContentData.getTokens().length][];
+			
+			for(int i = 0; i < partsOfSpeech.length; i++)
+			{
+				String[] currentSentence = ebookContentData.getTokens()[i];
+				partsOfSpeech[i] = tagger.tag(currentSentence);	
+			}
+			ebookContentData.setPartsOfSpeech(partsOfSpeech);
 			
 			SortedMap<String, Integer> posMap = ebookContentData.getPartsOfSpeechFrequencies();
 			
-			for(String tag : ebookContentData.getPartsOfSpeech())
+			for(String[] sentence : ebookContentData.getPartsOfSpeech())
 			{
-				if(posMap.containsKey(tag))
+				for(String tag : sentence)
 				{
-					posMap.put(tag, posMap.get(tag) + 1);
-				}
-				else
-				{
-					posMap.put(tag, 1);
+					if(posMap.containsKey(tag))
+					{
+						posMap.put(tag, posMap.get(tag) + 1);
+					}
+					else
+					{
+						posMap.put(tag, 1);
+					}	
 				}
 			}
 			

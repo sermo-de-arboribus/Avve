@@ -55,15 +55,6 @@ public class EpubExtractor
 			
 			if(languageCode.equals(language))
 			{
-				// Pre-process the text data
-				DataPreprocessorService textPreprocessor = new DataPreprocessorService(logger);
-						
-				EbookContentData ebookContentData = new EbookContentData(plainText);
-				
-				textPreprocessor.preProcessText(ebookContentData);
-				
-				// save the processing result
-				fileService.createDirectory("output");
 				String warengruppe;
 				if(cliArguments.hasOption(CommandLineArguments.WARENGRUPPE.toString()))
 				{
@@ -71,18 +62,28 @@ public class EpubExtractor
 				}
 				else if(cliArguments.hasOption(CommandLineArguments.FOLDER.toString()))
 				{
-					warengruppe = inputFile.getParentFile().getName() + "/";
+					warengruppe = inputFile.getParentFile().getName();
 				}
 				else
 				{
 					warengruppe = "";
 				}
 				
-				String outputDirForFiles = "output/text/" + warengruppe;
-				String outputDirForAttributes = "output/stats/" + warengruppe;
+				// Pre-process the text data
+				DataPreprocessorService textPreprocessor = new DataPreprocessorService(logger);
+						
+				EbookContentData ebookContentData = new EbookContentData(plainText, warengruppe, logger);
+				
+				textPreprocessor.preProcessText(ebookContentData);
+				
+				// save the processing result
+				fileService.createDirectory("output");
+				
+				String outputDirForFiles = "output/text/" + warengruppe + "/";
+				String outputDirForAttributes = "output/stats/" + warengruppe + "/";
 				
 				String outputFile = outputDirForFiles + FilenameUtils.getBaseName(inputFile.getAbsolutePath()) + ".txt";
-				String outputAttributes = outputDirForAttributes + FilenameUtils.getBaseName(inputFile.getAbsolutePath()) + ".txt";
+				String outputAttributes = outputDirForAttributes + FilenameUtils.getBaseName(inputFile.getAbsolutePath()) + ".xml";
 				
 				PrintStream printStream = null;
 				

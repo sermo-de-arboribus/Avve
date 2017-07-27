@@ -39,8 +39,18 @@ public class TextTokenizer implements TextPreprocessor
 	{
 		logger.info(infoMessagesBundle.getString("avve.textpreprocess.tokenizingText"));
 		
-		ebookContentData.setTokens(tokenizer.tokenize(ebookContentData.getPlainText()));
+		String[][] tokenizedSentences = new String[ebookContentData.getSentences().length][];
+		int counter = 0;
 		
-		logger.info(String.format(infoMessagesBundle.getString("avve.textpreprocess.numberOfTokensDetected"), ebookContentData.getTokens().length));
+		for(int i = 0; i < tokenizedSentences.length; i++)
+		{
+			tokenizedSentences[i] = tokenizer.tokenize(ebookContentData.getSentences()[i]);
+			counter += tokenizedSentences[i].length;
+		}
+		
+		ebookContentData.setTokens(tokenizedSentences);
+		ebookContentData.setNumberOfTokens(counter);
+		
+		logger.info(String.format(infoMessagesBundle.getString("avve.textpreprocess.numberOfTokensDetected"), counter));
 	}
 }

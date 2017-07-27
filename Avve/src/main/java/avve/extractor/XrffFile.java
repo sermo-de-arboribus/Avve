@@ -21,20 +21,39 @@ public class XrffFile
 		try
 		{
 			outputStream = fileService.createFileOutputStream(filePath);
-			OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+			//OutputStreamWriter writer = new OutputStreamWriter(outputStream);
 			Element root = new Element("dataset");
 			root.addAttribute(new Attribute("name", "avve"));
 			Document xmlOutputDocument = new Document(root);
 			
-			writeHeader(xmlOutputDocument);
+			writeHeader(root);
 			writeBody(root, content);
 			
+			// workaround for internal DTD subset, see http://www.xom.nu/tutorial.xhtml
+			Builder builder = new Builder();
+			Document tempDoc = builder.build(dtd, null);
+			DocType doctype = tempDoc.getDocType();
+			doctype.detach();
+			xmlOutputDocument.setDocType(doctype);
+			
 			// serialize XML Document and write it to the output stream
-			String xmlOutputString = xmlOutputDocument.toXML();
-			writer.write(xmlOutputString);
-			writer.flush();
+			
+			Serializer serializer = new Serializer(outputStream, "UTF-8");
+			serializer.setIndent(4);
+		 	serializer.setMaxLength(256);
+		 	serializer.write(xmlOutputDocument);  
 		}
 		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (ValidityException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (ParsingException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,30 +76,64 @@ public class XrffFile
 		instancesElement.appendChild(instanceElement);
 		
 		Element lemmasElement = new Element("value");
-		lemmasElement.appendChild(String.join(" ", content.getLemmas()));
+		Comment lemmasComment = new Comment("lemmas");
+		lemmasElement.appendChild(lemmasComment);
+		StringBuffer lemmaSerializer = new StringBuffer();
+		for(int i = 0; i < content.getLemmas().length; i++)
+		{
+			lemmaSerializer.append("[" + i + "] ");
+			lemmaSerializer.append(String.join(" ", content.getLemmas()[i]));
+			lemmaSerializer.append(System.lineSeparator());
+		}
+		lemmasElement.appendChild(lemmaSerializer.toString());
 		instanceElement.appendChild(lemmasElement);
 		
 		Element partsOfSpeechElement = new Element("value");
-		partsOfSpeechElement.appendChild(String.join(" ", content.getPartsOfSpeech()));
+		Comment partsOfSpeechComment = new Comment("parts of speech tags");
+		partsOfSpeechElement.appendChild(partsOfSpeechComment);
+		StringBuffer posSerializer = new StringBuffer();
+		for(int i = 0; i < content.getPartsOfSpeech().length; i++)
+		{
+			posSerializer.append("[" + i + "] ");
+			posSerializer.append(String.join(" ", content.getPartsOfSpeech()[i]));
+			posSerializer.append(System.lineSeparator());
+		}
+		partsOfSpeechElement.appendChild(posSerializer.toString());
 		instanceElement.appendChild(partsOfSpeechElement);
 		
 		Element wordsPerSentenceElement = new Element("value");
-		wordsPerSentenceElement.appendChild("" + ((double)content.getTokens().length / (double)content.getSentences().length));
+		Comment wordsPerSentenceComment = new Comment("words per sentence");
+		wordsPerSentenceElement.appendChild(wordsPerSentenceComment);
+		wordsPerSentenceElement.appendChild("" + ((double)content.getNumberOfTokens() / (double)content.getSentences().length));
 		instanceElement.appendChild(wordsPerSentenceElement);
 		
 		Element lemmasPerSentenceElement = new Element("value");
-		lemmasPerSentenceElement.appendChild("" + ((double)content.getLemmas().length / (double)content.getSentences().length));
+		Comment lemmasPerSentenceComment = new Comment("lemmas per sentence");
+		lemmasPerSentenceElement.appendChild(lemmasPerSentenceComment);
+		lemmasPerSentenceElement.appendChild("" + ((double)content.getLemmaFrequencies().size() / (double)content.getSentences().length));
 		instanceElement.appendChild(lemmasPerSentenceElement);
 		
 		Element uniquePartsOfSpeech = new Element("value");
-		uniquePartsOfSpeech.appendChild("" + content.getPartsOfSpeech().length);
+		Comment uniquePartsOfSpeechComment = new Comment("unique parts of speech");
+		uniquePartsOfSpeech.appendChild(uniquePartsOfSpeechComment);
+		uniquePartsOfSpeech.appendChild("" + content.getPartsOfSpeechFrequencies().size());
 		instanceElement.appendChild(uniquePartsOfSpeech);
 		
 		Element uniqueNumberOfWords = new Element("value");
-		uniqueNumberOfWords.appendChild("" + content.getPartsOfSpeech().length);
+		Comment uniqueNumberOfWordsComment = new Comment("unique number of words");
+		uniqueNumberOfWords.appendChild(uniqueNumberOfWordsComment);
+		uniqueNumberOfWords.appendChild("" + content.getWordFrequencies().size());
 		instanceElement.appendChild(uniqueNumberOfWords);
 
+		Element ratioOfPassiveSentences = new Element("value");
+		Comment ratioOfPassiveSentencesComment = new Comment("ratio of passive sentences");
+		ratioOfPassiveSentences.appendChild(ratioOfPassiveSentencesComment);
+		ratioOfPassiveSentences.appendChild("" + ((double)content.getNumberOfPassiveConstructions() / (double)content.getSentences().length));
+		instanceElement.appendChild(ratioOfPassiveSentences);
+		
 		Element classElement = new Element("value");
+		Comment classComment = new Comment("class");
+		classElement.appendChild(classComment);
 		classElement.appendChild(content.getWarengruppe());
 		instanceElement.appendChild(classElement);
 	}
@@ -123,6 +176,11 @@ public class XrffFile
 		uniqueNumberOfWords.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(uniqueNumberOfWords);
 
+		Element ratioOfPassiveSentences = new Element("attribute");
+		ratioOfPassiveSentences.addAttribute(new Attribute("name", "ratioOfPassiveSentences"));
+		ratioOfPassiveSentences.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(ratioOfPassiveSentences);
+		
 		Element classElement = new Element("attribute");
 		classElement.addAttribute(new Attribute("class", "yes"));
 		classElement.addAttribute(new Attribute("name", "class"));
@@ -136,8 +194,7 @@ public class XrffFile
 	private final String filePath;
 	private final FileService fileService;
 	
-	private static final String dtd = "<!DOCTYPE dataset " + System.lineSeparator() + 
-			"[" + System.lineSeparator() + 
+	private static final String dtd = "<!DOCTYPE dataset [" + System.lineSeparator() + 
 			"<!ELEMENT dataset (header,body)>" + System.lineSeparator() + 
 			"<!ATTLIST dataset name CDATA #REQUIRED>" + System.lineSeparator() + 
 			"<!ATTLIST dataset version CDATA \"3.5.4\">" + System.lineSeparator() + 
@@ -165,6 +222,6 @@ public class XrffFile
 			"<!ELEMENT value (#PCDATA|instances)*>" + System.lineSeparator() + 
 			"<!ATTLIST value index CDATA #IMPLIED>   <!-- 1-based index (only used for instance format \"sparse\") -->" + System.lineSeparator() + 
 			"<!ATTLIST value missing (yes|no) \"no\">" + System.lineSeparator() + 
-			"]" + System.lineSeparator() + 
-			">";
+			"]>" + System.lineSeparator() +
+			"<root />";
 }

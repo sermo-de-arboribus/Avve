@@ -1,8 +1,5 @@
 package avve.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.logging.log4j.Logger;
 
 import avve.epubhandling.EbookContentData;
@@ -11,18 +8,10 @@ import avve.textpreprocess.*;
 public class DataPreprocessorService
 {
 	private Logger logger;
-	private List<TextPreprocessor> preprocessors;
 	
 	public DataPreprocessorService(Logger logservice)
 	{
 		this.logger = logservice;
-		this.preprocessors = new ArrayList<TextPreprocessor>();
-		
-		
-		preprocessors.add(new SentenceDetectorPreprocessor(logger));
-		preprocessors.add(new TextTokenizer(logger));
-		preprocessors.add(new WordFrequencyPreprocessor(logger));
-		preprocessors.add(new ToLowerCasePreprocessor(logger));
 	}
 
 	/**
@@ -39,8 +28,8 @@ public class DataPreprocessorService
 		new SentenceDetectorPreprocessor(logger).process(ebookContentData);
 		new TextTokenizer(logger).process(ebookContentData);
 		new WordFrequencyPreprocessor(logger).process(ebookContentData);
-		new ToLowerCasePreprocessor(logger).process(ebookContentData);
 		new PartOfSpeechTagger(logger).process(ebookContentData);
 		new Lemmatizer(logger).process(ebookContentData);
+		new ToLowerCasePreprocessor(logger).process(ebookContentData);
 	}
 }

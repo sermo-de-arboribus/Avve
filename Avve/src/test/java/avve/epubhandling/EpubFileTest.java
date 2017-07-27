@@ -25,5 +25,8 @@ public class EpubFileTest
 		
 		// Act
 		EpubFile epubFile = new EpubFile(filepath, mockedFileService, logger);
+		
+		// Assert
+		
 	}
 }
