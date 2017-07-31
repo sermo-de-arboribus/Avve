@@ -165,11 +165,12 @@ public class EpubFile
 	}
 
 	private String getOebpsFilePath(final String epubDir) throws IOException, ParsingException, SAXException
-	{		
-		// use a non-validating reader that ignores external dtds... 
-		// TODO: may lead to problems with parsing of HTML entities like &auml; Better to provide a local version for HTML DTDs
-
+	{
 		Document parsedContainerFile = xmlService.build(FilenameUtils.concat(epubDir, "META-INF/container.xml"));
+		if(null == parsedContainerFile)
+		{
+			throw new IOException(errorMessagesBundle.getString("RootfileEntryNotFoundInEpubContainer"));
+		}
 		Nodes rootfileNodes = parsedContainerFile.query("/cnt:container/cnt:rootfiles/cnt:rootfile[@media-type='application/oebps-package+xml']", epubContainerNamespace);
 		if(rootfileNodes.size() == 0)
 		{

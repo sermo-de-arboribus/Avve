@@ -25,6 +25,12 @@ public class EbookContentData
 	private SortedMap<String, Integer> partsOfSpeechFrequencies;
 	private int numberOfTokens;
 	
+	/**
+	 * Constructor
+	 * @param plainText The input text
+	 * @param warengruppe The Warengruppe class
+	 * @param logger The logger to be used
+	 */
 	public EbookContentData(String plainText, String warengruppe, Logger logger)
 	{
 		this.logger = logger;
@@ -33,6 +39,106 @@ public class EbookContentData
 		lemmaFrequencies = new TreeMap<String, Integer>();
 		wordFrequencies = new TreeMap<String, Integer>();
 		partsOfSpeechFrequencies = new TreeMap<String, Integer>();
+	}
+	
+	/**
+	 * Get the number of adjectives, divided by the number of tokens in this text.
+	 * @return The adjectives-to-tokens ratio
+	 */
+	public double getAdjectiveRatio()
+	{
+		return calculatePosTokenRatio(new String[]{"ADJA", "ADJD"});
+	}
+	
+	/**
+	 * Get the number of adverbs, divided by the number of tokens in this ebook text.
+	 * @return The adverbs-to-tokens ratio
+	 */
+	public double getAdverbRatio()
+	{
+		return calculatePosTokenRatio("ADV");
+	}
+	
+	/**
+	 * Get the attributive demonstrative pronouns, divided by the number of tokens in this ebook text.
+	 * @return The pronoun-to-tokens ratio
+	 */
+	public double getAttributiveDemonstrativePronounRatio()
+	{
+		return calculatePosTokenRatio("PDAT");
+	}
+	
+	/**
+	 * Get the attributive indefinite pronouns, divided by the number of tokens in this ebook text.
+	 * @return The pronoun-to-tokens ratio
+	 */
+	public double getAttributiveIndefinitePronounRatio()
+	{
+		return calculatePosTokenRatio("PIS");
+	}
+
+	/**
+	 * Get the attributive possessive pronouns, divided by the number of tokens in this ebook text.
+	 * @return The pronoun-to-tokens ratio
+	 */
+	public double getAttributivePossessivePronounRatio()
+	{
+		return calculatePosTokenRatio("PPOSAT");
+	}
+	
+	/**
+	 * Get the attributive relative pronouns, divided by the number of tokens in this ebook text.
+	 * @return The pronoun-to-tokens ratio
+	 */
+	public double getAttributiveRelativePronounRatio()
+	{
+		return calculatePosTokenRatio("PRELS");
+	}
+	
+	/**
+	 * Get the number of cardinals, divided by the number of tokens in this ebook text.
+	 * @return The cardinals-to-tokens ratio
+	 */
+	public double getCardinalsRatio()
+	{
+		return calculatePosTokenRatio("CARD");
+	}
+	
+	/**
+	 * Get the number of words in foreign language(s), divided by the number of tokens in this ebook text.
+	 * @return The foreign-words-to-tokens ratio
+	 */
+	public double getForeignLanguageWordsRatio()
+	{
+		return calculatePosTokenRatio("FM");
+	}
+	
+	/**
+	 * Get the number of interjections, divided by the number of tokens in this ebook text.
+	 * @return The foreign-words-to-tokens ratio
+	 */
+	public double getInterjectionRatio()
+	{
+		return calculatePosTokenRatio("ITJ");
+	}
+	
+	/**
+	 * Get the number of named entity nouns, divided by the number of tokens in this ebook text.
+	 * @return The named-entities-to-tokens ratio
+	 */
+	public double getNamedEntityRatio()
+	{
+		return calculatePosTokenRatio("NE");
+	}
+	
+	/**
+	 * Get the number of nouns, divided by the number of tokens in this ebook text.
+	 * The noun count includes general nouns as well as named entities
+	 * @return The nouns-to-tokens ratio
+	 */
+	public double getNounRatio()
+	{
+		return calculatePosTokenRatio(new String[]{"NN", "NE"});
 	}
 	
 	public int getNumberOfTokens()
@@ -45,6 +151,15 @@ public class EbookContentData
 			}
 		}
 		return numberOfTokens;
+	}
+	
+	/**
+	 * Get the number of personal pronouns, divided by the number of tokens in this ebook text.
+	 * @return The named-entities-to-tokens ratio
+	 */
+	public double getPersonalPronounRatio()
+	{
+		return calculatePosTokenRatio(new String[]{"PPER", "PRF"});
 	}
 	
 	public String getPlainText()
@@ -143,6 +258,51 @@ public class EbookContentData
 		return partsOfSpeech;
 	}
 
+	/**
+	 * Get the number of pronominal adverbs, divided by the number of tokens in this ebook text.
+	 * @return The pronoun-to-tokens ratio
+	 */
+	public double getPronominalAdverbRatio()
+	{
+		return calculatePosTokenRatio("PROAV");
+	}
+	
+	/**
+	 * Get the substituting demonstrative pronouns, divided by the number of tokens in this ebook text.
+	 * @return The pronoun-to-tokens ratio
+	 */
+	public double getSubstitutingDemonstrativePronounRatio()
+	{
+		return calculatePosTokenRatio("PDS");
+	}
+	
+	/**
+	 * Get the substituting indefinite pronouns, divided by the number of tokens in this ebook text.
+	 * @return The pronoun-to-tokens ratio
+	 */
+	public double getSubstitutingIndefinitePronounRatio()
+	{
+		return calculatePosTokenRatio(new String[]{"PIAT", "PIDAT"});
+	}
+
+	/**
+	 * Get the substitutive possessive pronouns, divided by the number of tokens in this ebook text.
+	 * @return The pronoun-to-tokens ratio
+	 */
+	public double getSubstitutivePossessivePronounRatio()
+	{
+		return calculatePosTokenRatio("PPOSS");
+	}
+	
+	/**
+	 * Get the substitutive relative pronouns, divided by the number of tokens in this ebook text.
+	 * @return The pronoun-to-tokens ratio
+	 */
+	public double getSubstitutiveRelativePronounRatio()
+	{
+		return calculatePosTokenRatio("PRELAT");
+	}
+	
 	public String getWarengruppe()
 	{
 		return warengruppe;
@@ -186,5 +346,48 @@ public class EbookContentData
 	public void setPlainText(final String plainText)
 	{
 		this.plainText = plainText;
+	}
+	
+	private double calculatePosTokenRatio(String posToken)
+	{
+		if(null == posToken || !partsOfSpeechFrequencies.containsKey(posToken))
+		{
+			return 0.0;
+		}
+		else
+		{
+			int posTokenCount = partsOfSpeechFrequencies.get(posToken);
+			return calculateRatio(posTokenCount, getNumberOfTokens());
+		}
+	}
+	
+	private double calculatePosTokenRatio(String[] posTokens)
+	{
+		int posTokenCount = 0;
+		for(int i = 0; i < posTokens.length; i++)
+		{
+			if(!partsOfSpeechFrequencies.containsKey(posTokens[i]))
+			{
+				// nothing to do, assuming posTokenCount for posTokens[i] is 0 
+			}
+			else
+			{
+				posTokenCount += partsOfSpeechFrequencies.get(posTokens[i]);
+			}
+		}
+		
+		return calculateRatio(posTokenCount, getNumberOfTokens());
+	}
+	
+	private double calculateRatio(int numerator, int denominator)
+	{
+		if(denominator != 0)
+		{
+			return (double)numerator / (double)denominator;
+		}
+		else // avoid division by zero
+		{
+			return (double)numerator / Double.MAX_VALUE;
+		}
 	}
 }

@@ -55,7 +55,7 @@ public class XmlService
 			Document xomDoc = xomXmlParser.build(inStream);
 			return xomDoc;
 		}
-		catch (ParsingException | IOException exc)
+		catch (ParsingException | IOException | NullPointerException exc)
 		{
 			logger.error(exc.getLocalizedMessage());
 			exc.printStackTrace();
