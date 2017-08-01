@@ -1,6 +1,8 @@
 package avve.epubhandling;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -8,23 +10,7 @@ import java.util.TreeMap;
 import org.apache.logging.log4j.Logger;
 
 public class EbookContentData
-{
-	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
-	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
-	
-	private Logger logger;
-	
-	private String plainText;
-	private String warengruppe;
-	private String[] sentences;
-	private String[][] tokenizedSentences;
-	private String[][] lemmatizedSentences;
-	private String[][] partsOfSpeech;
-	private SortedMap<String, Integer> lemmaFrequencies;
-	private SortedMap<String, Integer> wordFrequencies;
-	private SortedMap<String, Integer> partsOfSpeechFrequencies;
-	private int numberOfTokens;
-	
+{	
 	/**
 	 * Constructor
 	 * @param plainText The input text
@@ -39,8 +25,11 @@ public class EbookContentData
 		lemmaFrequencies = new TreeMap<String, Integer>();
 		wordFrequencies = new TreeMap<String, Integer>();
 		partsOfSpeechFrequencies = new TreeMap<String, Integer>();
+		warengruppenMap = new HashMap<String, String>();
+		
+		initializeWarengruppenMap();
 	}
-	
+
 	/**
 	 * Get the number of adjectives, divided by the number of tokens in this text.
 	 * @return The adjectives-to-tokens ratio
@@ -57,6 +46,15 @@ public class EbookContentData
 	public double getAdverbRatio()
 	{
 		return calculatePosTokenRatio("ADV");
+	}
+	
+	/**
+	 * Get the number of answer particles, divided by the number of tokens in this ebook text.
+	 * @return The particles-to-tokens ratio
+	 */
+	public double getAnswerParticlesRatio()
+	{
+		return calculatePosTokenRatio("PTKANT");
 	}
 	
 	/**
@@ -105,6 +103,15 @@ public class EbookContentData
 	}
 	
 	/**
+	 * Get the number of compound words, divided by the number of tokens in this ebook text.
+	 * @return The compounds-to-tokens ratio
+	 */
+	public double getCompoundWords()
+	{
+		return calculatePosTokenRatio("TRUNC");
+	}
+	
+	/**
 	 * Get the number of words in foreign language(s), divided by the number of tokens in this ebook text.
 	 * @return The foreign-words-to-tokens ratio
 	 */
@@ -123,12 +130,40 @@ public class EbookContentData
 	}
 	
 	/**
+	 * Get the number of interrogative pronouns, divided by the number of tokens in this ebook text.
+	 * @return The pronoun-to-tokens ratio
+	 */
+	public double getInterrogativePronounRatio()
+	{
+		return calculatePosTokenRatio(new String[] {"PWS", "PWAT", "PWAV"});
+	}
+	
+	public SortedMap<String, Integer> getLemmaFrequencies()
+	{
+		return lemmaFrequencies;
+	}
+	
+	public String[][] getLemmas()
+	{
+		return lemmatizedSentences;
+	}
+	
+	/**
 	 * Get the number of named entity nouns, divided by the number of tokens in this ebook text.
 	 * @return The named-entities-to-tokens ratio
 	 */
 	public double getNamedEntityRatio()
 	{
 		return calculatePosTokenRatio("NE");
+	}
+	
+	/**
+	 * Get the number of negation particles, divided by the number of tokens in this ebook text.
+	 * @return The negation-particles-to-tokens ratio
+	 */
+	public double getNegationParticleRatio()
+	{
+		return calculatePosTokenRatio("PTKNEG");
 	}
 	
 	/**
@@ -139,53 +174,6 @@ public class EbookContentData
 	public double getNounRatio()
 	{
 		return calculatePosTokenRatio(new String[]{"NN", "NE"});
-	}
-	
-	public int getNumberOfTokens()
-	{
-		if(0 == numberOfTokens)
-		{
-			for(int i = 0; i < getTokens().length; i++)
-			{
-				numberOfTokens += getTokens()[i].length;
-			}
-		}
-		return numberOfTokens;
-	}
-	
-	/**
-	 * Get the number of personal pronouns, divided by the number of tokens in this ebook text.
-	 * @return The named-entities-to-tokens ratio
-	 */
-	public double getPersonalPronounRatio()
-	{
-		return calculatePosTokenRatio(new String[]{"PPER", "PRF"});
-	}
-	
-	public String getPlainText()
-	{
-		return plainText;
-	}
-	
-	public String[] getSentences()
-	{
-		return sentences;
-	}
-	
-	public String[][] getTokens()
-	{
-		return tokenizedSentences;
-	}
-	
-
-	public SortedMap<String, Integer> getLemmaFrequencies()
-	{
-		return lemmaFrequencies;
-	}
-	
-	public String[][] getLemmas()
-	{
-		return lemmatizedSentences;
 	}
 	
 	/**
@@ -253,18 +241,54 @@ public class EbookContentData
 		return counter;
 	}
 	
+	public int getNumberOfTokens()
+	{
+		if(0 == numberOfTokens)
+		{
+			for(int i = 0; i < getTokens().length; i++)
+			{
+				numberOfTokens += getTokens()[i].length;
+			}
+		}
+		return numberOfTokens;
+	}
+	
 	public String[][] getPartsOfSpeech()
 	{
 		return partsOfSpeech;
+	}	
+	
+	/**
+	 * Get the number of personal pronouns, divided by the number of tokens in this ebook text.
+	 * @return The named-entities-to-tokens ratio
+	 */
+	public double getPersonalPronounRatio()
+	{
+		return calculatePosTokenRatio(new String[]{"PPER", "PRF"});
 	}
-
+	
+	public String getPlainText()
+	{
+		return plainText;
+	}
+	
 	/**
 	 * Get the number of pronominal adverbs, divided by the number of tokens in this ebook text.
 	 * @return The pronoun-to-tokens ratio
 	 */
 	public double getPronominalAdverbRatio()
 	{
-		return calculatePosTokenRatio("PROAV");
+		return calculatePosTokenRatio(new String[] { "PROAV", "PAV" });
+	}
+	
+	public String[] getSentences()
+	{
+		return sentences;
+	}
+	
+	public String[][] getTokens()
+	{
+		return tokenizedSentences;
 	}
 	
 	/**
@@ -305,7 +329,15 @@ public class EbookContentData
 	
 	public String getWarengruppe()
 	{
-		return warengruppe;
+		// we might want to map some Warengruppe codes onto a common code, so we don't return the actual code, but go through a map
+		if(warengruppenMap.containsKey(warengruppe))
+		{
+			return warengruppenMap.get(warengruppe);
+		}
+		else
+		{
+			return warengruppe;
+		}
 	}
 	
 	public SortedMap<String, Integer> getWordFrequencies()
@@ -390,4 +422,27 @@ public class EbookContentData
 			return (double)numerator / Double.MAX_VALUE;
 		}
 	}
+	
+	private void initializeWarengruppenMap()
+	{
+		warengruppenMap.put("111", "110");
+		warengruppenMap.put("112", "110");
+	}
+	
+	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
+	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
+	
+	private Logger logger;
+	
+	private String plainText;
+	private String warengruppe;
+	private String[] sentences;
+	private String[][] tokenizedSentences;
+	private String[][] lemmatizedSentences;
+	private String[][] partsOfSpeech;
+	private SortedMap<String, Integer> lemmaFrequencies;
+	private SortedMap<String, Integer> wordFrequencies;
+	private SortedMap<String, Integer> partsOfSpeechFrequencies;
+	private int numberOfTokens;
+	private final Map<String, String> warengruppenMap;
 }

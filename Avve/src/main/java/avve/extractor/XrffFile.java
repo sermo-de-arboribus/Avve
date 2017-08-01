@@ -257,6 +257,34 @@ public class XrffFile
 		pronominalAdverbElement.appendChild("" + content.getPronominalAdverbRatio());
 		instanceElement.appendChild(pronominalAdverbElement);
 		
+		// print ratio of interrogative pronouns
+		Element interrogativePronounElement = new Element("value");
+		Comment interrogativePronounElementComment = new Comment("ratio of interrogative pronouns");
+		interrogativePronounElement.appendChild(interrogativePronounElementComment);
+		interrogativePronounElement.appendChild("" + content.getInterrogativePronounRatio());
+		instanceElement.appendChild(interrogativePronounElement);
+		
+		// print ratio of negation particles
+		Element negationParticlesElement = new Element("value");
+		Comment negationParticlesElementComment = new Comment("ratio of negation particles");
+		negationParticlesElement.appendChild(negationParticlesElementComment);
+		negationParticlesElement.appendChild("" + content.getNegationParticleRatio());
+		instanceElement.appendChild(negationParticlesElement);
+		
+		// print ratio of answer particles
+		Element answerParticlesElement = new Element("value");
+		Comment answerParticlesElementComment = new Comment("ratio of answer particles");
+		answerParticlesElement.appendChild(answerParticlesElementComment);
+		answerParticlesElement.appendChild("" + content.getAnswerParticlesRatio());
+		answerParticlesElement.appendChild(negationParticlesElement);
+		
+		// print ratio of compound parts
+		Element compoundElement = new Element("value");
+		Comment compoundElementComment = new Comment("ratio of compound word parts");
+		compoundElement.appendChild(compoundElementComment);
+		compoundElement.appendChild("" + content.getCompoundWords());
+		compoundElement.appendChild(compoundElement);
+		
 		// print class
 		Element classElement = new Element("value");
 		Comment classComment = new Comment("class");
@@ -411,6 +439,30 @@ public class XrffFile
 		pronominalAdverbsElement.addAttribute(new Attribute("name", "pronominalAdverbRatio"));
 		pronominalAdverbsElement.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(pronominalAdverbsElement);
+
+		// ratio of interrogative pronoun
+		Element interrogativePronounElement = new Element("attribute");
+		interrogativePronounElement.addAttribute(new Attribute("name", "interrogativePronounRatio"));
+		interrogativePronounElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(interrogativePronounElement);
+		
+		// ratio of negation particles
+		Element negationParticleElement = new Element("attribute");
+		negationParticleElement.addAttribute(new Attribute("name", "negationParticleRatio"));
+		negationParticleElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(negationParticleElement);
+		
+		// ratio of answer particles
+		Element answerParticleElement = new Element("attribute");
+		answerParticleElement.addAttribute(new Attribute("name", "answerParticleRatio"));
+		answerParticleElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(answerParticleElement);
+		
+		// ratio of compound parts
+		Element compoundElement = new Element("attribute");
+		compoundElement.addAttribute(new Attribute("name", "compoundPartRatio"));
+		compoundElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(compoundElement);
 		
 		// class element
 		Element classElement = new Element("attribute");
