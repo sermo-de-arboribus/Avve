@@ -112,12 +112,39 @@ public class EbookContentData
 	}
 	
 	/**
+	 * Get the number of finite main verbs, divided by the number of tokens in this ebook text.
+	 * @return The verbs-to-tokens ratio
+	 */
+	public double getFiniteMainVerbsRatio()
+	{
+		return calculatePosTokenRatio("VVFIN");
+	}
+	
+	/**
 	 * Get the number of words in foreign language(s), divided by the number of tokens in this ebook text.
 	 * @return The foreign-words-to-tokens ratio
 	 */
 	public double getForeignLanguageWordsRatio()
 	{
 		return calculatePosTokenRatio("FM");
+	}
+	
+	/**
+	 * Get the number of imperative main verbs, divided by the number of tokens in this ebook text.
+	 * @return The verbs-to-tokens ratio
+	 */
+	public double 	getImperativeMainVerbsRatio()
+	{
+		return calculatePosTokenRatio("VVIMP");
+	}
+	
+	/**
+	 * Get the number of infinitive main verbs, divided by the number of tokens in this ebook text.
+	 * @return The verbs-to-tokens ratio
+	 */
+	public double 	getInfinitiveMainVerbsRatio()
+	{
+		return calculatePosTokenRatio(new String[]{"VVINF", "VVIZU"});
 	}
 	
 	/**

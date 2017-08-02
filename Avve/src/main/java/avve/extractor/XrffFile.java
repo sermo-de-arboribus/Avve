@@ -276,14 +276,35 @@ public class XrffFile
 		Comment answerParticlesElementComment = new Comment("ratio of answer particles");
 		answerParticlesElement.appendChild(answerParticlesElementComment);
 		answerParticlesElement.appendChild("" + content.getAnswerParticlesRatio());
-		answerParticlesElement.appendChild(negationParticlesElement);
+		instanceElement.appendChild(answerParticlesElement);
 		
 		// print ratio of compound parts
 		Element compoundElement = new Element("value");
 		Comment compoundElementComment = new Comment("ratio of compound word parts");
 		compoundElement.appendChild(compoundElementComment);
 		compoundElement.appendChild("" + content.getCompoundWords());
-		compoundElement.appendChild(compoundElement);
+		instanceElement.appendChild(compoundElement);
+		
+		// print ratio of finite main verbs
+		Element finiteMainVerbsElement = new Element("value");
+		Comment finiteMainVerbsElementComment = new Comment("ratio of finite main verbs");
+		finiteMainVerbsElement.appendChild(finiteMainVerbsElementComment);
+		finiteMainVerbsElement.appendChild("" + content.getFiniteMainVerbsRatio());
+		instanceElement.appendChild(finiteMainVerbsElement);
+	
+		// print ratio of imperative main verbs
+		Element imperativeMainVerbsElement = new Element("value");
+		Comment imperativeMainVerbsElementComment = new Comment("ratio of imperative main verbs");
+		imperativeMainVerbsElement.appendChild(imperativeMainVerbsElementComment);
+		imperativeMainVerbsElement.appendChild("" + content.getImperativeMainVerbsRatio());
+		instanceElement.appendChild(imperativeMainVerbsElement);
+		
+		// print ratio of infinitive main verbs
+		Element infinitiveMainVerbsElement = new Element("value");
+		Comment infinitiveMainVerbsElementComment = new Comment("ratio of infinitive main verbs");
+		infinitiveMainVerbsElement.appendChild(infinitiveMainVerbsElementComment);
+		infinitiveMainVerbsElement.appendChild("" + content.getInfinitiveMainVerbsRatio());
+		instanceElement.appendChild(infinitiveMainVerbsElement);
 		
 		// print class
 		Element classElement = new Element("value");
@@ -463,6 +484,24 @@ public class XrffFile
 		compoundElement.addAttribute(new Attribute("name", "compoundPartRatio"));
 		compoundElement.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(compoundElement);
+			
+		// ratio of finite main verbs
+		Element finiteMainVerbsElement = new Element("attribute");
+		finiteMainVerbsElement.addAttribute(new Attribute("name", "finiteMainVerbsRatio"));
+		finiteMainVerbsElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(finiteMainVerbsElement);
+		
+		// ratio of imperative main verbs
+		Element imperativeMainVerbsElement = new Element("attribute");
+		imperativeMainVerbsElement.addAttribute(new Attribute("name", "imperativeMainVerbsRatio"));
+		imperativeMainVerbsElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(imperativeMainVerbsElement);
+		
+		// ratio of infinitive main verbs
+		Element infinitiveMainVerbsElement = new Element("attribute");
+		infinitiveMainVerbsElement.addAttribute(new Attribute("name", "infinitiveMainVerbsRatio"));
+		infinitiveMainVerbsElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(infinitiveMainVerbsElement);
 		
 		// class element
 		Element classElement = new Element("attribute");
