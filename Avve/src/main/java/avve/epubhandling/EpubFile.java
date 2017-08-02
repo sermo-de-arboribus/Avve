@@ -158,8 +158,9 @@ public class EpubFile
 	private void determineLanguage(final Document parsedOebpsFile)
 	{
 		Nodes dublinCoreLanguage = parsedOebpsFile.query("/opf:package/opf:metadata/dc:language", opfNamespace);
-		if(dublinCoreLanguage != null && dublinCoreLanguage.size() > 0 && (dublinCoreLanguage.get(0).getValue().length() > 1));
+		if((dublinCoreLanguage != null) && (dublinCoreLanguage.size() > 0) && (dublinCoreLanguage.get(0).getValue().length() > 1));
 		{
+			logger.trace(String.format(infoMessagesBundle.getString("avve.epubhandling.languageDetermination"), dublinCoreLanguage.get(0).getValue()));
 			language = dublinCoreLanguage.get(0).getValue().substring(0,2).toLowerCase();
 		}
 	}

@@ -6,7 +6,8 @@ public enum CommandLineArguments
 	
 	private String commandLineArgument;
 	
-	private CommandLineArguments(String arg){
+	private CommandLineArguments(String arg)
+	{
 		    this.commandLineArgument = arg;
 	}
 	
