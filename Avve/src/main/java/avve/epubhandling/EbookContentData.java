@@ -17,8 +17,9 @@ public class EbookContentData
 	 * @param warengruppe The Warengruppe class
 	 * @param logger The logger to be used
 	 */
-	public EbookContentData(String plainText, String warengruppe, Logger logger)
+	public EbookContentData(EpubFile epubFile, String plainText, String warengruppe, Logger logger)
 	{
+		this.epubFile = epubFile;
 		this.logger = logger;
 		this.plainText = plainText;
 		this.warengruppe = warengruppe;
@@ -118,6 +119,11 @@ public class EbookContentData
 	public double getCompoundWords()
 	{
 		return calculatePosTokenRatio("TRUNC");
+	}
+	
+	public long getFileSize()
+	{
+		return epubFile.getFileSize();
 	}
 	
 	/**
@@ -488,6 +494,7 @@ public class EbookContentData
 	
 	private Logger logger;
 	
+	private EpubFile epubFile;
 	private String plainText;
 	private String warengruppe;
 	private String[] sentences;

@@ -4,6 +4,7 @@ import avve.services.FileService;
 import avve.services.XmlService;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class EpubFile
 	
 	// private instance fields
 	private String filePath;
+	private long fileSize;
 	private String language;
 	private FileService fileService;
 	private Logger logger;
@@ -57,6 +59,8 @@ public class EpubFile
 		{
 		    throw new FileNotFoundException(errorMessagesBundle.getString("EpubFileNotFound"));
 		}
+		File file = fileService.newFileObject(filePath);
+		fileSize = file.length();
 		this.filePath = filePath;
 		this.fileService = fileService;
 		this.logger = logger;
@@ -100,6 +104,11 @@ public class EpubFile
 		}
 		
 		return sb.toString();
+	}
+	
+	public long getFileSize()
+	{
+		return fileSize;
 	}
 	
 	public String getLanguageCode()

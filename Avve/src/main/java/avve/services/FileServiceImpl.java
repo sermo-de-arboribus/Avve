@@ -64,6 +64,12 @@ public class FileServiceImpl implements FileService
 	}
 	
 	@Override
+	public File newFileObject(String filepath)
+	{
+		return new File(filepath);
+	}
+	
+	@Override
 	public void safeClose(final Closeable closeable)
 	{
 		try

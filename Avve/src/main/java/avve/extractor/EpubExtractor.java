@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -28,23 +29,30 @@ public class EpubExtractor
 	
 	public static void main(String[] args)
 	{
+		LocalDateTime startTime = LocalDateTime.now();
+		long startTimestamp = System.currentTimeMillis();
+		logger.info(String.format(infoMessagesBundle.getString("avve.extractor.started"), startTime));
+		
 		// parse and validate command line options
 		CommandLine cliArguments = parseCommandLineArguments(args);
 		
 		// build a list of files that need to be processed
 		ArrayList<File> inputFiles = getCollectionOfInputFiles(fileService, cliArguments);
 		
+		logger.info(String.format(infoMessagesBundle.getString("avve.extractor.numberOfFilesToProcess"), inputFiles.size()));
+		
 		// process all input files
 		for(File inputFile : inputFiles)
 		{
-			logger.info(infoMessagesBundle.getString("startEpubExtraction") + ": " + inputFile);
+			logger.info(infoMessagesBundle.getString("avve.extractor.startEpubExtraction") + ": " + inputFile);
 			
 			// read input files
 			String plainText = "";
 			String languageCode = null;
+			EpubFile epubFile = null;
 			try
 			{
-				EpubFile epubFile = new EpubFile(inputFile.getAbsolutePath(), fileService, logger);
+				epubFile = new EpubFile(inputFile.getAbsolutePath(), fileService, logger);
 				plainText = epubFile.extractPlainText();
 				languageCode = epubFile.getLanguageCode();
 			}
@@ -53,7 +61,7 @@ public class EpubExtractor
 				logger.error(exc.getLocalizedMessage(), exc);
 			}
 			
-			if(languageCode.equals(language))
+			if(null != epubFile && languageCode.equals(language))
 			{
 				String warengruppe;
 				if(cliArguments.hasOption(CommandLineArguments.WARENGRUPPE.toString()))
@@ -72,7 +80,7 @@ public class EpubExtractor
 				// Pre-process the text data
 				DataPreprocessorService textPreprocessor = new DataPreprocessorService(logger);
 						
-				EbookContentData ebookContentData = new EbookContentData(plainText, warengruppe, logger);
+				EbookContentData ebookContentData = new EbookContentData(epubFile, plainText, warengruppe, logger);
 				
 				textPreprocessor.preProcessText(ebookContentData);
 				
@@ -114,9 +122,13 @@ public class EpubExtractor
 			{
 				logger.error(String.format(errorMessageBundle.getString("InvalidLanguage"), languageCode));
 			}
-			logger.info(infoMessagesBundle.getString("programFinished"));
 		}
-
+		
+		LocalDateTime endTime = LocalDateTime.now();
+		long endTimestamp = System.currentTimeMillis();
+		
+		logger.info(String.format(infoMessagesBundle.getString("avve.extractor.executionTime"), (endTimestamp - startTimestamp) / 1000));
+		logger.info(String.format(infoMessagesBundle.getString("avve.extractor.programFinished"), endTime));
 	}
 
 	private static ArrayList<File> getCollectionOfInputFiles(FileService fileService, CommandLine cliArguments)

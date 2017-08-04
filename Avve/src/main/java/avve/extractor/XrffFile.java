@@ -117,6 +117,13 @@ public class XrffFile
 		partsOfSpeechElement.appendChild(posSerializer.toString());
 		instanceElement.appendChild(partsOfSpeechElement);
 		
+		// print file size
+		Element fileSizeElement = new Element("value");
+		Comment fileSizeComment = new Comment("file size in bytes");
+		fileSizeElement.appendChild(fileSizeComment);
+		fileSizeElement.appendChild("" + content.getFileSize());
+		instanceElement.appendChild(fileSizeElement);
+		
 		// print ratio of words per sentence
 		Element wordsPerSentenceElement = new Element("value");
 		Comment wordsPerSentenceComment = new Comment("words per sentence");
@@ -375,6 +382,13 @@ public class XrffFile
 		partsOfSpeech.addAttribute(new Attribute("type", "string"));
 		attributes.appendChild(partsOfSpeech);
 		
+		// file size in bytes
+		Element fileSizeElement = new Element("attribute");
+		fileSizeElement.addAttribute(new Attribute("name", "fileSizeInBytes"));
+		fileSizeElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(fileSizeElement);
+		
+		// word per sentence
 		Element wordsPerSentence = new Element("attribute");
 		wordsPerSentence.addAttribute(new Attribute("name", "wordsPerSentence"));
 		wordsPerSentence.addAttribute(new Attribute("type", "numeric"));

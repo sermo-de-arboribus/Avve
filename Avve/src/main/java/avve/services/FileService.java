@@ -44,6 +44,13 @@ public interface FileService
 	
 	Collection<File> listFilesInDirectory(String directoryPath);
 	
+	/**
+	 * Instantiates a new java.io.File object 
+	 * @param filepath the filepath associated with the File object
+	 * @return the newly instantiated File object
+	 */
+	File newFileObject(String filepath);
+	
 	void safeClose(Closeable closeable);
 
 	Collection<File> getFilesFromAllSubdirectories(String basePath);
