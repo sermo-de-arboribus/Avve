@@ -161,7 +161,14 @@ public class EpubFile
 		if((dublinCoreLanguage != null) && (dublinCoreLanguage.size() > 0) && (dublinCoreLanguage.get(0).getValue().length() > 1));
 		{
 			logger.trace(String.format(infoMessagesBundle.getString("avve.epubhandling.languageDetermination"), dublinCoreLanguage.get(0).getValue()));
-			language = dublinCoreLanguage.get(0).getValue().substring(0,2).toLowerCase();
+			try
+			{
+				language = dublinCoreLanguage.get(0).getValue().substring(0,2).toLowerCase();	
+			}
+			catch(StringIndexOutOfBoundsException exc)
+			{
+				logger.error(String.format(errorMessagesBundle.getString("avve.epubhandling.languageDeterminationException"), dublinCoreLanguage.get(0).getValue().length()));
+			}
 		}
 	}
 

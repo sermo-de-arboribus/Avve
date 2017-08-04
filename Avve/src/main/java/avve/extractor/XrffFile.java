@@ -124,12 +124,12 @@ public class XrffFile
 		wordsPerSentenceElement.appendChild("" + ((double)content.getNumberOfTokens() / (double)content.getSentences().length));
 		instanceElement.appendChild(wordsPerSentenceElement);
 		
-		// print ratio of lemmas per sentence
-		Element lemmasPerSentenceElement = new Element("value");
-		Comment lemmasPerSentenceComment = new Comment("lemmas per sentence");
-		lemmasPerSentenceElement.appendChild(lemmasPerSentenceComment);
-		lemmasPerSentenceElement.appendChild("" + ((double)content.getLemmaFrequencies().size() / (double)content.getSentences().length));
-		instanceElement.appendChild(lemmasPerSentenceElement);
+		// print ratio of lemmas divided by number of tokens
+		Element lemmasPerTokensElement = new Element("value");
+		Comment lemmasPerTokensElementComment = new Comment("lemma to token ratio");
+		lemmasPerTokensElement.appendChild(lemmasPerTokensElementComment);
+		lemmasPerTokensElement.appendChild("" + ((double)content.getLemmaFrequencies().size() / (double)content.getNumberOfTokens()));
+		instanceElement.appendChild(lemmasPerTokensElement);
 		
 		// print number of unique parts of speech
 		Element uniquePartsOfSpeech = new Element("value");
@@ -145,6 +145,13 @@ public class XrffFile
 		uniqueNumberOfWords.appendChild("" + content.getWordFrequencies().size());
 		instanceElement.appendChild(uniqueNumberOfWords);
 
+		// print unique-to-total-words-ratio
+		Element uniquetoTotalNumberOfWords = new Element("value");
+		Comment uniquetoTotalNumberOfWordsComment = new Comment("ratio of unique to total number of words");
+		uniquetoTotalNumberOfWords.appendChild(uniquetoTotalNumberOfWordsComment);
+		uniquetoTotalNumberOfWords.appendChild("" + ((double)content.getWordFrequencies().size() / (double)content.getNumberOfTokens()));
+		instanceElement.appendChild(uniquetoTotalNumberOfWords);
+		
 		// print ratio of passive sentences
 		Element ratioOfPassiveSentences = new Element("value");
 		Comment ratioOfPassiveSentencesComment = new Comment("ratio of passive sentences");
@@ -161,7 +168,7 @@ public class XrffFile
 		
 		// print ratio of adverbs
 		Element ratioOfAdverbs = new Element("value");
-		Comment ratioOfAdverbsComment = new Comment("ratio of adjectives");
+		Comment ratioOfAdverbsComment = new Comment("ratio of adverbs");
 		ratioOfAdverbs.appendChild(ratioOfAdverbsComment);
 		ratioOfAdverbs.appendChild("" + content.getAdverbRatio());
 		instanceElement.appendChild(ratioOfAdverbs);
@@ -374,7 +381,7 @@ public class XrffFile
 		attributes.appendChild(wordsPerSentence);
 		
 		Element lemmasPerSentence = new Element("attribute");
-		lemmasPerSentence.addAttribute(new Attribute("name", "lemmasPerSentence"));
+		lemmasPerSentence.addAttribute(new Attribute("name", "lemmasToTokensRatio"));
 		lemmasPerSentence.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(lemmasPerSentence);
 		
@@ -383,11 +390,18 @@ public class XrffFile
 		uniquePartsOfSpeech.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(uniquePartsOfSpeech);
 		
+		// unique number of words
 		Element uniqueNumberOfWords = new Element("attribute");
 		uniqueNumberOfWords.addAttribute(new Attribute("name", "uniqueNumberOfWords"));
 		uniqueNumberOfWords.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(uniqueNumberOfWords);
 
+		// ratio of unique to total number of words
+		Element uniqueToTotalNumberOfWords = new Element("attribute");
+		uniqueToTotalNumberOfWords.addAttribute(new Attribute("name", "uniqueToTotalNumberOfWordsRatio"));
+		uniqueToTotalNumberOfWords.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(uniqueToTotalNumberOfWords);
+		
 		// ratio of passive sentences
 		Element ratioOfPassiveSentences = new Element("attribute");
 		ratioOfPassiveSentences.addAttribute(new Attribute("name", "ratioOfPassiveSentences"));
