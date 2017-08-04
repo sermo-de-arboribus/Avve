@@ -75,15 +75,29 @@ public class XrffFile
 		Element instanceElement = new Element("instance");
 		instancesElement.appendChild(instanceElement);
 		
-		// print all lemmas
+		// print all lemmas and part of speech tags
 		Element lemmasElement = new Element("value");
 		Comment lemmasComment = new Comment("lemmas");
 		lemmasElement.appendChild(lemmasComment);
 		StringBuffer lemmaSerializer = new StringBuffer();
+		// iterate through all lemmatized sentences
 		for(int i = 0; i < content.getLemmas().length; i++)
 		{
-			lemmaSerializer.append("[" + i + "] ");
-			lemmaSerializer.append(String.join(" ", content.getLemmas()[i]));
+			lemmaSerializer.append("[" + i + "] "); // print number of sentence
+			// iterate through all lemmas in the current sentence
+			for(int j = 0; j < content.getLemmas()[i].length; j++)
+			{
+				String posTag = "";
+				try
+				{
+					posTag = content.getPartsOfSpeech()[i][j];
+				}
+				catch(StringIndexOutOfBoundsException exc)
+				{
+					// ignore
+				}
+				lemmaSerializer.append(content.getLemmas()[i][j] + "_" + posTag + " ");
+			}
 			lemmaSerializer.append(System.lineSeparator());
 		}
 		lemmasElement.appendChild(lemmaSerializer.toString());
@@ -306,6 +320,27 @@ public class XrffFile
 		infinitiveMainVerbsElement.appendChild("" + content.getInfinitiveMainVerbsRatio());
 		instanceElement.appendChild(infinitiveMainVerbsElement);
 		
+		// print ratio of perfect participle main verbs
+		Element perfPartMainVerbsElement = new Element("value");
+		Comment perfPartMainVerbsElementComment = new Comment("ratio of perfect participle main verbs");
+		perfPartMainVerbsElement.appendChild(perfPartMainVerbsElementComment);
+		perfPartMainVerbsElement.appendChild("" + content.getMainVerbPerfectParticiplesRatio());
+		instanceElement.appendChild(perfPartMainVerbsElement);
+		
+		// print ratio of auxiliar verbs
+		Element auxiliarVerbsElement = new Element("value");
+		Comment auxiliarVerbsElementComment = new Comment("ratio of auxiliar verbs");
+		auxiliarVerbsElement.appendChild(auxiliarVerbsElementComment);
+		auxiliarVerbsElement.appendChild("" + content.getAuxiliarVerbsRatio());
+		instanceElement.appendChild(auxiliarVerbsElement);
+		
+		// print ratio of modal verbs
+		Element modalVerbsElement = new Element("value");
+		Comment modalVerbsElementComment = new Comment("ratio of modal verbs");
+		modalVerbsElement.appendChild(modalVerbsElementComment);
+		modalVerbsElement.appendChild("" + content.getModalVerbRatio());
+		instanceElement.appendChild(modalVerbsElement);
+		
 		// print class
 		Element classElement = new Element("value");
 		Comment classComment = new Comment("class");
@@ -502,6 +537,24 @@ public class XrffFile
 		infinitiveMainVerbsElement.addAttribute(new Attribute("name", "infinitiveMainVerbsRatio"));
 		infinitiveMainVerbsElement.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(infinitiveMainVerbsElement);
+		
+		// ratio of perfect participle main verbs
+		Element perfPartMainVerbsElement = new Element("attribute");
+		perfPartMainVerbsElement.addAttribute(new Attribute("name", "perfectParticipleMainVerbsRatio"));
+		perfPartMainVerbsElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(perfPartMainVerbsElement);
+		
+		// ratio of auxiliar verbs
+		Element auxiliarVerbsElement = new Element("attribute");
+		auxiliarVerbsElement.addAttribute(new Attribute("name", "auxiliarVerbsRatio"));
+		auxiliarVerbsElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(auxiliarVerbsElement);
+
+		// ratio of modal verbs
+		Element modalVerbsElement = new Element("attribute");
+		modalVerbsElement.addAttribute(new Attribute("name", "modalVerbsRatio"));
+		modalVerbsElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(modalVerbsElement);
 		
 		// class element
 		Element classElement = new Element("attribute");

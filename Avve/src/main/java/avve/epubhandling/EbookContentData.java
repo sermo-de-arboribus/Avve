@@ -94,6 +94,15 @@ public class EbookContentData
 	}
 	
 	/**
+	 * Get the auxiliar verbs, divided by the number of tokens in this ebook text.
+	 * @return The verb-to-tokens ratio
+	 */
+	public double getAuxiliarVerbsRatio()
+	{
+		return calculatePosTokenRatio(new String[]{"VAFIN", "VAIMP", "VAINF", "VAPP"});
+	}
+	
+	/**
 	 * Get the number of cardinals, divided by the number of tokens in this ebook text.
 	 * @return The cardinals-to-tokens ratio
 	 */
@@ -133,7 +142,7 @@ public class EbookContentData
 	 * Get the number of imperative main verbs, divided by the number of tokens in this ebook text.
 	 * @return The verbs-to-tokens ratio
 	 */
-	public double 	getImperativeMainVerbsRatio()
+	public double getImperativeMainVerbsRatio()
 	{
 		return calculatePosTokenRatio("VVIMP");
 	}
@@ -142,7 +151,7 @@ public class EbookContentData
 	 * Get the number of infinitive main verbs, divided by the number of tokens in this ebook text.
 	 * @return The verbs-to-tokens ratio
 	 */
-	public double 	getInfinitiveMainVerbsRatio()
+	public double getInfinitiveMainVerbsRatio()
 	{
 		return calculatePosTokenRatio(new String[]{"VVINF", "VVIZU"});
 	}
@@ -173,6 +182,15 @@ public class EbookContentData
 	public String[][] getLemmas()
 	{
 		return lemmatizedSentences;
+	}
+	
+	/**
+	 * Get the number of modal verbs, divided by the number of tokens in this ebook text.
+	 * @return The modal-verb-to-tokens ratio
+	 */
+	public double getModalVerbRatio()
+	{
+		return calculatePosTokenRatio(new String[] {"VMFIN", "VMINF", "VMPP"});
 	}
 	
 	/**
@@ -278,6 +296,15 @@ public class EbookContentData
 			}
 		}
 		return numberOfTokens;
+	}
+	
+	/**
+	 * Get the number of main verbs in perfect participle form, divided by the number of tokens in this ebook text.
+	 * @return The verbs-to-tokens ratio
+	 */
+	public double 	getMainVerbPerfectParticiplesRatio()
+	{
+		return calculatePosTokenRatio("VVPP");
 	}
 	
 	public String[][] getPartsOfSpeech()

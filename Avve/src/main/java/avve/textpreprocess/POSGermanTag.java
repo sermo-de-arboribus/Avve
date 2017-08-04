@@ -58,7 +58,7 @@ public enum POSGermanTag
     VAFIN("finites Verb, aux"),
     VAIMP("Imperativ, aux"),
     VAINF("Infinitiv, aux"),
-    VAPP("Partizip Perfekt"),
+    VAPP("Partizip Perfekt, aux"),
     VMFIN("finites Verb, modal"),
     VMINF("Infinitiv, modal"),
     VMPP("Partizip Perfekt, modal"),
