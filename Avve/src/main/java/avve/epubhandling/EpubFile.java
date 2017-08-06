@@ -39,6 +39,7 @@ public class EpubFile
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	
 	// private instance fields
+	private String documentId;
 	private String filePath;
 	private long fileSize;
 	private String language;
@@ -106,6 +107,12 @@ public class EpubFile
 		return sb.toString();
 	}
 	
+
+	public String getDocumentId()
+	{
+		return documentId;
+	}
+	
 	public long getFileSize()
 	{
 		return fileSize;
@@ -132,6 +139,7 @@ public class EpubFile
 		{
 			Document parsedOebpsFile = xmlService.build(instream);
 			determineLanguage(parsedOebpsFile);
+			determineDocumentId(parsedOebpsFile);
 			Nodes spine = parsedOebpsFile.query("/opf:package/opf:spine/opf:itemref/@idref", opfNamespace);
 
 			logger.trace(String.format(infoMessagesBundle.getString("numberOfSpineItemsFound"), spine.size()));
@@ -164,6 +172,27 @@ public class EpubFile
 		return resultList;
 	}
 
+	// Try to determine the document ID from the EPUB's metadata and store it in the documentId instance variable. If no ID is found, a timestamp is used as the ID instead
+	private void determineDocumentId(final Document parsedOebpsFile)
+	{
+		Nodes uniqueIdentifierNodes = parsedOebpsFile.query("/opf:package/opf:metadata/*[@id = /opf:package/@unique-identifier]", opfNamespace);
+		if((uniqueIdentifierNodes != null) && (uniqueIdentifierNodes.size() > 0) && (uniqueIdentifierNodes.get(0).getValue().length() > 1));
+		{
+			try
+			{
+				String uniqueIdentifier = uniqueIdentifierNodes.get(0).getValue();
+				logger.trace(String.format(infoMessagesBundle.getString("avve.epubhandling.uniqueIdentifierFound"), uniqueIdentifier));
+				// don't trust EPUB creators to provide truly unique IDs... So we append some timestamp at the end
+				setDocumentId(uniqueIdentifier + "_" + (System.currentTimeMillis() / 1000));
+			}
+			catch(Exception exc)
+			{
+				logger.error(errorMessagesBundle.getString("avve.epubhandling.documentIdDeterminationException"));
+				setDocumentId("" + (System.currentTimeMillis() / 100));
+			}
+		}
+	}
+	
 	private void determineLanguage(final Document parsedOebpsFile)
 	{
 		Nodes dublinCoreLanguage = parsedOebpsFile.query("/opf:package/opf:metadata/dc:language", opfNamespace);
@@ -197,6 +226,11 @@ public class EpubFile
 		
 		// the absolute filepath to the OEBPS file is the tempDir plus the full-path given in the container-file
 		return FilenameUtils.concat(epubDir, ((Element)rootFileNode).getAttribute("full-path").getValue());
+	}
+	
+	private void setDocumentId(String documentId)
+	{
+		this.documentId = documentId;
 	}
 	
 	private void unzipEpubToTempFolder(final String tempDir) throws IOException
