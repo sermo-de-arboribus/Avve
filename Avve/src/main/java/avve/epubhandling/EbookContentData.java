@@ -121,6 +121,19 @@ public class EbookContentData
 		return calculatePosTokenRatio("TRUNC");
 	}
 	
+	/**
+	 * Retrieve the unique ID of the EPUB document that this object represents
+	 * @return A unique ID for the underlying EPUB document
+	 */
+	public String getDocumentId()
+	{
+		return epubFile.getDocumentId();
+	}
+	
+	/**
+	 * Get the file size of the underlying EPUB file (in zipped form)
+	 * @return The file size in bytes
+	 */
 	public long getFileSize()
 	{
 		return epubFile.getFileSize();

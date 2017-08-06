@@ -25,6 +25,7 @@ public class DataPreprocessorService
 	{
 		// TODO: for the time being, just configure the services here; if useful, refactor later to an approach using external configuration
 		
+		new NumberProcessor().process(ebookContentData);
 		new SentenceDetectorPreprocessor(logger).process(ebookContentData);
 		new TextTokenizer(logger).process(ebookContentData);
 		new WordFrequencyPreprocessor(logger).process(ebookContentData);

@@ -7,9 +7,9 @@ import java.io.*;
 
 import nu.xom.*;
 
-public class XrffFile
+public class XrffFileWriter
 {
-	public XrffFile(final String filePath, final FileService fileService)
+	public XrffFileWriter(final String filePath, final FileService fileService)
 	{
 		this.filePath = filePath;
 		this.fileService = fileService;
@@ -73,6 +73,7 @@ public class XrffFile
 		bodyElement.appendChild(instancesElement);
 		
 		Element instanceElement = new Element("instance");
+		instanceElement.addAttribute(new Attribute("documentId", content.getDocumentId()));
 		instancesElement.appendChild(instanceElement);
 		
 		// print all lemmas and part of speech tags
@@ -619,7 +620,8 @@ public class XrffFile
 			" <!ELEMENT instances (instance*)>" + System.lineSeparator() + 
 			"<!ELEMENT instance (value*)>" + System.lineSeparator() + 
 			"<!ATTLIST instance type (normal|sparse) \"normal\">" + System.lineSeparator() + 
-			"<!ATTLIST instance weight CDATA #IMPLIED>" + System.lineSeparator() + 
+			"<!ATTLIST instance weight CDATA #IMPLIED>" + System.lineSeparator() +
+			"<!ATTLIST instance documentId CDATA #IMPLIED>" + System.lineSeparator() +
 			"<!ELEMENT value (#PCDATA|instances)*>" + System.lineSeparator() + 
 			"<!ATTLIST value index CDATA #IMPLIED>   <!-- 1-based index (only used for instance format \"sparse\") -->" + System.lineSeparator() + 
 			"<!ATTLIST value missing (yes|no) \"no\">" + System.lineSeparator() + 
