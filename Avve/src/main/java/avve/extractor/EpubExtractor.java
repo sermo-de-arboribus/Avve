@@ -13,16 +13,13 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.de.GermanAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
-import org.apache.lucene.index.IndexOptions;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import avve.epubhandling.EbookContentData;
 import avve.epubhandling.EpubFile;
 import avve.services.*;
-import nu.xom.Builder;
 
 /**
  * This main class provides an entry point for extracting text from EPUB files, applying a series of data transformations and writing the result 

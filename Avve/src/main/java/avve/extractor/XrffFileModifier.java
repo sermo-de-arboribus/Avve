@@ -72,11 +72,11 @@ public class XrffFileModifier
 		    if(hits.length > 0)
 		    {
 			    Terms terms = luceneIndexReader.getTermVector(hits[0].doc, "plaintext");
+			    
 			    long numberOfDocuments = luceneIndexReader.getDocCount("plaintext");
 			    TermsEnum termsEnum = terms.iterator();
 			    BytesRef bytesRefToTerm = null;
-			    SortedMap<String, Integer> termFrequenciesInCurrentDocument = new TreeMap<String, Integer>();
-			    SortedMap<String, Double> inverseDocumentFrequency = new TreeMap<String, Double>();
+			    SortedMap<String, TfIdfTuple> tdIdfTuples = new TreeMap<String, TfIdfTuple>();
 			    
 			    // iterate through all terms in the current document's "plaintext" field
 			    while ((bytesRefToTerm = termsEnum.next()) != null)
@@ -84,29 +84,26 @@ public class XrffFileModifier
 			    	String term = bytesRefToTerm.utf8ToString();
 			    	
 			    	// calculate term frequency
-			    	if(termFrequenciesInCurrentDocument.containsKey(term))
+			    	if(tdIdfTuples.containsKey(term))
 			    	{
-			    		// increment existing entry
-			    		termFrequenciesInCurrentDocument.replace(term, termFrequenciesInCurrentDocument.get(term) + 1);
+			    		// increment term frequency of existing entry
+			    		tdIdfTuples.get(term).incrementTermFrequencyByOne();
 			    	}
 			    	else
 			    	{
-			    		termFrequenciesInCurrentDocument.put(term, 1);	
-			    	}
-			    	
-			    	// calculate inverse document frequency (only need to do that once per term)
-			    	if(!inverseDocumentFrequency.containsKey(term))
-			    	{
+			    		// initialize term frequency and calculate inverse document frequency (only need to do that once per term)
 			    		double idf = 1 + Math.log(numberOfDocuments / luceneIndexReader.docFreq(new Term("plaintext", bytesRefToTerm)) + 1.0);
-			    		inverseDocumentFrequency.put(term, idf);
+			    		tdIdfTuples.put(term, new TfIdfTuple(1, idf /*, 1.0 / Math.sqrt(termsEnum.docFreq())*/)); // TODO: add normalization factor	
+			    		// TODO: See https://lucene.apache.org/core/6_4_0/core/org/apache/lucene/search/package-summary.html, header "Changing Scoring - Similarity"
 			    	}
 			    }
 			    
-			    List<Entry<String, Double>> sortedByIdfDescending = new ArrayList<Entry<String, Double>>(inverseDocumentFrequency.entrySet());
+			    List<Entry<String, TfIdfTuple>> sortedByIdfDescending = new ArrayList<Entry<String, TfIdfTuple>>(tdIdfTuples.entrySet());
 			    
-			    Collections.sort(sortedByIdfDescending, new Comparator<Entry<String, Double>>(){
+			    Collections.sort(sortedByIdfDescending, new Comparator<Entry<String, TfIdfTuple>>()
+			    {
 			    	@Override
-			    	public int compare(Entry<String, Double> e1, Entry<String, Double> e2)
+			    	public int compare(Entry<String, TfIdfTuple> e1, Entry<String, TfIdfTuple> e2)
 			    	{
 			    		return e2.getValue().compareTo(e1.getValue());
 			    	}
@@ -118,7 +115,6 @@ public class XrffFileModifier
 			    attributeElement.addAttribute(new Attribute("name", "top-idf"));
 			    attributeElement.addAttribute(new Attribute("type", "string"));
 			    attributesElement.insertChild(attributeElement, attributesElement.getChildCount() - 2);
-			    //attributesElement.appendChild(attributeElement);
 			    
 			    Nodes instanceNode = xrffDocument.query("/dataset/body/instances/instance");
 			    Element instanceElement = (Element)instanceNode.get(0);
@@ -130,15 +126,14 @@ public class XrffFileModifier
 			    	stringBuilder.append("[" + i + "] ");
 			    	stringBuilder.append(term);
 			    	stringBuilder.append(" - ");
-			    	stringBuilder.append(sortedByIdfDescending.get(i).getValue()); // the value = the idf number
+			    	stringBuilder.append(sortedByIdfDescending.get(i).getValue().getInverseDocumentFrequency()); // the idf
 			    	stringBuilder.append(" - ");
-			    	stringBuilder.append(termFrequenciesInCurrentDocument.get(term));
+			    	stringBuilder.append(sortedByIdfDescending.get(i).getValue().getTermFrequency());
 			    	stringBuilder.append(System.lineSeparator());
 			    }
 			    Element newValueElement = new Element("value");
 			    newValueElement.appendChild(stringBuilder.toString());
 			    instanceElement.insertChild(newValueElement, instanceElement.getChildCount() - 2);
-			    //instanceElement.appendChild(newValueElement);
 		    }
 	    }
 		catch (IOException exc)
