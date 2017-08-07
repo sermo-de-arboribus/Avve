@@ -117,7 +117,8 @@ public class XrffFileModifier
 			    Element attributeElement = new Element("attribute");
 			    attributeElement.addAttribute(new Attribute("name", "top-idf"));
 			    attributeElement.addAttribute(new Attribute("type", "string"));
-			    attributesElement.appendChild(new Element("attribute"));
+			    attributesElement.insertChild(attributeElement, attributesElement.getChildCount() - 2);
+			    //attributesElement.appendChild(attributeElement);
 			    
 			    Nodes instanceNode = xrffDocument.query("/dataset/body/instances/instance");
 			    Element instanceElement = (Element)instanceNode.get(0);
@@ -136,7 +137,8 @@ public class XrffFileModifier
 			    }
 			    Element newValueElement = new Element("value");
 			    newValueElement.appendChild(stringBuilder.toString());
-			    instanceElement.appendChild(newValueElement);
+			    instanceElement.insertChild(newValueElement, instanceElement.getChildCount() - 2);
+			    //instanceElement.appendChild(newValueElement);
 		    }
 	    }
 		catch (IOException exc)

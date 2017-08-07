@@ -345,6 +345,23 @@ public class EbookContentData
 		return plainText;
 	}
 	
+	public String getLemmatizedText()
+	{
+		StringBuilder stringbuilder = new StringBuilder();
+			
+		for(int i = 0; i < lemmatizedSentences.length; i++)
+		{
+			for(int j = 0; j < lemmatizedSentences[i].length; j++)
+			{
+				stringbuilder.append(lemmatizedSentences[i][j]);
+				stringbuilder.append(" ");
+			}
+			stringbuilder.append(System.lineSeparator());
+		}
+		
+		return stringbuilder.toString();
+	}
+	
 	/**
 	 * Get the number of pronominal adverbs, divided by the number of tokens in this ebook text.
 	 * @return The pronoun-to-tokens ratio

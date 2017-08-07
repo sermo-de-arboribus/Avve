@@ -106,7 +106,7 @@ public class EpubExtractor
 				EbookContentData ebookContentData = preprocessText(plainText, epubFile, warengruppe);
 				
 				// add the text to a Lucene index (for TF/IDF retrieval)
-				addTextToLuceneIndex(plainText, epubFile.getDocumentId(), epubFile);
+				addTextToLuceneIndex(ebookContentData.getLemmatizedText(), epubFile.getDocumentId(), epubFile);
 				
 				// save the processing result to the file system, one file with plain text, one file with statistical attributes
 				writePreprocessingResultsToFileSystem(warengruppe, ebookContentData, inputFile);
