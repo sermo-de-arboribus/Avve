@@ -27,14 +27,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/U0558/.m2/repository/org/mockito/mockito-core/2.8.9/mockito-core-2.8.9.jar" sourcepath="C:/Users/U0558/.m2/repository/org/mockito/mockito-core/2.8.9/mockito-core-2.8.9-sources.jar">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-			<attribute name="maven.groupId" value="org.mockito"/>
-			<attribute name="maven.artifactId" value="mockito-core"/>
-			<attribute name="maven.version" value="2.8.9"/>
-			<attribute name="maven.scope" value="test"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

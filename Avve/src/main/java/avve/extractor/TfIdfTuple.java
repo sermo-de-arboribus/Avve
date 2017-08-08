@@ -51,7 +51,8 @@ public class TfIdfTuple implements Comparable<TfIdfTuple>
 	public double getNormalizedTfIdfValue()
 	{
 		// formula adapted from the default TF-IDF calculation in Solr, which is: sqrt(tf) * ( 1 + log(numDocs / (docFreq + 1)) * boostFactor * (1 / sqrt(numTerms))
-		return Math.sqrt(tf) * idf * norm;
+		// but for our purpose we are boosting tf
+		return tf * tf * idf * norm;
 	}
 	
 	@Override

@@ -13,6 +13,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
+import org.apache.lucene.search.Explanation;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
@@ -72,7 +73,8 @@ public class XrffFileModifier
 		    if(hits.length > 0)
 		    {
 			    Terms terms = luceneIndexReader.getTermVector(hits[0].doc, "plaintext");
-			    
+		    	int numberOfTermsInPlainTextField = getTermsCount(terms);
+		    	
 			    long numberOfDocuments = luceneIndexReader.getDocCount("plaintext");
 			    TermsEnum termsEnum = terms.iterator();
 			    BytesRef bytesRefToTerm = null;
@@ -93,8 +95,7 @@ public class XrffFileModifier
 			    	{
 			    		// initialize term frequency and calculate inverse document frequency (only need to do that once per term)
 			    		double idf = 1 + Math.log(numberOfDocuments / luceneIndexReader.docFreq(new Term("plaintext", bytesRefToTerm)) + 1.0);
-			    		tdIdfTuples.put(term, new TfIdfTuple(1, idf /*, 1.0 / Math.sqrt(termsEnum.docFreq())*/)); // TODO: add normalization factor	
-			    		// TODO: See https://lucene.apache.org/core/6_4_0/core/org/apache/lucene/search/package-summary.html, header "Changing Scoring - Similarity"
+			    		tdIdfTuples.put(term, new TfIdfTuple(1, idf, 1.0 / Math.sqrt(numberOfTermsInPlainTextField)));
 			    	}
 			    }
 			    
@@ -119,12 +120,14 @@ public class XrffFileModifier
 			    Nodes instanceNode = xrffDocument.query("/dataset/body/instances/instance");
 			    Element instanceElement = (Element)instanceNode.get(0);
 			    StringBuilder stringBuilder = new StringBuilder();
-			    int numberOfIdfValuesToInclude = sortedByIdfDescending.size() > 50 ? 50 : sortedByIdfDescending.size();
+			    int numberOfIdfValuesToInclude = sortedByIdfDescending.size() > 100 ? 100 : sortedByIdfDescending.size();
 			    for(int i = 0; i < numberOfIdfValuesToInclude; i++ )
 			    {
 			    	String term = sortedByIdfDescending.get(i).getKey();
 			    	stringBuilder.append("[" + i + "] ");
 			    	stringBuilder.append(term);
+			    	stringBuilder.append(" - ");
+			    	stringBuilder.append("" + sortedByIdfDescending.get(i).getValue().getNormalizedTfIdfValue());
 			    	stringBuilder.append(" - ");
 			    	stringBuilder.append(sortedByIdfDescending.get(i).getValue().getInverseDocumentFrequency()); // the idf
 			    	stringBuilder.append(" - ");
@@ -177,6 +180,20 @@ public class XrffFileModifier
 		}
 		
 		return documentId;
+	}
+	
+
+	private int getTermsCount(Terms terms) throws IOException
+	{
+	    TermsEnum termsEnum = terms.iterator();
+	    @SuppressWarnings("unused")
+		BytesRef bytesRefToTerm = null;
+	    int counter = 0;
+	    while ((bytesRefToTerm = termsEnum.next()) != null)
+	    {
+	    	counter++;
+	    }
+	    return counter;
 	}
 
 	private FileService fileService;
