@@ -182,8 +182,8 @@ public class EpubFile
 			{
 				String uniqueIdentifier = uniqueIdentifierNodes.get(0).getValue();
 				logger.trace(String.format(infoMessagesBundle.getString("avve.epubhandling.uniqueIdentifierFound"), uniqueIdentifier));
-				// don't trust EPUB creators to provide truly unique IDs... So we append some timestamp at the end
-				setDocumentId(uniqueIdentifier + "_" + (System.currentTimeMillis() / 1000));
+				// TODO: check what happens if a unique ID is actually not unique
+				setDocumentId(uniqueIdentifier);
 			}
 			catch(Exception exc)
 			{

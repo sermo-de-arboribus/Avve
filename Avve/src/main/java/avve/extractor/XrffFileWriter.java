@@ -4,15 +4,40 @@ import avve.epubhandling.EbookContentData;
 import avve.services.FileService;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.Map.Entry;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.index.Terms;
+import org.apache.lucene.index.TermsEnum;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.util.BytesRef;
+import org.apache.lucene.util.QueryBuilder;
 
 import nu.xom.*;
 
 public class XrffFileWriter
 {
-	public XrffFileWriter(final String filePath, final FileService fileService)
+	public XrffFileWriter(final String filePath, final FileService fileService, final Directory luceneIndexDirectory, final Logger logger)
 	{
 		this.filePath = filePath;
 		this.fileService = fileService;
+		this.logger = logger;
+		this.luceneIndexDirectory = luceneIndexDirectory;
 	}
 	
 	public void saveEbookContentData(final EbookContentData content)
@@ -21,13 +46,13 @@ public class XrffFileWriter
 		try
 		{
 			outputStream = fileService.createFileOutputStream(filePath);
-			//OutputStreamWriter writer = new OutputStreamWriter(outputStream);
 			Element root = new Element("dataset");
 			root.addAttribute(new Attribute("name", "avve"));
 			Document xmlOutputDocument = new Document(root);
 			
 			writeHeader(root);
 			writeBody(root, content);
+			addTfIdfStatistics(root, content);
 			
 			// workaround for internal DTD subset, see http://www.xom.nu/tutorial.xhtml
 			Builder builder = new Builder();
@@ -84,7 +109,7 @@ public class XrffFileWriter
 		// iterate through all lemmatized sentences
 		for(int i = 0; i < content.getLemmas().length; i++)
 		{
-			lemmaSerializer.append("[" + i + "] "); // print number of sentence
+			lemmaSerializer.append("[" + i + "] "); // print number of sentences
 			// iterate through all lemmas in the current sentence
 			for(int j = 0; j < content.getLemmas()[i].length; j++)
 			{
@@ -593,8 +618,113 @@ public class XrffFileWriter
 		attributes.appendChild(classElement);
 	}
 
+	public void addTfIdfStatistics(final Element root, final EbookContentData content)
+	{
+		try
+		{
+			IndexReader luceneIndexReader = DirectoryReader.open(luceneIndexDirectory);
+			String documentId = content.getDocumentId();
+			
+			logger.info(String.format(infoMessagesBundle.getString("avve.extractor.retrievingTfIdfForDocument"), documentId));
+			
+		    IndexSearcher isearcher = new IndexSearcher(luceneIndexReader);
+		    // Parse a simple query that searches for "text":
+		    QueryBuilder queryBuilder = new QueryBuilder(new KeywordAnalyzer());
+		    Query query = queryBuilder.createPhraseQuery("docId", documentId);
+		    
+		    // expecting one hit per document ID
+		    ScoreDoc[] hits = isearcher.search(query, 1).scoreDocs;
+		    if(hits.length > 0)
+		    {
+			    Terms terms = luceneIndexReader.getTermVector(hits[0].doc, "plaintext");
+			    // TODO: This is like comparing apples and pears, as tokenization in EbookContentData and Lucene may be quite different... Adjust that 
+		    	int numberOfTermsInPlainTextField = content.getNumberOfTokens();
+		    	
+			    long numberOfDocuments = luceneIndexReader.getDocCount("plaintext");
+			    TermsEnum termsEnum = terms.iterator();
+			    BytesRef bytesRefToTerm = null;
+			    SortedMap<String, TfIdfTuple> tdIdfTuples = new TreeMap<String, TfIdfTuple>();
+			    
+			    // iterate through all terms in the current document's "plaintext" field
+			    while ((bytesRefToTerm = termsEnum.next()) != null)
+			    {
+			    	String term = bytesRefToTerm.utf8ToString();
+			    	
+			    	// try to get the same term from EbookContentData
+			    	// TODO: Like comparing apples and pears, see TODO comment above
+			    	if(content.getWordFrequencies().containsKey(term))
+			    	{
+			    		int termFrequencyInDocumentField = content.getWordFrequencies().get(term);
+			    		
+				    	// calculate term frequency
+				    	if(tdIdfTuples.containsKey(term))
+				    	{
+				    		// increment term frequency of existing entry
+				    		tdIdfTuples.get(term).incrementTermFrequency(termFrequencyInDocumentField);
+				    	}
+				    	else
+				    	{
+				    		// initialize term frequency and calculate inverse document frequency (only need to do that once per term)
+				    		double idf = 1 + Math.log(numberOfDocuments / luceneIndexReader.docFreq(new Term("plaintext", bytesRefToTerm)) + 1.0);
+				    		tdIdfTuples.put(term, new TfIdfTuple(termFrequencyInDocumentField, idf, 1.0 / Math.sqrt(numberOfTermsInPlainTextField)));
+				    	}
+			    	}
+			    }
+			    
+			    List<Entry<String, TfIdfTuple>> sortedByIdfDescending = new ArrayList<Entry<String, TfIdfTuple>>(tdIdfTuples.entrySet());
+			    
+			    Collections.sort(sortedByIdfDescending, new Comparator<Entry<String, TfIdfTuple>>()
+			    {
+			    	@Override
+			    	public int compare(Entry<String, TfIdfTuple> e1, Entry<String, TfIdfTuple> e2)
+			    	{
+			    		return e2.getValue().compareTo(e1.getValue());
+			    	}
+			    });
+			    
+			    Nodes attributesNode = root.query("/dataset/header/attributes");
+			    Element attributesElement = (Element)attributesNode.get(0);
+			    Element attributeElement = new Element("attribute");
+			    attributeElement.addAttribute(new Attribute("name", "top-idf"));
+			    attributeElement.addAttribute(new Attribute("type", "string"));
+			    attributesElement.insertChild(attributeElement, attributesElement.getChildCount() - 2);
+			    
+			    Nodes instanceNode = root.query("/dataset/body/instances/instance");
+			    Element instanceElement = (Element)instanceNode.get(0);
+			    StringBuilder stringBuilder = new StringBuilder();
+			    int numberOfIdfValuesToInclude = sortedByIdfDescending.size() > 100 ? 100 : sortedByIdfDescending.size();
+			    for(int i = 0; i < numberOfIdfValuesToInclude; i++ )
+			    {
+			    	String term = sortedByIdfDescending.get(i).getKey();
+			    	stringBuilder.append("[" + i + "] ");
+			    	stringBuilder.append(term);
+			    	stringBuilder.append(" - ");
+			    	stringBuilder.append("" + sortedByIdfDescending.get(i).getValue().getNormalizedTfIdfValue());
+			    	stringBuilder.append(" - ");
+			    	stringBuilder.append(sortedByIdfDescending.get(i).getValue().getInverseDocumentFrequency()); // the idf
+			    	stringBuilder.append(" - ");
+			    	stringBuilder.append(sortedByIdfDescending.get(i).getValue().getTermFrequency());
+			    	stringBuilder.append(System.lineSeparator());
+			    }
+			    Element newValueElement = new Element("value");
+			    newValueElement.appendChild(stringBuilder.toString());
+			    instanceElement.insertChild(newValueElement, instanceElement.getChildCount() - 2);
+		    }
+	    }
+		catch (IOException exc)
+		{
+			// TODO: log error
+	        exc.printStackTrace();
+	    }
+	}
+	
 	private final String filePath;
 	private final FileService fileService;
+	private Logger logger;
+	private Directory luceneIndexDirectory;
+	
+	private static final ResourceBundle errorMessageBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
+	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	
 	private static final String dtd = "<!DOCTYPE dataset [" + System.lineSeparator() + 
 			"<!ELEMENT dataset (header,body)>" + System.lineSeparator() + 

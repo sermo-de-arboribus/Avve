@@ -66,6 +66,19 @@ public class TfIdfTuple implements Comparable<TfIdfTuple>
 		tf++;
 	}
 	
+	public void incrementTermFrequency(int increment)
+	{
+		if(increment < 0)
+		{
+			// this is not an increment
+			// TODO: ignore or throw an error?
+		}
+		else
+		{
+			tf += increment;
+		}
+	}
+	
 	private int tf;
 	private double idf;
 	private double norm;

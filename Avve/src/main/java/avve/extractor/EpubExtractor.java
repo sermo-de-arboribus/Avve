@@ -71,10 +71,43 @@ public class EpubExtractor
 		
 		// build a list of files that need to be processed
 		ArrayList<File> inputFiles = getCollectionOfInputFiles(fileService, cliArguments);
-		
+
 		logger.info(String.format(infoMessagesBundle.getString("avve.extractor.numberOfFilesToProcess"), inputFiles.size()));
 		
-		// process all input files
+		// process all input files, first run: push text to Lucene index
+		for(File inputFile : inputFiles)
+		{
+			logger.info(infoMessagesBundle.getString("avve.extractor.startEpubExtraction") + ": " + inputFile);
+
+			// parse input files
+			String plainText = "";
+			String languageCode = null;
+			EpubFile epubFile = null;
+			try
+			{
+				epubFile = new EpubFile(inputFile.getAbsolutePath(), fileService, logger);
+				plainText = epubFile.extractPlainText();
+				languageCode = epubFile.getLanguageCode();
+			}
+			catch (IOException exc)
+			{
+				logger.error(exc.getLocalizedMessage(), exc);
+			}
+			
+			if(null != epubFile && languageCode.equals(language))
+			{
+				// add the text to a Lucene index (for TF/IDF retrieval)
+				addTextToLuceneIndex(plainText, epubFile.getDocumentId(), epubFile);
+			}
+			else
+			{
+				logger.error(String.format(errorMessageBundle.getString("InvalidLanguage"), languageCode));
+			}
+		}
+		
+		logger.info(infoMessagesBundle.getString("avve.extractor.startEpubExtraction"));
+		
+		// second interation: build statistics and write xrff file for Weka data mining
 		for(File inputFile : inputFiles)
 		{
 			logger.info(infoMessagesBundle.getString("avve.extractor.startEpubExtraction") + ": " + inputFile);
@@ -101,9 +134,6 @@ public class EpubExtractor
 				
 				// Pre-process the text data (e.g. tokenization, sentence detection, part-of-speech tagging
 				EbookContentData ebookContentData = preprocessText(plainText, epubFile, warengruppe);
-				
-				// add the text to a Lucene index (for TF/IDF retrieval)
-				addTextToLuceneIndex(ebookContentData.getLemmatizedText(), epubFile.getDocumentId(), epubFile);
 				
 				// save the processing result to the file system, one file with plain text, one file with statistical attributes
 				writePreprocessingResultsToFileSystem(warengruppe, ebookContentData, inputFile);
@@ -305,7 +335,7 @@ public class EpubExtractor
 			printStream.print(ebookContentData.getPlainText());
 			printStream.close();
 			
-			XrffFileWriter xrffFile = new XrffFileWriter(outputAttributes, fileService);
+			XrffFileWriter xrffFile = new XrffFileWriter(outputAttributes, fileService, getLuceneIndexDirectory(), logger);
 			xrffFile.saveEbookContentData(ebookContentData);
 		}
 		catch (FileNotFoundException exc)
