@@ -94,10 +94,17 @@ public class EpubExtractor
 				logger.error(exc.getLocalizedMessage(), exc);
 			}
 			
+			//TODO: refactor this to prevent double work
+			// determine "warengruppe" class code, either from command line parameter or from folder name
+			String warengruppe = determineClassName(cliArguments, inputFile);
+			
+			// Pre-process the text data (e.g. tokenization, sentence detection, part-of-speech tagging
+			EbookContentData ebookContentData = preprocessText(plainText, epubFile, warengruppe);
+			
 			if(null != epubFile && languageCode.equals(language))
 			{
 				// add the text to a Lucene index (for TF/IDF retrieval)
-				addTextToLuceneIndex(plainText, epubFile.getDocumentId(), epubFile);
+				addTextToLuceneIndex(ebookContentData.getLemmatizedText(), epubFile.getDocumentId(), epubFile);
 			}
 			else
 			{
@@ -145,7 +152,7 @@ public class EpubExtractor
 		}
 		
 		// Go through all statistics files from previous step once again, this time adding TF/IDF score data (which only makes sense after the index for all documents has been built)
-		Collection<File> xrffFiles = fileService.getFilesFromAllSubdirectories(statsDirectory);
+		/*Collection<File> xrffFiles = fileService.getFilesFromAllSubdirectories(statsDirectory);
 		
 		Directory directory = getLuceneIndexDirectory();
 		
@@ -154,7 +161,7 @@ public class EpubExtractor
 			XrffFileModifier xrffModifier = new XrffFileModifier(xrffFile, directory, fileService, logger);
 			xrffModifier.addTfIdfStatistics();
 			xrffModifier.saveChanges();
-		}
+		}*/
 		
 		
 		LocalDateTime endTime = LocalDateTime.now();
