@@ -72,13 +72,16 @@ public class FileServiceImpl implements FileService
 	@Override
 	public void safeClose(final Closeable closeable)
 	{
-		try
+		if(closeable != null)
 		{
-			closeable.close();
-		}
-		catch(IOException exc)
-		{
-			;
+			try
+			{
+				closeable.close();
+			}
+			catch(IOException exc)
+			{
+				;
+			}
 		}
 	}
 

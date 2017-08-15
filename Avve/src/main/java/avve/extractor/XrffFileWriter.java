@@ -68,20 +68,18 @@ public class XrffFileWriter
 		 	serializer.setMaxLength(256);
 		 	serializer.write(xmlOutputDocument);  
 		}
-		catch (IOException e)
+		catch (IOException exc)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(exc.getLocalizedMessage(), exc);
+			
 		}
-		catch (ValidityException e)
+		catch (ValidityException exc)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(exc.getLocalizedMessage(), exc);
 		}
-		catch (ParsingException e)
+		catch (ParsingException exc)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(exc.getLocalizedMessage(), exc);
 		}
 		finally
 		{
@@ -652,9 +650,9 @@ public class XrffFileWriter
 			    	
 			    	// try to get the same term from EbookContentData
 			    	// TODO: Like comparing apples and pears, see TODO comment above
-			    	if(content.getWordFrequencies().containsKey(term))
+			    	if(content.getLemmaFrequencies().containsKey(term))
 			    	{
-			    		int termFrequencyInDocumentField = content.getWordFrequencies().get(term);
+			    		int termFrequencyInDocumentField = content.getLemmaFrequencies().get(term);	
 			    		
 				    	// calculate term frequency
 				    	if(tdIdfTuples.containsKey(term))
@@ -664,9 +662,14 @@ public class XrffFileWriter
 				    	}
 				    	else
 				    	{
-				    		// initialize term frequency and calculate inverse document frequency (only need to do that once per term)
-				    		double idf = 1 + Math.log(numberOfDocuments / luceneIndexReader.docFreq(new Term("plaintext", bytesRefToTerm)) + 1.0);
-				    		tdIdfTuples.put(term, new TfIdfTuple(termFrequencyInDocumentField, idf, 1.0 / Math.sqrt(numberOfTermsInPlainTextField)));
+				    		// only use words that don't appear in (nearly) all documents
+				    		int docFreq = luceneIndexReader.docFreq(new Term("plaintext", bytesRefToTerm));
+				    		if(docFreq < (numberOfDocuments * 0.9))
+				    		{
+					    		// initialize term frequency and calculate inverse document frequency (only need to do that once per term)
+					    		double idf = 1 + Math.log(numberOfDocuments / docFreq + 1.0);
+					    		tdIdfTuples.put(term, new TfIdfTuple(termFrequencyInDocumentField, idf, 1.0 / Math.sqrt(numberOfTermsInPlainTextField)));
+				    		}
 				    	}
 			    	}
 			    }
@@ -687,28 +690,30 @@ public class XrffFileWriter
 			    Element attributeElement = new Element("attribute");
 			    attributeElement.addAttribute(new Attribute("name", "top-idf"));
 			    attributeElement.addAttribute(new Attribute("type", "string"));
-			    attributesElement.insertChild(attributeElement, attributesElement.getChildCount() - 2);
+			    attributesElement.insertChild(attributeElement, attributesElement.getChildCount() - 1);
 			    
 			    Nodes instanceNode = root.query("/dataset/body/instances/instance");
 			    Element instanceElement = (Element)instanceNode.get(0);
-			    StringBuilder stringBuilder = new StringBuilder();
-			    int numberOfIdfValuesToInclude = sortedByIdfDescending.size() > 100 ? 100 : sortedByIdfDescending.size();
+			    int numberOfIdfValuesToInclude = sortedByIdfDescending.size() > 200 ? 200 : sortedByIdfDescending.size();
+			    
+			    Element newValueElement = new Element("value");
+			    Comment newValueComment = new Comment("[index] term - normalizedTfIdfValue - idf - term frequency");
+			    newValueElement.appendChild(newValueComment);
+			    newValueElement.appendChild(new Text(System.lineSeparator()));
 			    for(int i = 0; i < numberOfIdfValuesToInclude; i++ )
 			    {
 			    	String term = sortedByIdfDescending.get(i).getKey();
-			    	stringBuilder.append("[" + i + "] ");
-			    	stringBuilder.append(term);
-			    	stringBuilder.append(" - ");
-			    	stringBuilder.append("" + sortedByIdfDescending.get(i).getValue().getNormalizedTfIdfValue());
-			    	stringBuilder.append(" - ");
-			    	stringBuilder.append(sortedByIdfDescending.get(i).getValue().getInverseDocumentFrequency()); // the idf
-			    	stringBuilder.append(" - ");
-			    	stringBuilder.append(sortedByIdfDescending.get(i).getValue().getTermFrequency());
-			    	stringBuilder.append(System.lineSeparator());
+			    	Node termText = new Text(term);
+			    	Node termComment = new Comment("[" + i + "] - "
+			    			+ sortedByIdfDescending.get(i).getValue().getNormalizedTfIdfValue() + " - "
+			    			+ sortedByIdfDescending.get(i).getValue().getInverseDocumentFrequency() + " - "
+			    			+ sortedByIdfDescending.get(i).getValue().getTermFrequency()
+			    			);
+			    	newValueElement.appendChild(termComment);
+			    	newValueElement.appendChild(termText);
+			    	newValueElement.appendChild(new Text(System.lineSeparator()));
 			    }
-			    Element newValueElement = new Element("value");
-			    newValueElement.appendChild(stringBuilder.toString());
-			    instanceElement.insertChild(newValueElement, instanceElement.getChildCount() - 2);
+			    instanceElement.insertChild(newValueElement, instanceElement.getChildCount() - 1);
 		    }
 	    }
 		catch (IOException exc)
@@ -723,7 +728,6 @@ public class XrffFileWriter
 	private Logger logger;
 	private Directory luceneIndexDirectory;
 	
-	private static final ResourceBundle errorMessageBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	
 	private static final String dtd = "<!DOCTYPE dataset [" + System.lineSeparator() + 

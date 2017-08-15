@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -29,8 +30,10 @@ import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
 
-public class EpubFile
+public class EpubFile implements Serializable
 {
+	private static final long serialVersionUID = 3022250504362756894L;
+	
 	// constants
 	private static final int BUFFER_SIZE = 8192;
 	private static final XPathContext epubContainerNamespace = new XPathContext("cnt", "urn:oasis:names:tc:opendocument:xmlns:container");
@@ -43,9 +46,9 @@ public class EpubFile
 	private String filePath;
 	private long fileSize;
 	private String language;
-	private FileService fileService;
-	private Logger logger;
-	private XmlService xmlService;
+	transient private FileService fileService;
+	transient private Logger logger;
+	transient private XmlService xmlService;
 	
 	/**
 	 * Constructor, checks if file exists and therefore might throw an IOException
@@ -182,7 +185,6 @@ public class EpubFile
 			{
 				String uniqueIdentifier = uniqueIdentifierNodes.get(0).getValue();
 				logger.trace(String.format(infoMessagesBundle.getString("avve.epubhandling.uniqueIdentifierFound"), uniqueIdentifier));
-				// TODO: check what happens if a unique ID is actually not unique
 				setDocumentId(uniqueIdentifier);
 			}
 			catch(Exception exc)

@@ -41,7 +41,7 @@ public class PartOfSpeechTagger implements TextPreprocessor
 	{
 		if(ebookContentData.getTokens() == null || ebookContentData.getTokens().length == 0)
 		{
-			this.logger.error(errorMessageBundle.getString("avve.textpreprocess.noTokensAvailable"));
+			this.logger.error(String.format(errorMessageBundle.getString("avve.textpreprocess.noTokensAvailable"), "PartOfSpeechTagger.process()"));
 		}
 		else
 		{

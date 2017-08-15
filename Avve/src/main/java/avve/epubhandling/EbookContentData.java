@@ -1,16 +1,14 @@
 package avve.epubhandling;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.io.Serializable;
+import java.util.*;
 
 import org.apache.logging.log4j.Logger;
 
-public class EbookContentData
+public class EbookContentData implements Serializable
 {	
+	private static final long serialVersionUID = 3022250504362756894L;
+	
 	/**
 	 * Constructor
 	 * @param plainText The input text
@@ -191,6 +189,11 @@ public class EbookContentData
 	public double getInterrogativePronounRatio()
 	{
 		return calculatePosTokenRatio(new String[] {"PWS", "PWAT", "PWAV"});
+	}
+	
+	public String getLanguage()
+	{
+		return epubFile.getLanguageCode();
 	}
 	
 	public SortedMap<String, Integer> getLemmaFrequencies()

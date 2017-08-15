@@ -63,13 +63,11 @@ public class Lemmatizer implements TextPreprocessor
 			}
 			catch (IOException exc)
 			{
-				// TODO Auto-generated catch block
-				exc.printStackTrace();
+				logger.error(errorMessageBundle.getString("avve.textpreprocess.lemmatizerIoException"), exc);
 			}
 			catch (TreeTaggerException exc)
 			{
-				// TODO Auto-generated catch block
-				exc.printStackTrace();
+				logger.error(exc.getLocalizedMessage(), exc);
 			}
 			finally
 			{

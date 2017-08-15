@@ -10,6 +10,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.StopwordAnalyzerBase;
 import org.apache.lucene.analysis.de.GermanAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
@@ -56,9 +58,10 @@ public class EpubExtractor
 	 * The main method parses all EPUB files in the input folder (INPUT command line argument) and writes the respective output after
 	 * transformations and statistics have been built.
 	 * 
-	 * @param args Command line arguments
+	 * 	INPUT("i"), FOLDER("folder"), WARENGRUPPE("wg");
+	 * 
+	 * @param args Command line arguments: "i" a single input file, "wg" a Warengruppe class label for the input file, "folder" an input folder, with subfolders named after the class labels for the input files contained within each subfolder
 	 */
-	// TODO: documentation for command line arguments
 	public static void main(final String[] args)
 	{
 		// prepare some execution time statistics
@@ -74,7 +77,7 @@ public class EpubExtractor
 
 		logger.info(String.format(infoMessagesBundle.getString("avve.extractor.numberOfFilesToProcess"), inputFiles.size()));
 		
-		// process all input files, first run: push text to Lucene index
+		// process all input files, first run: preprocess input files, push text to Lucene index, write serialized temp files
 		for(File inputFile : inputFiles)
 		{
 			logger.info(infoMessagesBundle.getString("avve.extractor.startEpubExtraction") + ": " + inputFile);
@@ -110,60 +113,54 @@ public class EpubExtractor
 			{
 				logger.error(String.format(errorMessageBundle.getString("InvalidLanguage"), languageCode));
 			}
+			
+			// serialize temporary file to disk
+			serializeTempEbookContentFileToDisk(inputFile, warengruppe, ebookContentData);
 		}
 		
-		logger.info(infoMessagesBundle.getString("avve.extractor.startEpubExtraction"));
-		
-		// second interation: build statistics and write xrff file for Weka data mining
-		for(File inputFile : inputFiles)
+		ArrayList<File> preprocessedFiles = getCollectionOfSerializedTempFiles(fileService, "output/temp/");
+		// second iteration: build statistics and write xrff file for Weka data mining
+		for(File preprocessedFile : preprocessedFiles)
 		{
-			logger.info(infoMessagesBundle.getString("avve.extractor.startEpubExtraction") + ": " + inputFile);
+			logger.info(infoMessagesBundle.getString("avve.extractor.startWorkingOnSerializedTempFiles") + ": " + preprocessedFile);
 			
-			// parse input files
-			String plainText = "";
-			String languageCode = null;
-			EpubFile epubFile = null;
+			InputStream fileInputStream = null;
+			EbookContentData ebookContentData = null;
+			
 			try
 			{
-				epubFile = new EpubFile(inputFile.getAbsolutePath(), fileService, logger);
-				plainText = epubFile.extractPlainText();
-				languageCode = epubFile.getLanguageCode();
+				fileInputStream = fileService.createFileInputStream(preprocessedFile.getAbsolutePath());
+
+				ObjectInputStream objectInputStream = new ObjectInputStream( fileInputStream );
+				ebookContentData = (EbookContentData) objectInputStream.readObject();
 			}
 			catch (IOException exc)
 			{
-				logger.error(exc.getLocalizedMessage(), exc);
+				logger.error(exc.getLocalizedMessage());
+			}
+			catch (ClassNotFoundException exc)
+			{
+				logger.error(exc.getLocalizedMessage());
+			}
+			finally
+			{
+				fileService.safeClose(fileInputStream);
 			}
 			
-			if(null != epubFile && languageCode.equals(language))
+			if(null != ebookContentData && ebookContentData.getLanguage().equals(language))
 			{
 				// determine "warengruppe" class code, either from command line parameter or from folder name
-				String warengruppe = determineClassName(cliArguments, inputFile);
-				
-				// Pre-process the text data (e.g. tokenization, sentence detection, part-of-speech tagging
-				EbookContentData ebookContentData = preprocessText(plainText, epubFile, warengruppe);
+				String warengruppe = ebookContentData.getWarengruppe();
 				
 				// save the processing result to the file system, one file with plain text, one file with statistical attributes
-				writePreprocessingResultsToFileSystem(warengruppe, ebookContentData, inputFile);
+				writePreprocessingResultsToFileSystem(warengruppe, ebookContentData, preprocessedFile);
 			}
 			else
 			{
-				logger.error(String.format(errorMessageBundle.getString("InvalidLanguage"), languageCode));
+				logger.error(String.format(errorMessageBundle.getString("InvalidLanguage"), ebookContentData.getLanguage()));
 			}
 		}
-		
-		// Go through all statistics files from previous step once again, this time adding TF/IDF score data (which only makes sense after the index for all documents has been built)
-		/*Collection<File> xrffFiles = fileService.getFilesFromAllSubdirectories(statsDirectory);
-		
-		Directory directory = getLuceneIndexDirectory();
-		
-		for(File xrffFile : xrffFiles)
-		{
-			XrffFileModifier xrffModifier = new XrffFileModifier(xrffFile, directory, fileService, logger);
-			xrffModifier.addTfIdfStatistics();
-			xrffModifier.saveChanges();
-		}*/
-		
-		
+
 		LocalDateTime endTime = LocalDateTime.now();
 		long endTimestamp = System.currentTimeMillis();
 		
@@ -178,7 +175,20 @@ public class EpubExtractor
 		switch(language)
 		{
 			case "de":
-				analyzer = new GermanAnalyzer();
+				
+				Collection<Object> stopWordsCollection = GermanAnalyzer.getDefaultStopSet();
+				
+				stopWordsCollection.add("dass");
+				stopWordsCollection.add("schon");
+				stopWordsCollection.add("mehr");
+				
+				CharArraySet stopSet = new CharArraySet(stopWordsCollection, true);
+				
+				analyzer = new StandardAnalyzer(stopSet);
+				
+				// analyzer = new GermanAnalyzer();
+				analyzer = new StandardAnalyzer(GermanAnalyzer.getDefaultStopSet());
+				
 				break;
 			default:
 				analyzer = new StandardAnalyzer();
@@ -191,6 +201,10 @@ public class EpubExtractor
 	{
 		Analyzer analyzer = getLuceneAnalyzer();
 
+		//TODO: Remove the following two lines, they're only for debug purposes
+		CharArraySet stopwords = ((StopwordAnalyzerBase)analyzer).getStopwordSet();
+		String allStopwords = stopwords.toString();
+		
 		IndexWriter iwriter = null;
 		try
 		{
@@ -217,7 +231,8 @@ public class EpubExtractor
 		    Field luceneField = new Field("plaintext", plainText, luceneFieldType);
 		    luceneDocument.add(luceneField);
 		    
-			iwriter.addDocument(luceneDocument);
+			//iwriter.addDocument(luceneDocument);
+			iwriter.updateDocument(new Term(documentId), luceneDocument);
 		    iwriter.close();
 		}
 		catch (final IOException exc)
@@ -279,6 +294,13 @@ public class EpubExtractor
 		}
 		return inputFiles;
 	}
+	
+	private static ArrayList<File> getCollectionOfSerializedTempFiles(FileService fileService, String baseDirectory)
+	{
+		ArrayList<File> inputFiles = new ArrayList<File>();
+		inputFiles.addAll(fileService.getFilesFromAllSubdirectories(baseDirectory));
+		return inputFiles;
+	}
 
 	private static Options getCommandLineOptions()
 	{
@@ -300,8 +322,8 @@ public class EpubExtractor
 		}
 		catch (ParseException exc)
 		{
-			String header = errorMessageBundle.getString("HelpMessageHeader");
-			String footer = errorMessageBundle.getString("HelpMessageFooter");
+			String header = errorMessageBundle.getString("avve.extractor.helpMessageHeader");
+			String footer = errorMessageBundle.getString("avve.extractor.helpMessageFooter");
 			 
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("Avve", header, options, footer, true);
@@ -318,6 +340,27 @@ public class EpubExtractor
 		
 		textPreprocessor.preProcessText(ebookContentData);
 		return ebookContentData;
+	}
+	
+	private static void serializeTempEbookContentFileToDisk(File inputFile, String warengruppe, EbookContentData ebookContentData)
+	{
+		OutputStream fileOutputStream = null;
+
+		fileService.createDirectory("output/temp/" + warengruppe);
+		try
+		{
+			fileOutputStream = new FileOutputStream(FilenameUtils.concat("output/temp/" + warengruppe + "/", inputFile.getName() + ".ser"));
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream( fileOutputStream );
+			objectOutputStream.writeObject( ebookContentData );
+		}
+		catch ( IOException exc )
+		{
+			logger.error(exc.getLocalizedMessage());
+		}
+		finally
+		{ 
+			fileService.safeClose(fileOutputStream);
+		}
 	}
 	
 	private static void writePreprocessingResultsToFileSystem(String warengruppe, EbookContentData ebookContentData, File inputFile)

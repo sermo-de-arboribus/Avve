@@ -140,8 +140,7 @@ public class XrffFileModifier
 	    }
 		catch (IOException exc)
 		{
-			// TODO: log error
-	        exc.printStackTrace();
+			logger.error(exc.getLocalizedMessage(), exc);
 	    }
 	}
 
@@ -157,10 +156,9 @@ public class XrffFileModifier
 		 	serializer.setMaxLength(256);
 			serializer.write(xrffDocument);
 		}
-	 	catch (IOException e)
+	 	catch (IOException exc)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(exc.getLocalizedMessage(), exc);
 		}
 	 	finally
 	 	{

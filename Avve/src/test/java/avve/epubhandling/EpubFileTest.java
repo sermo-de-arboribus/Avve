@@ -24,9 +24,9 @@ public class EpubFileTest
 		when(mockedFileService.isDirectory(filepath)).thenReturn(false);
 		
 		// Act
-		EpubFile epubFile = new EpubFile(filepath, mockedFileService, logger);
+		new EpubFile(filepath, mockedFileService, logger);
 		
 		// Assert
-		
+		// empty, assertion is made via @Test(expected...) annotation
 	}
 }
