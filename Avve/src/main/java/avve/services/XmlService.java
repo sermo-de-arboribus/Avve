@@ -1,10 +1,12 @@
 package avve.services;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.xml.resolver.CatalogManager;
@@ -20,6 +22,7 @@ import nu.xom.ParsingException;
 public class XmlService
 {
 	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
+	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	
 	private Builder xomXmlParser;
 	private CatalogResolver xmlCatalogResolver;
@@ -76,5 +79,29 @@ public class XmlService
 			exc.printStackTrace();
 		}
 		return build(inStream);
+	}
+
+	public void combineXrffFiles()
+	{
+		logger.info(infoMessagesBundle.getString("avve.services.combiningXrffFiles"));
+		
+        System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		InputStream xsltStream = this.getClass().getClassLoader().getResourceAsStream("xml/Merge_statistics_files.xsl");
+		InputStream xmlDummyInputStream = this.getClass().getClassLoader().getResourceAsStream("xml/dummy.xml");
+		
+		try
+		{
+			Transformer transformer = transformerFactory.newTransformer(new StreamSource(xsltStream));
+			transformer.transform(new StreamSource(xmlDummyInputStream), new StreamResult(new File("output/result_" + System.currentTimeMillis())));
+		}
+		catch(TransformerConfigurationException exc)
+		{
+			logger.error(exc.getLocalizedMessage(), exc);
+		}
+		catch(TransformerException exc)
+		{
+			logger.error(exc.getLocalizedMessage(), exc);
+		}
 	}
 }

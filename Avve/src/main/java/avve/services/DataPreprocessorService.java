@@ -6,9 +6,7 @@ import avve.epubhandling.EbookContentData;
 import avve.textpreprocess.*;
 
 public class DataPreprocessorService
-{
-	private Logger logger;
-	
+{	
 	public DataPreprocessorService(Logger logservice)
 	{
 		this.logger = logservice;
@@ -28,9 +26,12 @@ public class DataPreprocessorService
 		new NumberProcessor().process(ebookContentData);
 		new SentenceDetectorPreprocessor(logger).process(ebookContentData);
 		new TextTokenizer(logger).process(ebookContentData);
+		new RemovePunctuationPreprocessor(logger).process(ebookContentData);
 		new WordFrequencyPreprocessor(logger).process(ebookContentData);
 		new PartOfSpeechTagger(logger).process(ebookContentData);
 		new Lemmatizer(logger).process(ebookContentData);
 		new ToLowerCasePreprocessor(logger).process(ebookContentData);
 	}
+	
+	private Logger logger;
 }

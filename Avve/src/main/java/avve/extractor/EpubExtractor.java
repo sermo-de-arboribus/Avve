@@ -11,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.CharArraySet;
-import org.apache.lucene.analysis.StopwordAnalyzerBase;
 import org.apache.lucene.analysis.de.GermanAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
@@ -50,6 +49,7 @@ public class EpubExtractor
 	private static final ResourceBundle errorMessageBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	private static FileService fileService = new FileServiceImpl();
+	private static XmlService xmlService = new XmlService(fileService, logger);
 	private static String indexDirectory = "output/index";
 	private static String statsDirectory = "output/stats";
 	private static String textDirectory = "output/text";
@@ -119,7 +119,7 @@ public class EpubExtractor
 		}
 		
 		ArrayList<File> preprocessedFiles = getCollectionOfSerializedTempFiles(fileService, "output/temp/");
-		// second iteration: build statistics and write xrff file for Weka data mining
+		// second iteration: build statistics and write xrff files for Weka data mining
 		for(File preprocessedFile : preprocessedFiles)
 		{
 			logger.info(infoMessagesBundle.getString("avve.extractor.startWorkingOnSerializedTempFiles") + ": " + preprocessedFile);
@@ -160,6 +160,10 @@ public class EpubExtractor
 				logger.error(String.format(errorMessageBundle.getString("InvalidLanguage"), ebookContentData.getLanguage()));
 			}
 		}
+		
+		// combine all xrff files written in the previous step
+		//Set saxon as transformer.
+		xmlService.combineXrffFiles();
 
 		LocalDateTime endTime = LocalDateTime.now();
 		long endTimestamp = System.currentTimeMillis();
@@ -167,7 +171,6 @@ public class EpubExtractor
 		logger.info(String.format(infoMessagesBundle.getString("avve.extractor.executionTime"), (endTimestamp - startTimestamp) / 1000));
 		logger.info(String.format(infoMessagesBundle.getString("avve.extractor.programFinished"), endTime));
 	}
-
 	
 	public static Analyzer getLuceneAnalyzer()
 	{
@@ -200,10 +203,6 @@ public class EpubExtractor
 	private static void addTextToLuceneIndex(String plainText, String documentId, EpubFile epubFile)
 	{
 		Analyzer analyzer = getLuceneAnalyzer();
-
-		//TODO: Remove the following two lines, they're only for debug purposes
-		CharArraySet stopwords = ((StopwordAnalyzerBase)analyzer).getStopwordSet();
-		String allStopwords = stopwords.toString();
 		
 		IndexWriter iwriter = null;
 		try
@@ -345,12 +344,13 @@ public class EpubExtractor
 	private static void serializeTempEbookContentFileToDisk(File inputFile, String warengruppe, EbookContentData ebookContentData)
 	{
 		OutputStream fileOutputStream = null;
-
+		ObjectOutputStream objectOutputStream = null;
+		
 		fileService.createDirectory("output/temp/" + warengruppe);
 		try
 		{
 			fileOutputStream = new FileOutputStream(FilenameUtils.concat("output/temp/" + warengruppe + "/", inputFile.getName() + ".ser"));
-			ObjectOutputStream objectOutputStream = new ObjectOutputStream( fileOutputStream );
+			objectOutputStream = new ObjectOutputStream( fileOutputStream );
 			objectOutputStream.writeObject( ebookContentData );
 		}
 		catch ( IOException exc )
@@ -358,7 +358,8 @@ public class EpubExtractor
 			logger.error(exc.getLocalizedMessage());
 		}
 		finally
-		{ 
+		{
+			fileService.safeClose(objectOutputStream);
 			fileService.safeClose(fileOutputStream);
 		}
 	}
