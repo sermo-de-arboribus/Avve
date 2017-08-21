@@ -1,6 +1,8 @@
 package avve.services;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -92,7 +94,9 @@ public class XmlService
 		
 		try
 		{
+			Path directory = Paths.get("output/stats");
 			Transformer transformer = transformerFactory.newTransformer(new StreamSource(xsltStream));
+			transformer.setParameter("sourceFolder", directory.toAbsolutePath().toUri());
 			transformer.transform(new StreamSource(xmlDummyInputStream), new StreamResult(new File("output/result_" + System.currentTimeMillis())));
 		}
 		catch(TransformerConfigurationException exc)
