@@ -1,7 +1,6 @@
 package avve.extractor;
 
 import java.io.*;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -9,18 +8,11 @@ import org.apache.commons.cli.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.CharArraySet;
-import org.apache.lucene.analysis.de.GermanAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.*;
-import org.apache.lucene.index.*;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 
 import avve.epubhandling.EbookContentData;
 import avve.epubhandling.EpubFile;
 import avve.services.*;
+import avve.services.lucene.LuceneService;
 
 /**
  * This main class provides an entry point for extracting text from EPUB files, applying a series of data transformations and writing the result 
@@ -50,9 +42,9 @@ public class EpubExtractor
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	private static FileService fileService = new FileServiceImpl();
 	private static XmlService xmlService = new XmlService(fileService, logger);
-	private static String indexDirectory = "output/index";
 	private static String statsDirectory = "output/stats";
 	private static String textDirectory = "output/text";
+	private static LuceneService luceneService = new LuceneService(logger, fileService);
 	
 	/**
 	 * The main method parses all EPUB files in the input folder (INPUT command line argument) and writes the respective output after
@@ -97,7 +89,6 @@ public class EpubExtractor
 				logger.error(exc.getLocalizedMessage(), exc);
 			}
 			
-			//TODO: refactor this to prevent double work
 			// determine "warengruppe" class code, either from command line parameter or from folder name
 			String warengruppe = determineClassName(cliArguments, inputFile);
 			
@@ -107,7 +98,7 @@ public class EpubExtractor
 			if(null != epubFile && languageCode.equals(language))
 			{
 				// add the text to a Lucene index (for TF/IDF retrieval)
-				addTextToLuceneIndex(ebookContentData.getLemmatizedText(), epubFile.getDocumentId(), epubFile);
+				luceneService.addTextToLuceneIndex(ebookContentData.getLemmatizedText(), epubFile.getDocumentId(), epubFile, language);
 			}
 			else
 			{
@@ -170,94 +161,6 @@ public class EpubExtractor
 		
 		logger.info(String.format(infoMessagesBundle.getString("avve.extractor.executionTime"), (endTimestamp - startTimestamp) / 1000));
 		logger.info(String.format(infoMessagesBundle.getString("avve.extractor.programFinished"), endTime));
-	}
-	
-	public static Analyzer getLuceneAnalyzer()
-	{
-		Analyzer analyzer = null;
-		switch(language)
-		{
-			case "de":
-				
-				Collection<Object> stopWordsCollection = GermanAnalyzer.getDefaultStopSet();
-				
-				stopWordsCollection.add("dass");
-				stopWordsCollection.add("schon");
-				stopWordsCollection.add("mehr");
-				
-				CharArraySet stopSet = new CharArraySet(stopWordsCollection, true);
-				
-				analyzer = new StandardAnalyzer(stopSet);
-				
-				// analyzer = new GermanAnalyzer();
-				analyzer = new StandardAnalyzer(GermanAnalyzer.getDefaultStopSet());
-				
-				break;
-			default:
-				analyzer = new StandardAnalyzer();
-		}
-		
-		return analyzer;
-	}
-	
-	private static void addTextToLuceneIndex(String plainText, String documentId, EpubFile epubFile)
-	{
-		Analyzer analyzer = getLuceneAnalyzer();
-		
-		IndexWriter iwriter = null;
-		try
-		{
-		    Directory directory = getLuceneIndexDirectory();
-		    IndexWriterConfig config = new IndexWriterConfig(analyzer);
-		    iwriter = new IndexWriter(directory, config);
-		    Document luceneDocument = new Document();
-		    
-		    // arrange the document id field
-		    FieldType documentIdFieldType = new FieldType();
-		    documentIdFieldType.setIndexOptions(IndexOptions.DOCS_AND_FREQS);
-		    documentIdFieldType.setStored(true);
-		    documentIdFieldType.setStoreTermVectors(false);
-		    documentIdFieldType.setTokenized(false);
-		    Field documentIdField = new Field("docId", documentId, documentIdFieldType);
-		    luceneDocument.add(documentIdField);
-		    
-		    // arrange the text content field
-		    FieldType luceneFieldType = new FieldType();
-		    luceneFieldType.setIndexOptions(IndexOptions.DOCS_AND_FREQS);
-		    luceneFieldType.setStored(false);
-		    luceneFieldType.setStoreTermVectors(true);
-		    luceneFieldType.setTokenized(true);
-		    Field luceneField = new Field("plaintext", plainText, luceneFieldType);
-		    luceneDocument.add(luceneField);
-		    
-			//iwriter.addDocument(luceneDocument);
-			iwriter.updateDocument(new Term(documentId), luceneDocument);
-		    iwriter.close();
-		}
-		catch (final IOException exc)
-		{
-			logger.error(String.format(errorMessageBundle.getString("avve.extractor.luceneIndexWritingError"), epubFile.getDocumentId()), exc);
-		}
-		finally
-		{
-			fileService.safeClose(iwriter);
-		}
-	}
-
-	private static Directory getLuceneIndexDirectory()
-	{
-		Directory directory = null;
-		
-		try
-		{
-			directory = FSDirectory.open(Paths.get(indexDirectory));
-		}
-		catch (final IOException exc)
-		{
-			logger.error(String.format(errorMessageBundle.getString("avve.extractor.luceneIndexWritingError"), Paths.get(indexDirectory)), exc);
-		}
-		
-		return directory;
 	}
 
 	private static String determineClassName(CommandLine cliArguments, File inputFile)
@@ -386,7 +289,7 @@ public class EpubExtractor
 			printStream.print(ebookContentData.getPlainText());
 			printStream.close();
 			
-			XrffFileWriter xrffFile = new XrffFileWriter(outputAttributes, fileService, getLuceneIndexDirectory(), logger);
+			XrffFileWriter xrffFile = new XrffFileWriter(outputAttributes, fileService, luceneService.getLuceneIndexDirectory(), logger);
 			xrffFile.saveEbookContentData(ebookContentData);
 		}
 		catch (FileNotFoundException exc)

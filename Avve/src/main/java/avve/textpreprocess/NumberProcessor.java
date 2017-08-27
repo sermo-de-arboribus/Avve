@@ -8,5 +8,17 @@ public class NumberProcessor implements TextPreprocessor
 	public void process(EbookContentData contentData)
 	{
 		contentData.setPlainText(contentData.getPlainText().replaceAll("[0-9]", "#"));
+		
+		// check if we need to also process tokens
+		if(null != contentData.getTokens() && contentData.getTokens().length > 0)
+		{
+			for(int i = 0; i < contentData.getTokens().length; i++)
+			{
+				for(int j = 0; j < contentData.getTokens()[i].length; j++)
+				{
+					contentData.getTokens()[i][j] = contentData.getTokens()[i][j].replaceAll("[0-9]", "#");
+				}
+			}
+		}
 	}
 }

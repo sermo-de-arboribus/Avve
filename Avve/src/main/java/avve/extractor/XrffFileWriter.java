@@ -127,20 +127,6 @@ public class XrffFileWriter
 		lemmasElement.appendChild(lemmaSerializer.toString());
 		instanceElement.appendChild(lemmasElement);
 		
-		// print all parts of speech in document order
-		Element partsOfSpeechElement = new Element("value");
-		Comment partsOfSpeechComment = new Comment("parts of speech tags");
-		partsOfSpeechElement.appendChild(partsOfSpeechComment);
-		StringBuffer posSerializer = new StringBuffer();
-		for(int i = 0; i < content.getPartsOfSpeech().length; i++)
-		{
-			posSerializer.append("[" + i + "] ");
-			posSerializer.append(String.join(" ", content.getPartsOfSpeech()[i]));
-			posSerializer.append(System.lineSeparator());
-		}
-		partsOfSpeechElement.appendChild(posSerializer.toString());
-		instanceElement.appendChild(partsOfSpeechElement);
-		
 		// print file size
 		Element fileSizeElement = new Element("value");
 		Comment fileSizeComment = new Comment("file size in bytes");
@@ -395,16 +381,11 @@ public class XrffFileWriter
 		Element attributes = new Element("attributes");
 		headerElement.appendChild(attributes);
 		
+		// lemmas and part-of-speech-tags
 		Element lemmas = new Element("attribute");
 		lemmas.addAttribute(new Attribute("name", "lemmas"));
 		lemmas.addAttribute(new Attribute("type", "string"));
 		attributes.appendChild(lemmas);
-		
-		// parts of speech
-		Element partsOfSpeech = new Element("attribute");
-		partsOfSpeech.addAttribute(new Attribute("name", "partsOfSpeech"));
-		partsOfSpeech.addAttribute(new Attribute("type", "string"));
-		attributes.appendChild(partsOfSpeech);
 		
 		// file size in bytes
 		Element fileSizeElement = new Element("attribute");

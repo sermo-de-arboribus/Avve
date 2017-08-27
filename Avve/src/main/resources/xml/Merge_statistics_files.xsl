@@ -5,7 +5,8 @@
     version="2.0">
     <xsl:output encoding="UTF-8" indent="yes"/>
     <xsl:param name="sourceFolder" select="'file:///home/kai/git/Avve/Avve/output/stats'"/>
-    
+    <xsl:preserve-space elements="value"/>
+
     <xsl:template match="/">
         <xsl:text disable-output-escaping="yes"><![CDATA[
 <!DOCTYPE dataset [
@@ -24,20 +25,6 @@
                             <xsl:attribute name="type" select="@type"/>
                         </attribute>
                     </xsl:for-each>
-                    <!--<attribute name="lemmas" type="string"/>
-                    <attribute name="partsOfSpeech" type="string"/>
-                    <attribute name="wordsPerSentence" type="numeric"/>
-                    <attribute name="lemmasPerSentence" type="numeric"/>
-                    <attribute name="uniquePartsOfSpeech" type="numeric"/>
-                    <attribute name="uniqueNumberOfWords" type="numeric"/>
-                    <attribute name="ratioOfPassiveSentences" type="numeric"/>
-                    <attribute name="ratioOfAdjectives" type="numeric"/>
-                    <attribute name="ratioOfAdverbs" type="numeric"/>
-                    <attribute name="ratioOfCardinals" type="numeric"/>
-                    <attribute name="ratioOfForeignLanguageWords" type="numeric"/>
-                    <attribute name="ratioOfInterjections" type="numeric"/>
-                    <attribute name="ratioOfNouns" type="numeric"/>
-                    <attribute name="ratioOfNamedEntities" type="numeric"/>-->
                     <attribute class="yes" name="class" type="nominal">
                         <labels>
                             <xsl:for-each select="distinct-values(collection(concat($sourceFolder,'?select=*.xml;recurse=yes'))/dataset/body/instances/instance/value[position() = last()])">
@@ -63,7 +50,7 @@
     <xsl:template mode="inFile" match="instance">
         <xsl:comment><xsl:value-of select="base-uri()"/></xsl:comment>
         <xsl:copy>
-            <xsl:apply-templates select="value[position() > 2]" mode="inFile"/> <!--[position() &gt; 1]--> <!-- ignoring the large string value elements -->
+            <xsl:apply-templates select="value[position() > 1]" mode="inFile"/> <!--[position() &gt; 1]--> <!-- ignoring the large string value elements -->
         </xsl:copy>
     </xsl:template>
     
@@ -78,7 +65,7 @@
     </xsl:template>
     
     <xsl:template mode="inFile" match="text()">
-        <xsl:value-of select="normalize-space(.)"/>
+        <xsl:value-of select="."/>
     </xsl:template>
     
 </xsl:stylesheet>
