@@ -127,9 +127,9 @@ public class Lemmatizer implements TextPreprocessor
 			}
 			try
 			{
-				File outputDirectory = new File("debug/postag/" + ebookContentData.getWarengruppe() + "/");
+				File outputDirectory = new File("output/debug/postag/" + ebookContentData.getWarengruppe() + "/");
 				outputDirectory.mkdirs();
-				FileWriter fw = new FileWriter(FilenameUtils.concat(outputDirectory.getAbsolutePath(), ebookContentData.getDocumentId()));
+				FileWriter fw = new FileWriter(FilenameUtils.concat(outputDirectory.getAbsolutePath(), ebookContentData.getDocumentId() + ".txt"));
 				fw.write(sb.toString());
 				fw.close();
 			}
