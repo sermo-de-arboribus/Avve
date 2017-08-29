@@ -616,7 +616,9 @@ public class XrffFileWriter
 		    if(hits.length > 0)
 		    {
 			    Terms terms = luceneIndexReader.getTermVector(hits[0].doc, "plaintext");
-			    // TODO: This is like comparing apples and pears, as tokenization in EbookContentData and Lucene may be quite different... Adjust that 
+			    // Beware that there may be differences between the tokenization in EbookContentData and in the Lucene index. The programmer should 
+			    // ensure that tokenization is done in a similar way on both sides, so that the number of tokens in EbookContentData is similar with the
+			    // number of tokens in the Lucene index
 		    	int numberOfTermsInPlainTextField = content.getNumberOfTokens();
 		    	
 			    long numberOfDocuments = luceneIndexReader.getDocCount("plaintext");
@@ -630,7 +632,6 @@ public class XrffFileWriter
 			    	String term = bytesRefToTerm.utf8ToString();
 			    	
 			    	// try to get the same term from EbookContentData
-			    	// TODO: Like comparing apples and pears, see TODO comment above
 			    	if(content.getLemmaFrequencies().containsKey(term))
 			    	{
 			    		int termFrequencyInDocumentField = content.getLemmaFrequencies().get(term);	
@@ -643,9 +644,9 @@ public class XrffFileWriter
 				    	}
 				    	else
 				    	{
-				    		// only use words that don't appear in (nearly) all documents
+				    		// only use words that don't appear in (nearly) all documents and that appear at least in two documents
 				    		int docFreq = luceneIndexReader.docFreq(new Term("plaintext", bytesRefToTerm));
-				    		if(docFreq < (numberOfDocuments * 0.9))
+				    		if(docFreq > 1 && docFreq < (numberOfDocuments * 0.9))
 				    		{
 					    		// initialize term frequency and calculate inverse document frequency (only need to do that once per term)
 					    		double idf = 1 + Math.log(numberOfDocuments / docFreq + 1.0);
@@ -699,8 +700,7 @@ public class XrffFileWriter
 	    }
 		catch (IOException exc)
 		{
-			// TODO: log error
-	        exc.printStackTrace();
+			logger.error(errorMessageBundle.getString("avve.extractor.luceneIndexAccessError"), exc);
 	    }
 	}
 	
@@ -709,6 +709,7 @@ public class XrffFileWriter
 	private Logger logger;
 	private Directory luceneIndexDirectory;
 	
+	private static final ResourceBundle errorMessageBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	
 	private static final String dtd = "<!DOCTYPE dataset [" + System.lineSeparator() + 
