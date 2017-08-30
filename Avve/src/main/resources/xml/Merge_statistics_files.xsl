@@ -19,7 +19,7 @@
         <dataset name="avve">
             <header>
                 <attributes>
-                    <xsl:for-each select="collection(concat($sourceFolder,'?select=*.xml;recurse=yes'))[1]/dataset/header/attributes/attribute[position() > 2 and position() ne last()]">
+                    <xsl:for-each select="collection(concat($sourceFolder,'?select=*.xml;recurse=yes'))[1]/dataset/header/attributes/attribute[position() > 1 and position() ne last()]">
                         <attribute>
                             <xsl:attribute name="name" select="@name"/>
                             <xsl:attribute name="type" select="@type"/>
