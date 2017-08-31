@@ -35,10 +35,14 @@ public class RemovePunctuationPreprocessor implements TextPreprocessor
 				// process all words in the current sentence
 				for(int j = 0; j < contentData.getTokens()[i].length; j++)
 				{
-					String cleanedToken = contentData.getTokens()[i][j].replaceAll("[!\"$%&'()*+,./:;<=>?@\\[\\]^_`{|}~‘’‚‛„”“‟†‡•‣․%…‧’′″‴‵‶‷‸‹›⸮¿¡»«]", "");
-					if(cleanedToken != null && cleanedToken.length() > 0)
+					String replaced = contentData.getTokens()[i][j].replaceAll("[!\"$%&'()*+,./:;<=>?@\\[\\]^_`{|}~‘’‚‛„”“‟†‡•‣․%…‧’′″‴‵‶‷‸‹›⸮¿¡»«©]", " ");
+					String[] newTokens = replaced.split(" ");
+					for(String token : newTokens)
 					{
-						tempTokenStore.add(cleanedToken);
+						if(!token.matches("^\\s+$"))
+						{
+							tempTokenStore.add(token);
+						}	
 					}
 				}
 				contentData.getTokens()[i] = tempTokenStore.toArray(new String[0]);
