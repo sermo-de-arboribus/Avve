@@ -1,18 +1,23 @@
 package avve.services;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
+import org.w3c.dom.DOMImplementation;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -20,6 +25,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.ParsingException;
+import nu.xom.converters.DOMConverter;
 
 public class XmlService
 {
@@ -108,4 +114,99 @@ public class XmlService
 			logger.error(exc.getLocalizedMessage(), exc);
 		}
 	}
+
+	public String extractTextFromXhtml(Document contentDocument)
+	{
+		StringWriter stringWriter = new StringWriter();
+		StreamResult result = new StreamResult(stringWriter);
+		
+        System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		
+		synchronized(this)
+		{
+			// we cache the xslt stylesheet in a static variable, so we only need to compile it once
+			if(null == stylesheet)
+			{
+					Source xsltSource = new StreamSource(new ByteArrayInputStream(textExtractionFromHtml.getBytes(StandardCharsets.UTF_8)));
+					try
+					{
+						stylesheet = transformerFactory.newTemplates(xsltSource);
+					}
+					catch (TransformerConfigurationException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			}
+		}
+		
+		Transformer transformer;
+		try
+		{
+			transformer = stylesheet.newTransformer();
+			Source xmlSource = new DOMSource(DOMConverter.convert(contentDocument, getDefaultDOMImplementation()).getDocumentElement());
+			transformer.transform(xmlSource, result);
+		}
+		catch (NullPointerException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (TransformerConfigurationException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (TransformerException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return stringWriter.toString();
+	}
+	
+    private synchronized DOMImplementation getDefaultDOMImplementation()
+    {
+        if (domImplementation == null)
+        {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+
+            try
+            {
+            	domImplementation = factory.newDocumentBuilder().getDOMImplementation();
+
+            }
+            catch (ParserConfigurationException exc)
+            {
+            	// TODO: get message from resource bundle
+                logger.error("Unable to get default DOM implementation", exc);
+            }
+        }
+
+        return domImplementation;
+    }
+    
+	private static String textExtractionFromHtml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
+			"<xsl:stylesheet version=\"2.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + 
+			"<xsl:output method=\"text\" encoding=\"UTF-8\"/>" +
+			"	<xsl:template match=\"/\">" +
+			"		<xsl:apply-templates /> " + 
+			"	</xsl:template>" +
+			"	<xsl:template match=\"*[local-name() = 'p'] | *[local-name() = 'div']\">" +
+			"		<xsl:text> </xsl:text><xsl:apply-templates/><xsl:text> </xsl:text>"+
+			"	</xsl:template>"+
+	
+			"	<xsl:template match=\"*[local-name() = 'br']\">"+
+			"		<xsl:text>&#xD;&#xA; </xsl:text>" +
+			"	</xsl:template>"+
+	
+			"	<xsl:template match=\"text()\">" +
+			"		<xsl:value-of select=\".\"/>" +
+			"	</xsl:template>" +
+			"</xsl:stylesheet>";
+	
+	private static Templates stylesheet = null;
+	private static DOMImplementation domImplementation = null;
 }

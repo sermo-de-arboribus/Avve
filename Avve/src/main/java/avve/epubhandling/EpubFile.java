@@ -89,6 +89,7 @@ public class EpubFile implements Serializable
 			for(String chapter : pathsToContentFiles)
 			{
 				sb.append(chapter);
+				sb.append(System.lineSeparator());
 			}
 			
 			// clear temp folder
@@ -167,8 +168,8 @@ public class EpubFile implements Serializable
 				try(InputStream inputStream = fileService.createFileInputStream(contentFilepath))
 				{
 					Document contentDocument = xmlService.build(inputStream);
-					// simply get the text value of the HTML file, so HTML tags get automatically stripped.
-					resultList.add(contentDocument.getValue());
+					String plainText = xmlService.extractTextFromXhtml(contentDocument);
+					resultList.add(plainText);
 				}
 			}
 		}
