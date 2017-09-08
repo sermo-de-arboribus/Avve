@@ -190,8 +190,7 @@ public class EpubExtractor
 		}
 		else if(cliArguments.hasOption(CommandLineArguments.FOLDER.toString()));
 		{
-			String inputFolder = cliArguments.getOptionValue(CommandLineArguments.FOLDER.toString());
-			classNames.addAll(fileService.getAllFolders(inputFolder));
+			classNames.addAll(fileService.getAllFolders(statsDirectory));
 		}
 		return classNames;
 	}

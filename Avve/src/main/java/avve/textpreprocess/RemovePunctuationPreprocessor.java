@@ -39,7 +39,7 @@ public class RemovePunctuationPreprocessor implements TextPreprocessor
 					String[] newTokens = replaced.split(" ");
 					for(String token : newTokens)
 					{
-						if(!token.matches("^\\s+$"))
+						if(!token.matches("^\\s*$"))
 						{
 							tempTokenStore.add(token);
 						}	

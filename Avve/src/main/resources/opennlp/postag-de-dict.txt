@@ -2,6 +2,7 @@
 –	ADJD	$
 –	APPR	$
 à	ADJD	FM
+aaaaah	NE	ITJ
 abglühte	ADV	VVFIN
 abuela	$	FM
 abuela	ADV	FM
@@ -30,6 +31,7 @@ blablablablabla	ART	ITJ
 brandstiften	ADJA	VVINF
 bollocks	NE	FM
 boredom	NE	FM
+brrrr	NE	ITJ
 bruja	VVFIN	FM
 buenas	ADJD	FM
 cañada	ADV	FM
@@ -67,6 +69,7 @@ friends	ADV	FM
 fürn	VVFIN	APPRART
 funny	NE	FM
 gehts	ADV	VVFIN
+geht	PWAV	VVFIN
 getönter	APPR	ADJA
 good	NE	FM
 gracias	ADJA	FM
@@ -81,6 +84,7 @@ hinunterzukippen	VVFIN	VVIZU
 hoochie	ADJA	FM
 hours	NE	FM
 hundreds	NE	FM
+jörn	NN	NE
 judgemental	ADJD	FM
 kmh	KON	NN
 km/h	KON	NN
@@ -93,6 +97,7 @@ laugh	ADJD	FM
 le	VVFIN	FM
 legado	NE	FM
 like	NE	FM
+maarten	ADJA	NE
 malos	ADJA	FM
 mate	ADJA	NN
 might	ADJD	FM
@@ -141,6 +146,7 @@ two-faced	NE	FM
 übern	VVINF	APPRART
 übernehmen	NN	VVINF
 übersetzung	VVINF	NN
+übersetzungen	VVINF	NN
 una	KON	FM
 unbe	ADJA	$
 unterzeichen	ART	VVFIN
