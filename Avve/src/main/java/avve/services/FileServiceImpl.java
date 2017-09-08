@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
@@ -56,6 +58,22 @@ public class FileServiceImpl implements FileService
 	}
 	
 	@Override
+	public Collection<String> getAllFolders(String directoryPath)
+	{
+		ArrayList<String> result = new ArrayList<String>();
+		
+		File parentDirectory = new File(directoryPath);
+		File[] directories = parentDirectory.listFiles(new DirectoriesFilter());
+		
+		for(File dir : directories)
+		{
+			result.add(dir.getName());
+		}
+		
+		return result;
+	}
+	
+	@Override
 	public Collection<File> listFilesInDirectory(final String directoryPath)
 	{
 		Collection<File> result = FileUtils.listFiles(new File(directoryPath), null, false);
@@ -90,5 +108,14 @@ public class FileServiceImpl implements FileService
 	{
 		Collection<File> result = FileUtils.listFiles(new File(basePath), null, true);
 		return result;
+	}
+	
+	private static class DirectoriesFilter implements FilenameFilter
+	{
+	    @Override
+	    public boolean accept(File entry, String name)
+	    {
+	        return new File(entry, name).isDirectory();
+	    }
 	}
 }

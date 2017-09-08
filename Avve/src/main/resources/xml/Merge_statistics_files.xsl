@@ -4,6 +4,7 @@
     exclude-result-prefixes="xs"
     version="2.0">
     <xsl:output encoding="UTF-8" indent="yes"/>
+    <xsl:param name="classLabels"/>
     <xsl:param name="sourceFolder" select="'file:///home/kai/git/Avve/Avve/output/stats'"/>
     <xsl:preserve-space elements="value"/>
 
@@ -27,10 +28,14 @@
                     </xsl:for-each>
                     <attribute class="yes" name="class" type="nominal">
                         <labels>
-                            <xsl:for-each select="distinct-values(collection(concat($sourceFolder,'?select=*.xml;recurse=yes'))/dataset/body/instances/instance/value[position() = last()])">
+	                        <xsl:for-each select="tokenize($classLabels, ',')">
+	                        	<xsl:sort select="."/>
+	                        	<label><xsl:value-of select="normalize-space(.)"/></label>
+	                        </xsl:for-each>
+                            <!-- <xsl:for-each select="distinct-values(collection(concat($sourceFolder,'?select=*.xml;recurse=yes'))/dataset/body/instances/instance/value[position() = last()])">
                                 <xsl:sort select="."/>
                                 <label><xsl:value-of select="normalize-space(.)"/></label>
-                            </xsl:for-each>
+                            </xsl:for-each>-->
                         </labels>
                     </attribute>
                 </attributes>

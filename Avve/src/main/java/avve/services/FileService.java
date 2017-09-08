@@ -42,6 +42,13 @@ public interface FileService
 	 */
 	boolean isDirectory(String filepath);
 	
+	/**
+	 * Return the names of all directories within a given parent directory
+	 * @param directoryPath The current parent directory
+	 * @return A collection with all child directory names (not recursive)
+	 */
+	Collection<String> getAllFolders(String directoryPath);
+	
 	Collection<File> listFilesInDirectory(String directoryPath);
 	
 	/**

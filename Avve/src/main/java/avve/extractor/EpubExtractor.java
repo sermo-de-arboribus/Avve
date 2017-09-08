@@ -154,7 +154,7 @@ public class EpubExtractor
 		
 		// combine all xrff files written in the previous step
 		//Set saxon as transformer.
-		xmlService.combineXrffFiles();
+		xmlService.combineXrffFiles(getCollectionOfClassNames(fileService, cliArguments));
 
 		LocalDateTime endTime = LocalDateTime.now();
 		long endTimestamp = System.currentTimeMillis();
@@ -181,6 +181,21 @@ public class EpubExtractor
 		return warengruppe;
 	}
 
+	private static Collection<String> getCollectionOfClassNames(FileService fileService, CommandLine cliArguments)
+	{
+		ArrayList<String> classNames = new ArrayList<String>();
+		if(cliArguments.hasOption(CommandLineArguments.INPUT.toString()))
+		{
+			classNames.add(cliArguments.getOptionValue(CommandLineArguments.INPUT.toString()));
+		}
+		else if(cliArguments.hasOption(CommandLineArguments.FOLDER.toString()));
+		{
+			String inputFolder = cliArguments.getOptionValue(CommandLineArguments.FOLDER.toString());
+			classNames.addAll(fileService.getAllFolders(inputFolder));
+		}
+		return classNames;
+	}
+	
 	private static ArrayList<File> getCollectionOfInputFiles(FileService fileService, CommandLine cliArguments)
 	{
 		ArrayList<File> inputFiles = new ArrayList<File>();
