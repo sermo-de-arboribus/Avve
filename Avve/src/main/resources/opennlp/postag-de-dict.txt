@@ -1,4 +1,4 @@
-﻿-- Korrektur falscher POS-Tags --
+﻿// Korrektur falscher POS-Tags //
 –	ADJD	$
 –	APPR	$
 à	ADJD	FM
@@ -39,6 +39,7 @@ chinchulines	ADJA	FM
 choclos ADJD	FM
 cómo	NE	FM
 convirtió	NE	FM
+cover	NE	NN
 cuatro	NE	FM
 danebenbenahm	ART	VVFIN
 darinnen	VVFIN	ADV
@@ -46,6 +47,8 @@ davonknatternd	PROAV	ADJD
 davonreitend	PROAV	ADJD
 davonzurudern	ART	VVIZU
 del	NE	FM
+demosthenes	ADJA	NE
+demosthenes	NN	NE
 despertás	ART	FM
 dijiste ART	FM
 Dont	NE	FM
@@ -129,6 +132,9 @@ rectangulares	NN	FM
 reindrängelten	VVIZU	VVFIN
 riddance	NE	FM
 rumzubringen	VVFIN	VVIZU
+saarbrücken	NN	NE
+saarland	ADJA	NE
+saarlandes	ADJA	NE
 sake	ADJA	FM
 schnarrte	ADJA	VVFIN
 schwarzsahen	VVINF	VVFIN

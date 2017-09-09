@@ -50,7 +50,7 @@ public class EpubExtractor
 	 * The main method parses all EPUB files in the input folder (INPUT command line argument) and writes the respective output after
 	 * transformations and statistics have been built.
 	 * 
-	 * 	INPUT("i"), FOLDER("folder"), WARENGRUPPE("wg");
+	 * 	INPUT("i"), FOLDER("folder"), WARENGRUPPE("wg"), LEMMACORRECTION("lc"), POSCORRECTION("pc");
 	 * 
 	 * @param args Command line arguments: "i" a single input file, "wg" a Warengruppe class label for the input file, "folder" an input folder, with subfolders named after the class labels for the input files contained within each subfolder
 	 */
@@ -93,7 +93,7 @@ public class EpubExtractor
 			String warengruppe = determineClassName(cliArguments, inputFile);
 			
 			// Pre-process the text data (e.g. tokenization, sentence detection, part-of-speech tagging
-			EbookContentData ebookContentData = preprocessText(plainText, epubFile, warengruppe);
+			EbookContentData ebookContentData = preprocessText(plainText, epubFile, warengruppe, cliArguments);
 			
 			if(null != epubFile && languageCode.equals(language))
 			{
@@ -224,6 +224,8 @@ public class EpubExtractor
 		options.addOption(CommandLineArguments.INPUT.toString(), "input", true, infoMessagesBundle.getString("explainInputOption"));
 		options.addOption(CommandLineArguments.FOLDER.toString(), "inputfolder", true, infoMessagesBundle.getString("explainInputFolderOption"));
 		options.addOption(CommandLineArguments.WARENGRUPPE.toString(), "warengruppe", true, infoMessagesBundle.getString("explainWarengruppeOption"));
+		options.addOption(CommandLineArguments.LEMMACORRECTION.toString(), "lemmacorrection", false, infoMessagesBundle.getString("explainLemmaCorrectionOption"));
+		options.addOption(CommandLineArguments.POSCORRECTION.toString(), "poscorrection", false, infoMessagesBundle.getString("explainPosCorrectionOption"));
 		return options;
 	}
 	
@@ -248,9 +250,9 @@ public class EpubExtractor
 		return cliArguments;
 	}
 	
-	private static EbookContentData preprocessText(String plainText, EpubFile epubFile, String warengruppe)
+	private static EbookContentData preprocessText(String plainText, EpubFile epubFile, String warengruppe, CommandLine cliArguments)
 	{
-		DataPreprocessorService textPreprocessor = new DataPreprocessorService(logger);
+		DataPreprocessorService textPreprocessor = new DataPreprocessorService(logger, cliArguments);
 		// The pre-processing results will be stored in the EbookContentData object
 		EbookContentData ebookContentData = new EbookContentData(epubFile, plainText, warengruppe, logger);
 		

@@ -4,6 +4,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -101,11 +103,14 @@ public class XmlService
 		
 		try
 		{
+			LocalDateTime timePoint = LocalDateTime.now();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HHmmss");
+			
 			Path directory = Paths.get("output/stats");
 			Transformer transformer = transformerFactory.newTransformer(new StreamSource(xsltStream));
 			transformer.setParameter("sourceFolder", directory.toAbsolutePath().toUri());
 			transformer.setParameter("classLabels", String.join(",", classes));
-			transformer.transform(new StreamSource(xmlDummyInputStream), new StreamResult(new File("output/result_" + System.currentTimeMillis())));
+			transformer.transform(new StreamSource(xmlDummyInputStream), new StreamResult(new File("output/result_" + timePoint.format(formatter) + ".xrff")));
 		}
 		catch(TransformerConfigurationException exc)
 		{

@@ -1,4 +1,4 @@
-﻿-- manuell erfasst: 000000102.asset, 000000110.asset, 000000114.asset, 000000126.asset, 000000130.asset
+﻿// manuell erfasst: 000000102.asset, 000000110.asset, 000000114.asset, 000000126.asset, 000000130.asset
 abfederte	VVFIN	abfedern
 abgelutschtes	ADJA	abgelutscht
 abgetrenntem	ADJA	abgetrennt

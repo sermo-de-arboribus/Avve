@@ -2,7 +2,7 @@ package avve.extractor;
 
 public enum CommandLineArguments
 {
-	INPUT("i"), FOLDER("folder"), WARENGRUPPE("wg");
+	FOLDER("folder"), INPUT("i"), LEMMACORRECTION("lc"), POSCORRECTION("pc"), WARENGRUPPE("wg");
 	
 	private String commandLineArgument;
 	

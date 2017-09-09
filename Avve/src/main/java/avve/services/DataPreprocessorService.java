@@ -1,14 +1,16 @@
 package avve.services;
 
+import org.apache.commons.cli.CommandLine;
 import org.apache.logging.log4j.Logger;
 
 import avve.epubhandling.EbookContentData;
 import avve.textpreprocess.*;
 
 public class DataPreprocessorService
-{	
-	public DataPreprocessorService(Logger logservice)
+{
+	public DataPreprocessorService(Logger logservice, CommandLine cliArguments)
 	{
+		this.cliArguments = cliArguments;
 		this.logger = logservice;
 	}
 
@@ -27,11 +29,12 @@ public class DataPreprocessorService
 		new TextTokenizer(logger).process(ebookContentData);
 		new RemovePunctuationPreprocessor(logger).process(ebookContentData);
 		new WordFrequencyPreprocessor(logger).process(ebookContentData);
-		new PartOfSpeechTagger(logger).process(ebookContentData);
+		new PartOfSpeechTagger(logger, cliArguments).process(ebookContentData);
 		new NumberProcessor().process(ebookContentData);
-		new Lemmatizer(logger).process(ebookContentData);
+		new Lemmatizer(logger, cliArguments).process(ebookContentData);
 		new ToLowerCasePreprocessor(logger).process(ebookContentData);
 	}
 	
+	private CommandLine cliArguments;
 	private Logger logger;
 }
