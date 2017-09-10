@@ -50,7 +50,7 @@ public class EpubExtractor
 	 * The main method parses all EPUB files in the input folder (INPUT command line argument) and writes the respective output after
 	 * transformations and statistics have been built.
 	 * 
-	 * 	INPUT("i"), FOLDER("folder"), WARENGRUPPE("wg"), LEMMACORRECTION("lc"), POSCORRECTION("pc");
+	 * 	INPUT("i"), FOLDER("folder"), WARENGRUPPE("wg"), LEMMACORRECTION("lc"), MULTICLASS("mc"), POSCORRECTION("pc");
 	 * 
 	 * @param args Command line arguments: "i" a single input file, "wg" a Warengruppe class label for the input file, "folder" an input folder, with subfolders named after the class labels for the input files contained within each subfolder
 	 */
@@ -110,7 +110,7 @@ public class EpubExtractor
 		}
 		
 		ArrayList<File> preprocessedFiles = getCollectionOfSerializedTempFiles(fileService, "output/temp/");
-		// second iteration: build statistics and write xrff files for Weka data mining
+		// second iteration: build statistics and write xrff files for Weka or Meka data mining
 		for(File preprocessedFile : preprocessedFiles)
 		{
 			logger.info(infoMessagesBundle.getString("avve.extractor.startWorkingOnSerializedTempFiles") + ": " + preprocessedFile);
@@ -152,9 +152,16 @@ public class EpubExtractor
 			}
 		}
 		
-		// combine all xrff files written in the previous step
-		//Set saxon as transformer.
-		xmlService.combineXrffFiles(getCollectionOfClassNames(fileService, cliArguments));
+		if(cliArguments.hasOption(CommandLineArguments.MULTILABEL.toString()))
+		{
+			// combine all xrff files written in the previous step and save them as a single multilabel file Meka in ARFF format
+			xmlService.createCombinedMultiClassFile(getCollectionOfClassNames(fileService, cliArguments));
+		}
+		else
+		{
+			// combine all xrff files written in the previous step and save them as a single file for Weka in XRFF format
+			xmlService.combineXrffFiles(getCollectionOfClassNames(fileService, cliArguments));	
+		}
 
 		LocalDateTime endTime = LocalDateTime.now();
 		long endTimestamp = System.currentTimeMillis();
@@ -217,22 +224,11 @@ public class EpubExtractor
 		inputFiles.addAll(fileService.getFilesFromAllSubdirectories(baseDirectory));
 		return inputFiles;
 	}
-
-	private static Options getCommandLineOptions()
-	{
-		Options options = new Options();
-		options.addOption(CommandLineArguments.INPUT.toString(), "input", true, infoMessagesBundle.getString("explainInputOption"));
-		options.addOption(CommandLineArguments.FOLDER.toString(), "inputfolder", true, infoMessagesBundle.getString("explainInputFolderOption"));
-		options.addOption(CommandLineArguments.WARENGRUPPE.toString(), "warengruppe", true, infoMessagesBundle.getString("explainWarengruppeOption"));
-		options.addOption(CommandLineArguments.LEMMACORRECTION.toString(), "lemmacorrection", false, infoMessagesBundle.getString("explainLemmaCorrectionOption"));
-		options.addOption(CommandLineArguments.POSCORRECTION.toString(), "poscorrection", false, infoMessagesBundle.getString("explainPosCorrectionOption"));
-		return options;
-	}
 	
 	private static CommandLine parseCommandLineArguments(String[] args)
 	{
 		CommandLineParser cliParser = new DefaultParser();
-		Options options = getCommandLineOptions();
+		Options options = CommandLineArguments.getCommandLineOptions();
 		CommandLine cliArguments = null;
 		try
 		{

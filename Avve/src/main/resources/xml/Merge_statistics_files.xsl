@@ -53,7 +53,7 @@
     </xsl:template>
     
     <xsl:template mode="inFile" match="instance">
-        <xsl:comment><xsl:value-of select="base-uri()"/></xsl:comment>
+        <xsl:comment><xsl:value-of select="concat(base-uri(), '|', @documentId)"/></xsl:comment>
         <xsl:copy>
             <xsl:apply-templates select="value[position() > 1]" mode="inFile"/> <!--[position() &gt; 1]--> <!-- ignoring the large string value elements -->
         </xsl:copy>
