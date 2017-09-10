@@ -4,11 +4,11 @@
     exclude-result-prefixes="xs"
     version="2.0">
     <xsl:output encoding="UTF-8" indent="yes" method="text"/>
-    <xsl:param name="classLabels"/>
-    <xsl:param name="sourceFolder" select="'file:///home/kai/git/Avve/Avve/output/stats'"/>
+    <xsl:param name="classLabels" select="'GTM,KCX,QRJP,DNL,KCZ,FBA,FJH,FBC,WTD,YXF,DNP,UDBS,YXE,DNS,YXH,DNT,WTL,1DDU,3MN,3MP,3MR,1DFG,FYT,FUP'"/>
+    <xsl:param name="sourceFolder" select="'file:///home/kai/Dokumente/stats'"/>
+    <xsl:variable name="classTokens" select="tokenize($classLabels, ',')" />
     
     <xsl:template match="/">
-        <xsl:variable name="classTokens" select="tokenize($classLabels, ',')" /> 
         <xsl:variable name="numberOfClasses" select="count(classTokens)" />
         <!-- write relation header -->
         <xsl:text>@relation ’Avve multiclass dataset: -C </xsl:text><xsl:value-of select="$numberOfClasses"/><xsl:text>’
@@ -35,9 +35,15 @@
     </xsl:template>
     
     <xsl:template mode="inFile" match="instance">
-        <xsl:text>% </xsl:text><xsl:value-of select="concat(base-uri(), '|', @documentId)"/><xsl:text>
+        <xsl:text>
+% </xsl:text><xsl:value-of select="concat(base-uri(), '|', @documentId)"/><xsl:text>
 </xsl:text>
-        <xsl:for-each select="value[position() > 1]"><xsl:value-of select="normalize-space(.)"/><xsl:if test="position() ne last()">,</xsl:if></xsl:for-each>
+        <xsl:variable name="currentClassString" select="concat(',', normalize-space(value[position() = last()]), ',')"/>
+        <xsl:for-each select="$classTokens">
+            <xsl:variable name="currentToken" select="concat(',', ., ',')"/>
+            <xsl:choose><xsl:when test="contains($currentClassString, $currentToken)">1</xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose><xsl:text>,</xsl:text>
+        </xsl:for-each>
+        <xsl:for-each select="value[position() > 1 and position() ne last()]"><xsl:value-of select="normalize-space(.)"/><xsl:if test="position() ne last()">,</xsl:if></xsl:for-each>
         
     </xsl:template>
     
