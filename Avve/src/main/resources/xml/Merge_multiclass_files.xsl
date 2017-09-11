@@ -9,9 +9,10 @@
     <xsl:variable name="classTokens" select="tokenize($classLabels, ',')" />
     
     <xsl:template match="/">
-        <xsl:variable name="numberOfClasses" select="count(classTokens)" />
+        <xsl:variable name="numberOfClasses" select="count($classTokens)" />
         <!-- write relation header -->
-        <xsl:text>@relation ’Avve multiclass dataset: -C </xsl:text><xsl:value-of select="$numberOfClasses"/><xsl:text>’
+        <xsl:text>@relation "Avve multiclass dataset: -C </xsl:text><xsl:value-of select="$numberOfClasses"/><xsl:text>"
+
 </xsl:text>
         
         <!-- write class attributes header -->
@@ -26,7 +27,8 @@
 </xsl:text>
         </xsl:for-each>
         
-        <xsl:text>@data</xsl:text>
+        <xsl:text>
+@data</xsl:text>
         <xsl:apply-templates mode="inFile" select="collection(concat($sourceFolder,'?select=*.xml;recurse=yes'))"/>
     </xsl:template>
     
@@ -43,7 +45,7 @@
             <xsl:variable name="currentToken" select="concat(',', ., ',')"/>
             <xsl:choose><xsl:when test="contains($currentClassString, $currentToken)">1</xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose><xsl:text>,</xsl:text>
         </xsl:for-each>
-        <xsl:for-each select="value[position() > 1 and position() ne last()]"><xsl:value-of select="normalize-space(.)"/><xsl:if test="position() ne last()">,</xsl:if></xsl:for-each>
+        <xsl:for-each select="value[position() > 1 and position() ne last()]">"<xsl:value-of select="normalize-space(.)"/>"<xsl:if test="position() ne last()">,</xsl:if></xsl:for-each>
         
     </xsl:template>
     
