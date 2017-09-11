@@ -603,6 +603,9 @@ public class XrffFileWriter
 		{
 			IndexReader luceneIndexReader = DirectoryReader.open(luceneIndexDirectory);
 			String documentId = content.getDocumentId();
+			int totalNumberOfDocumentsInLuceneIndex = luceneIndexReader.numDocs();
+			// termThreshold is a value to prevent very rare words to be used in the output. The threshold is at least 2 and grows moderately (i.e. logarithmically) with the number of indexed documents 
+			int termThreshold = 2 + (int)Math.log10(totalNumberOfDocumentsInLuceneIndex);
 			
 			logger.info(String.format(infoMessagesBundle.getString("avve.extractor.retrievingTfIdfForDocument"), documentId));
 			
@@ -644,15 +647,19 @@ public class XrffFileWriter
 				    	}
 				    	else
 				    	{
-				    		// only use words that don't appear in (nearly) all documents and that appear at least in two documents
+				    		// only use words that don't appear in (nearly) all documents and that appear at least in three documents
 				    		int docFreq = luceneIndexReader.docFreq(new Term("plaintext", bytesRefToTerm));
-				    		if(docFreq > 1 && docFreq < (numberOfDocuments * 0.9))
+				    		if(docFreq > termThreshold && docFreq < (numberOfDocuments * 0.9))
 				    		{
 					    		// initialize term frequency and calculate inverse document frequency (only need to do that once per term)
 					    		double idf = 1 + Math.log(numberOfDocuments / docFreq + 1.0);
 					    		tdIdfTuples.put(term, new TfIdfTuple(termFrequencyInDocumentField, idf, 1.0 / Math.sqrt(numberOfTermsInPlainTextField)));
 				    		}
 				    	}
+			    	}
+			    	else
+			    	{
+			    		logger.debug(String.format(infoMessagesBundle.getString("avve.extractor.couldNotFindLuceneTermInEbookContentData"), term));
 			    	}
 			    }
 			    
@@ -696,6 +703,10 @@ public class XrffFileWriter
 			    	newValueElement.appendChild(new Text(System.lineSeparator()));
 			    }
 			    instanceElement.insertChild(newValueElement, instanceElement.getChildCount() - 1);
+		    }
+		    else
+		    {
+		    	logger.debug(String.format(infoMessagesBundle.getString("avve.extractor.couldNotFindDocumentInLuceneIndex"), documentId));
 		    }
 	    }
 		catch (IOException exc)
