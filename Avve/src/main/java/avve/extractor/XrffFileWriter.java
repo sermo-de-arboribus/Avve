@@ -40,7 +40,7 @@ public class XrffFileWriter
 		this.luceneIndexDirectory = luceneIndexDirectory;
 	}
 	
-	public void saveEbookContentData(final EbookContentData content)
+	public void saveEbookContentData(final EbookContentData content, final int wordVectorSize)
 	{
 		FileOutputStream outputStream = null;
 		try
@@ -52,7 +52,7 @@ public class XrffFileWriter
 			
 			writeHeader(root);
 			writeBody(root, content);
-			addTfIdfStatistics(root, content);
+			addTfIdfStatistics(root, content, wordVectorSize);
 			
 			// workaround for internal DTD subset, see http://www.xom.nu/tutorial.xhtml
 			Builder builder = new Builder();
@@ -597,7 +597,7 @@ public class XrffFileWriter
 		attributes.appendChild(classElement);
 	}
 
-	public void addTfIdfStatistics(final Element root, final EbookContentData content)
+	public void addTfIdfStatistics(final Element root, final EbookContentData content, int wordVectorSize)
 	{
 		try
 		{
@@ -676,7 +676,7 @@ public class XrffFileWriter
 			    
 			    Nodes instanceNode = root.query("/dataset/body/instances/instance");
 			    Element instanceElement = (Element)instanceNode.get(0);
-			    int numberOfIdfValuesToInclude = sortedByIdfDescending.size() > 200 ? 200 : sortedByIdfDescending.size();
+			    int numberOfIdfValuesToInclude = sortedByIdfDescending.size() > wordVectorSize ? wordVectorSize : sortedByIdfDescending.size();
 			    
 			    Element newValueElement = new Element("value");
 			    Comment newValueComment = new Comment("[index] term - normalizedTfIdfValue - idf - term frequency");

@@ -41,6 +41,7 @@ public class EpubExtractor
 	private static final ResourceBundle errorMessageBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	private static FileService fileService = new FileServiceImpl();
+	private static final int wordVectorSizeDefaultValue = 200;
 	private static XmlService xmlService = new XmlService(fileService, logger);
 	private static String statsDirectory = "output/stats";
 	private static String textDirectory = "output/text";
@@ -144,7 +145,7 @@ public class EpubExtractor
 				String warengruppe = ebookContentData.getWarengruppe();
 				
 				// save the processing result to the file system, one file with plain text, one file with statistical attributes
-				writePreprocessingResultsToFileSystem(warengruppe, ebookContentData, preprocessedFile);
+				writePreprocessingResultsToFileSystem(warengruppe, ebookContentData, preprocessedFile, cliArguments);
 			}
 			else
 			{
@@ -279,7 +280,7 @@ public class EpubExtractor
 		}
 	}
 	
-	private static void writePreprocessingResultsToFileSystem(String warengruppe, EbookContentData ebookContentData, File inputFile)
+	private static void writePreprocessingResultsToFileSystem(String warengruppe, EbookContentData ebookContentData, File inputFile, CommandLine cliArguments)
 	{
 		fileService.createDirectory("output");
 		
@@ -301,8 +302,23 @@ public class EpubExtractor
 			printStream.print(ebookContentData.getPlainText());
 			printStream.close();
 			
+			int wordVectorSize;
+			try
+			{
+				wordVectorSize = Integer.parseInt(cliArguments.getOptionValue(CommandLineArguments.WORDVECTORSIZE.toString()));
+			}
+			catch (NumberFormatException exc)
+			{
+				logger.error(String.format(errorMessageBundle.getString("avve.extractor.wordVectorNumberFormatError"), wordVectorSizeDefaultValue));
+				wordVectorSize = wordVectorSizeDefaultValue;
+			}
+			catch (NullPointerException exc)
+			{
+				wordVectorSize = wordVectorSizeDefaultValue;
+			}
+			
 			XrffFileWriter xrffFile = new XrffFileWriter(outputAttributes, fileService, luceneService.getLuceneIndexDirectory(), logger);
-			xrffFile.saveEbookContentData(ebookContentData);
+			xrffFile.saveEbookContentData(ebookContentData, wordVectorSize);
 		}
 		catch (FileNotFoundException exc)
 		{
