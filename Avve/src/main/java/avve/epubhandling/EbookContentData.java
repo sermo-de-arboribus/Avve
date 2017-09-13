@@ -193,7 +193,14 @@ public class EbookContentData implements Serializable
 	
 	public String getLanguage()
 	{
-		return epubFile.getLanguageCode();
+		if(null != epubFile)
+		{
+			return epubFile.getLanguageCode();
+		}
+		else
+		{
+			return "";
+		}
 	}
 	
 	public SortedMap<String, Integer> getLemmaFrequencies()
