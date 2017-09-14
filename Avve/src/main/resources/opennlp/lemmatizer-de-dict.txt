@@ -1,4 +1,4 @@
-﻿// manuell erfasst: 000000102.asset, 000000110.asset, 000000114.asset, 000000126.asset, 000000130.asset
+﻿// manuell erfasst: 000000102.asset, 000000110.asset, 000000114.asset, 000000126.asset, 000000130.asset, 000003750.asset.txt
 abfederte	VVFIN	abfedern
 abgelutschtes	ADJA	abgelutscht
 abgetrenntem	ADJA	abgetrennt
@@ -11,6 +11,7 @@ abtaubenden	ADJA	abtaubend
 achttürigen	ADJA	achttürig
 akklimatisierten	ADJD	akklimatisiert
 altersbrüchigen	ADJA	altersbrüchig
+andrerseits	ADV	andererseits
 angebahnten	ADJA	angebahnt
 angedrohter	ADJA	angedroht
 angeheiratetem	ADJA	angeheiratet
@@ -122,13 +123,21 @@ gottver	ADJA	gottverdammt
 guachos NN	guacho
 gutginge	NN	gutgehen
 gutginge	VVFIN	gutgehen
+hätt	VVFIN	haben
 halbweiches	ADJA	halbweich
+heuen	ADV	heute
+hihi	APPR	ITJ
+hihi	NE	ITJ
+hihi	VVFIN	ITJ
+hihihi	$	ITJ
+hihihi	NE	ITJ
 hinunterzukippen	VVFIN	hinunterkippen
 hinunterzukippen	VVIZU	hinunterkippen
 hinzurücken	VVIZU	hinrücken
 hochöchst	ADV	hoch
 Hours	FM	hour
 hours	FM	hour
+hüstelte	VVFIN	hüsteln
 hundertfünfunddreißigkarätigen	ADJA	hundertfünfunddreißigkarätig
 hundsföttische	ADJA	hundsföttisch
 hundsföttischen	ADJA	hundsföttisch
@@ -163,6 +172,7 @@ makedonischen	ADJA	makedonisch
 makedonischen	NN	makedonische
 métoikoi	FM	métoikos
 malos	FM	malo
+möcht	VVFIN	mögen
 morschem	ADJA	morsch
 nachtdunkle	ADJA	nachtdunkel
 neonblaue	ADJA	neonblau
@@ -188,6 +198,7 @@ schnurgelt	VVFIN	schnurgeln
 schwarzsahen	VVFIN	schwarzsehen
 schwarzsahen	VVINF	schwarzsehen
 silberhellem	ADJA	silberhell
+sin	VAFIN	sein
 skatete	VVFIN	skaten
 soltauschen	ADJA	soltausche
 sommersüße	ADJA	sommersüß
@@ -205,6 +216,7 @@ thebanische	ADJA	thebanisch
 thebanischer	ADJA	thebanisch
 tiefgeschnittene	ADJA tiefgeschnitten
 todlangweiliger	ADJA	todlangweilig
+unsre	PPOSAT	unser
 unterzeichen	ART	unterzeichnen
 unterzeichen	VVFIN	unterzeichnen
 verkräuselte	VVFIN	verkräuseln
@@ -220,11 +232,13 @@ verwitwetes	ADJA	verwitwet
 verübelst	VVFIN	verübeln
 volksbeschlusses	NN	volksbeschluss
 vollgelogen	VVPP	volllügen
+vorüberkamen	VVFIN	vorüberkommen
 wabernde	ADJA	wabernd
 weiblichstes	ADJA	weiblich
 weißen	ADJD	weiß
 weißen	VVFIN	wissen
 weiterbrachte	VVFIN	weiterbringen
+werd	VAFIN	werden
 werd	VVFIN	werden
 wichsten	VVFIN	wichsen
 wummert	VVFIN	wummern
