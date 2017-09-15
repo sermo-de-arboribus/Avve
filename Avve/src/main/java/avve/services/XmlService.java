@@ -231,6 +231,7 @@ public class XmlService
 			"	<xsl:template match=\"/\">" +
 			"		<xsl:apply-templates /> " + 
 			"	</xsl:template>" +
+			
 			"	<xsl:template match=\"*[local-name() = 'p'] | *[local-name() = 'div']\">" +
 			"		<xsl:text> </xsl:text><xsl:apply-templates/><xsl:text> </xsl:text>"+
 			"	</xsl:template>"+
@@ -239,6 +240,8 @@ public class XmlService
 			"		<xsl:text>&#xD;&#xA; </xsl:text>" +
 			"	</xsl:template>"+
 	
+			"   <xsl:template match=\"*[local-name() = 'style']|*[local-name() = 'script']\" />" +
+			
 			"	<xsl:template match=\"text()\">" +
 			"		<xsl:value-of select=\".\"/>" +
 			"	</xsl:template>" +

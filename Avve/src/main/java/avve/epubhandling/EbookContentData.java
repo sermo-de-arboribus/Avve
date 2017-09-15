@@ -286,7 +286,7 @@ public class EbookContentData implements Serializable
 						auxiliarVerbMessage = String.format(infoMessagesBundle.getString("avve.epubhandling.auxiliarVerbMessage"), lemmatizedSentences[i][j],
 								j, i, partsOfSpeech[i][j]);
 					}
-					if(partsOfSpeech[i][j].equals("VAPP") || partsOfSpeech[i][j].equals("VMPP"))
+					if(partsOfSpeech[i][j].equals("VAPP") || partsOfSpeech[i][j].equals("VMPP") || partsOfSpeech[i][j].equals("VVPP"))
 					{
 						hasParticiple = true;
 						participleMessage = String.format(infoMessagesBundle.getString("avve.epubhandling.participleMessage"), lemmatizedSentences[i][j],
