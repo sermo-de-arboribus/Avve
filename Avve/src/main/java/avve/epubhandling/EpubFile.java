@@ -2,28 +2,14 @@ package avve.epubhandling;
 
 import avve.services.FileService;
 import avve.services.XmlService;
+import net.sf.saxon.s9api.XPathCompiler;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.io.*;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import nu.xom.Attribute;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.Nodes;
-import nu.xom.ParsingException;
-import nu.xom.XPathContext;
+import nu.xom.*;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Logger;
@@ -38,16 +24,21 @@ public class EpubFile implements Serializable
 	private static final int BUFFER_SIZE = 8192;
 	private static final XPathContext epubContainerNamespace = new XPathContext("cnt", "urn:oasis:names:tc:opendocument:xmlns:container");
 	private static final XPathContext opfNamespace = new XPathContext("opf", "http://www.idpf.org/2007/opf");
+	private static final XPathContext ncxNamespace = new XPathContext("ncx", "http://www.daisy.org/z3986/2005/ncx/");
 	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	
 	// private instance fields
 	private String documentId;
 	private String filePath;
+	transient private FileService fileService;
 	private long fileSize;
 	private String language;
-	transient private FileService fileService;
 	transient private Logger logger;
+	private int numberOfChapters;
+	private int numberOfTocItems;
+	private String pathToTocFile;
+	private int depthOfToc;
 	transient private XmlService xmlService;
 	
 	/**
@@ -92,6 +83,10 @@ public class EpubFile implements Serializable
 				sb.append(System.lineSeparator());
 			}
 			
+			// determine table of contents (TOC) structure (NOTE: the pathToTocFile instance variable is set by getPlainTextFromContentFiles(), so we can only work on pathToTocFile afterwards)
+			String absolutePathToTocFile = FilenameUtils.concat(new File(pathToOebpsFile).getParent(), pathToTocFile);
+			determineTocStructure(absolutePathToTocFile);
+			
 			// clear temp folder
 			fileService.clearFolder(tempDir);
 		}
@@ -110,8 +105,12 @@ public class EpubFile implements Serializable
 		
 		return sb.toString();
 	}
-	
 
+	public int getDepthOfToc()
+	{
+		return depthOfToc;
+	}
+	
 	public String getDocumentId()
 	{
 		return documentId;
@@ -130,7 +129,80 @@ public class EpubFile implements Serializable
 		}
 		return language;
 	}
+	
+	public int getNumberOfChapters()
+	{
+		return numberOfChapters;
+	}
 
+	public int getNumberOfTocItems()
+	{
+		return numberOfTocItems;
+	}
+
+	private void determineTocStructure(String pathToTocFile)
+	{
+		if(null != pathToTocFile && pathToTocFile.length() > 0)
+		{
+			String extension = FilenameUtils.getExtension(pathToTocFile);
+			switch(extension)
+			{
+				case "ncx":
+					try(InputStream instream = fileService.createFileInputStream(pathToTocFile))
+					{
+						Document parsedTocFile = xmlService.build(instream);
+						
+						numberOfTocItems = parsedTocFile.query("/ncx:ncx/ncx:navMap//ncx:navPoint", ncxNamespace).size();
+						depthOfToc = Integer.parseInt(xmlService.evaluateXpath(parsedTocFile, "max(//ncx:navPoint/count(ancestor::*))", "ncx", ncxNamespace.lookup("ncx"))) - 1;
+					}
+					catch (FileNotFoundException exc)
+					{
+						logger.error(exc.getLocalizedMessage(), exc);
+					}
+					catch (IOException exc)
+					{
+						logger.error(exc.getLocalizedMessage(), exc);
+					}
+					catch (NumberFormatException exc)
+					{
+						logger.error(exc.getLocalizedMessage(), exc);
+					}
+					break;
+					
+				case "html":
+				case "xhtml":
+				case "htm":
+					try(InputStream instream = fileService.createFileInputStream(pathToTocFile))
+					{
+						Document parsedTocFile = xmlService.build(instream);
+						numberOfTocItems = parsedTocFile.query("/*[local-name() = 'nav']//*[local-name() = 'li']", null).size();
+						depthOfToc = Integer.parseInt(xmlService.evaluateXpath(parsedTocFile, "max(//*[local-name() = 'li']/count(ancestor::*[local-name() = 'li']))", "", "")) + 1;					
+					}
+					catch (FileNotFoundException exc)
+					{
+						logger.error(exc.getLocalizedMessage(), exc);
+					}
+					catch (IOException exc)
+					{
+						logger.error(exc.getLocalizedMessage(), exc);
+					}
+					catch (NumberFormatException exc)
+					{
+						logger.error(exc.getLocalizedMessage(), exc);
+					}
+					break;
+					
+				default:
+					numberOfTocItems = -1;
+					depthOfToc = -1;					
+			}
+		}
+		else
+		{
+			logger.error(errorMessagesBundle.getString("avve.epubhandling.pathToTocFileUnknown"));
+		}
+	}
+	
 	private List<String> getPlainTextFromContentFiles(String pathToOebpsFile) throws IOException, ParsingException, SAXException
 	{
 		logger.trace(infoMessagesBundle.getString("startReadingOebpsSpine") + " " + pathToOebpsFile);
@@ -145,6 +217,7 @@ public class EpubFile implements Serializable
 			determineLanguage(parsedOebpsFile);
 			determineDocumentId(parsedOebpsFile);
 			Nodes spine = parsedOebpsFile.query("/opf:package/opf:spine/opf:itemref/@idref", opfNamespace);
+			numberOfChapters = spine.size();
 
 			logger.trace(String.format(infoMessagesBundle.getString("numberOfSpineItemsFound"), spine.size()));
 			
@@ -171,6 +244,19 @@ public class EpubFile implements Serializable
 					String plainText = xmlService.extractTextFromXhtml(contentDocument);
 					resultList.add(plainText);
 				}
+			}
+			
+			// in EPUB 3 the nav-property must be used, in EPUB 2 we need to look for the item that is declared toc item by the spine's @toc attribute
+			Nodes tocItems = parsedOebpsFile.query("/opf:package/opf:manifest/opf:item[@properties = 'nav']/@href | "
+					+ "/opf:package/opf:manifest/opf:item[@id = /opf:package/opf:spine/@toc]/@href", opfNamespace);
+			
+			if(tocItems.size() > 0)
+			{
+				pathToTocFile = tocItems.get(0).getValue();	
+			}
+			else
+			{
+				pathToTocFile = "";
 			}
 		}
 		return resultList;

@@ -6,9 +6,7 @@ import java.util.*;
 import org.apache.logging.log4j.Logger;
 
 public class EbookContentData implements Serializable
-{	
-	private static final long serialVersionUID = 3022250504362756894L;
-	
+{
 	/**
 	 * Constructor
 	 * @param plainText The input text
@@ -528,16 +526,33 @@ public class EbookContentData implements Serializable
 		warengruppenMap.put("111", "110");
 		warengruppenMap.put("112", "110");
 	}
-	
+
+	public int getNumberOfChapters()
+	{
+		return epubFile.getNumberOfChapters();
+	}
+
+	public int getNumberOfTocItems()
+	{
+		return epubFile.getNumberOfTocItems();
+	}
+
+	public int getDepthOfToc()
+	{
+		return epubFile.getDepthOfToc();
+	}
+
+	private static final long serialVersionUID = 3022250504362756894L;
 	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	
 	private Logger logger;
 	
 	private EpubFile epubFile;
+
 	private String plainText;
-	private String warengruppe;
 	private String[] sentences;
+	private String warengruppe;
 	private String[][] tokenizedSentences;
 	private String[][] lemmatizedSentences;
 	private String[][] partsOfSpeech;

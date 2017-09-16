@@ -27,9 +27,19 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import net.sf.saxon.Configuration;
+import net.sf.saxon.dom.DocumentWrapper;
+import net.sf.saxon.option.xom.XOMDocumentWrapper;
+import net.sf.saxon.s9api.Processor;
+import net.sf.saxon.s9api.SaxonApiException;
+import net.sf.saxon.s9api.XPathCompiler;
+import net.sf.saxon.s9api.XPathExecutable;
+import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.s9api.XdmValue;
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.ParsingException;
+import nu.xom.XPathContext;
 import nu.xom.converters.DOMConverter;
 
 public class XmlService
@@ -41,6 +51,7 @@ public class XmlService
 	private CatalogResolver xmlCatalogResolver;
 	private FileService fileService;
 	private Logger logger;
+	private Processor saxonProcessor;
 
 	public XmlService(FileService fileService, Logger logservice)
 	{
@@ -64,6 +75,8 @@ public class XmlService
 		}
 		xmlReader.setEntityResolver(xmlCatalogResolver);
 		xomXmlParser = new Builder(xmlReader);
+		
+		saxonProcessor = new Processor(false);
 	}
 	
 	public Document build(InputStream inStream)
@@ -127,6 +140,34 @@ public class XmlService
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HHmmss");
 		
 		runXsltAndWriteOutputFile(uniqueClassLabels, this.getClass().getClassLoader().getResourceAsStream("xml/Merge_multiclass_files.xsl"), new File("output/result_" + timePoint.format(formatter) + ".arff"));
+	}
+	
+	public String evaluateXpath(Document xmlDocument, String xPathExpression, String namespacePrefix, String nameSpaceUri)
+	{
+		XOMDocumentWrapper xomDocWrapper = new XOMDocumentWrapper(xmlDocument, new Configuration());
+		XdmValue result = null;
+		
+		try
+		{
+			XdmNode xdmNode = saxonProcessor.newDocumentBuilder().build(xomDocWrapper);
+			
+			XPathCompiler xPathCompiler = saxonProcessor.newXPathCompiler();
+			xPathCompiler.declareNamespace(namespacePrefix, nameSpaceUri);
+			result = xPathCompiler.evaluate(xPathExpression, xdmNode);
+		}
+		catch (SaxonApiException exc)
+		{
+			logger.error(exc.getLocalizedMessage(), exc);
+		}
+		
+		if(null != result)
+		{
+			return result.toString();
+		}
+		else
+		{
+			return "";
+		}
 	}
 	
 	public String extractTextFromXhtml(Document contentDocument)

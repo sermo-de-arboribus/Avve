@@ -134,6 +134,27 @@ public class XrffFileWriter
 		fileSizeElement.appendChild("" + content.getFileSize());
 		instanceElement.appendChild(fileSizeElement);
 		
+		// print number of top-level chapters
+		Element chaptersElement = new Element("value");
+		Comment chaptersComment = new Comment("number of top-level chapters");
+		chaptersElement.appendChild(chaptersComment);
+		chaptersElement.appendChild("" + content.getNumberOfChapters());
+		instanceElement.appendChild(chaptersElement);
+		
+		// print number of table-of-contents items
+		Element tocCountElement = new Element("value");
+		Comment tocCountComment = new Comment("number of table-of-contents items");
+		tocCountElement.appendChild(tocCountComment);
+		tocCountElement.appendChild("" + content.getNumberOfTocItems());
+		instanceElement.appendChild(tocCountElement);
+		
+		// print number of table-of-contents depth
+		Element tocDepthElement = new Element("value");
+		Comment tocDepthComment = new Comment("depth of table of contents");
+		tocDepthElement.appendChild(tocDepthComment);
+		tocDepthElement.appendChild("" + content.getDepthOfToc());
+		instanceElement.appendChild(tocDepthElement);
+		
 		// print ratio of words per sentence
 		Element wordsPerSentenceElement = new Element("value");
 		Comment wordsPerSentenceComment = new Comment("words per sentence");
@@ -392,6 +413,24 @@ public class XrffFileWriter
 		fileSizeElement.addAttribute(new Attribute("name", "fileSizeInBytes"));
 		fileSizeElement.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(fileSizeElement);
+		
+		// top-level chapters
+		Element chaptersElement = new Element("attribute");
+		chaptersElement.addAttribute(new Attribute("name", "numberOfTopLevelChapters"));
+		chaptersElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(chaptersElement);
+		
+		// print number of table-of-contents items
+		Element tocCountElement = new Element("attribute");
+		tocCountElement.addAttribute(new Attribute("name", "numberOfTocElements"));
+		tocCountElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(tocCountElement);
+		
+		// print number of table-of-contents depth
+		Element tocDepthElement = new Element("attribute");
+		tocDepthElement.addAttribute(new Attribute("name", "depthOfToc"));
+		tocDepthElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(tocDepthElement);
 		
 		// word per sentence
 		Element wordsPerSentence = new Element("attribute");
