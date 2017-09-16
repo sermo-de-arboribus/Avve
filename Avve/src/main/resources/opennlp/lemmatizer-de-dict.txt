@@ -58,6 +58,7 @@ beschämter	ADJA	beschämt
 besonntes	ADJA	besonnt
 bestoppelten	ADJA	bestoppelt
 betonfarbenem	ADJA	betonfarben
+beunruhigender	ADJA	beunruhigend
 blätterlosen	ADJA	blätterlos
 blasiertes	ADJA	blasiert
 blassbraunem	ADJA	blassbraun
@@ -163,6 +164,7 @@ makedonischen	ADJA	makedonisch
 makedonischen	NN	makedonische
 métoikoi	FM	métoikos
 malos	FM	malo
+mimetischen	ADJA	mimetisch
 morschem	ADJA	morsch
 nachtdunkle	ADJA	nachtdunkel
 neonblaue	ADJA	neonblau
@@ -178,7 +180,10 @@ psephísmata	FM	pséphisma
 quiero	FM	querer
 reindrängelten	VVFIN	reindrängeln
 reindrängelten	VVIZU	reindrängeln
+repetitiven	ADJA	repetitiv
+ritualisierten	ADJA	ritualisiert
 säbelzähnigen	ADJA	säbelzähnig
+salutierten	ADJA	salutiert
 schiefliefe	VVFIN	schieflaufen
 schlenkernden	ADJA	schlenkernd
 schnapsseliger	ADJA	schnapsselig
@@ -205,6 +210,7 @@ thebanische	ADJA	thebanisch
 thebanischer	ADJA	thebanisch
 tiefgeschnittene	ADJA tiefgeschnitten
 todlangweiliger	ADJA	todlangweilig
+unhintergehbare	ADJA	unhintergehbar
 unterzeichen	ART	unterzeichnen
 unterzeichen	VVFIN	unterzeichnen
 verkräuselte	VVFIN	verkräuseln
