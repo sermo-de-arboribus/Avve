@@ -3,4 +3,5 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
   <nextCatalog catalog="xhtml/dtd/xhtmlcatalog.xml"/>
   <nextCatalog catalog="xhtml11/dtd/xhtmlcatalog.xml"/>
+  <nextCatalog catalog="daisy/daisycatalog.xml"/>
 </catalog>
