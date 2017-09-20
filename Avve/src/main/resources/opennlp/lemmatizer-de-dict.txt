@@ -1,4 +1,4 @@
-﻿// manuell erfasst: 000000102.asset, 000000110.asset, 000000114.asset, 000000126.asset, 000000130.asset, 000003750.asset.txt
+﻿// manuell erfasst: 000000102.asset, 000000110.asset, 000000114.asset, 000000126.asset, 000000130.asset, 000000257.asset, 000003750.asset, 005332618.asset
 abfederte	VVFIN	abfedern
 abgelutschtes	ADJA	abgelutscht
 abgetrenntem	ADJA	abgetrennt
@@ -33,6 +33,7 @@ aspirierendes	ADJA	aspirierend
 aspirinschluckende	ADJA	aspirinschluckend
 aufgestutzte	ADJA	aufgestutzt
 aufgestutzten	ADJA	aufgestutzt
+aufhatten	VVFIN	aufhaben
 aufkreuze	VVFIN	aufkreuzen
 aufquietschende	ADJA	aufquietschend
 aufsäßig	ADJA	aufsässig
@@ -90,6 +91,7 @@ convirtió	FM	convertir
 crèmefarbenen	ADJA	cremefarben
 crèmeweißem	ADJA	cremeweiß
 cremeweißer	ADJA	cremeweiß
+cremigen	ADJA	cremig
 daherphilosophierenden	ADJA	daherphilosophierend
 dauergeiler	ADJA	dauergeil
 demografische	ADJA	demografisch
@@ -98,9 +100,11 @@ dickbrüstige	ADJA	dickbrüstig
 dickleibiger	ADJA	dickleibig
 dimmte	VVFIN	dimmen
 documents	FM	document
+draufgestanden	VVPP	draufstehen
 dreckigbrauner	ADJA	dreckigbraun
 drittältestes	ADJA	drittältest
 drogerieblonde	ADJA	drogerieblond
+drum	ADV	darum
 dunkelgoldenen	ADJA	dunkelgolden
 dynastische	ADJA	dynastisch
 dynastischen	ADJA	dynastisch
@@ -121,10 +125,15 @@ erblicket	VVPP	erblicken
 erkundigst	VVFIN	erkundigen
 erlesener	ADJA	erlesen
 erquickenden	ADJA	erquickend
+erziehst	VVFIN	erziehen
+ess	VVFIN	essen
 estrellas	FM	estrella
+fad	ADJD	fade
 fernster	ADJA	fern
 fertigkriegte	VVFIN	fertigkriegen
 flamboyanten	ADJA	flamboyant
+flutschte	VVFIN	flutschen
+füllte	VVFIN	füllen
 gallische	ADJA	gallisch
 getönter	ADJA	getönt
 geschmeichelten	ADJA	geschmeichelt
@@ -135,6 +144,7 @@ gigantesken	ADJA	gigantesk
 girrte	VVFIN	girren
 globalisierten	ADJA	globalisiert
 gottver	ADJA	gottverdammt
+gsagt	VVFIN	sagen
 guachos NN	guacho
 gutginge	NN	gutgehen
 gutginge	VVFIN	gutgehen
@@ -142,14 +152,18 @@ hätt	VVFIN	haben
 halbweiches	ADJA	halbweich
 harmloser	ADJA	harmlos
 harmloser	ADJD	harmlos
+heimfuhren	VVFIN	heimfahren
+helllichten	ADJA	helllicht
 heuen	ADV	heute
 hihi	APPR	ITJ
 hihi	NE	ITJ
 hihi	VVFIN	ITJ
 hihihi	$	ITJ
 hihihi	NE	ITJ
+hinübertraute	VVFIN	hinübertrauen
 hinunterzukippen	VVFIN	hinunterkippen
 hinunterzukippen	VVIZU	hinunterkippen
+hinunterzuwürgen	VVIZU	hinunterwürgen
 hinzurücken	VVIZU	hinrücken
 hochöchst	ADV	hoch
 Hours	FM	hour
@@ -170,8 +184,10 @@ islamistischen	ADJA	islamistisch
 jammervollem	ADJA	jammervoll
 jubelst	VVFIN	jubeln
 jungüngst	ADV	jung
+katapultierte	VVFIN	katapultieren
 kept	FM	keep
 kifft	VVFIN	kiffen
+kimmt	VVFIN	kommen
 klickernde	ADJA	klickernd
 klickerte	VVFIN	klickern
 knacksenden	ADJA	knacksend
@@ -182,6 +198,8 @@ konsiderablen	ADJA	konsiderabel
 konstatiert	VVFIN	konstatieren
 krähender	ADJA	krähend
 krawattierten	ADJA	krawattiert
+läut	VVFIN	läuten
+läutn	VVFIN	läuten
 lausigsten	ADJA	lausig
 learned	FM	learn
 leinendraperien	NN	leinendraperie
@@ -193,6 +211,7 @@ métoikoi	FM	métoikos
 malos	FM	malo
 mediale	ADJA	medial
 mimetischen	ADJA	mimetisch
+miserablige	ADJA	miserablig
 möcht	VVFIN	mögen
 morschem	ADJA	morsch
 muslimischen	ADJA	muslimisch
@@ -209,6 +228,7 @@ pokalförmige	ADJA	pokalförmig
 populistische	ADJA	populistisch
 postet	VVFIN	posten
 postete	VVFIN	posten
+praktizierender	ADJA	praktizierend
 psephísmata	FM	pséphisma
 publications	FM	publication
 publications	NN	publication
@@ -220,7 +240,9 @@ repetitiven	ADJA	repetitiv
 ritualisierten	ADJA	ritualisiert
 säbelzähnigen	ADJA	säbelzähnig
 salutierten	ADJA	salutiert
+schad	ADJA	schade
 schiefliefe	VVFIN	schieflaufen
+schlabbernden	ADJA	schlabbernd
 schlenkernden	ADJA	schlenkernd
 schnapsseliger	ADJA	schnapsselig
 schnarrte	ADJA	schnarren
@@ -228,6 +250,7 @@ schnarrte	VVFIN	schnarren
 schnurgelt	VVFIN	schnurgeln
 schwarzsahen	VVFIN	schwarzsehen
 schwarzsahen	VVINF	schwarzsehen
+schwört	VVFIN	schwören
 selbstbewußter	ADJD	selbstbewusst
 silberhellem	ADJA	silberhell
 sin	VAFIN	sein
@@ -250,6 +273,7 @@ thebanische	ADJA	thebanisch
 thebanischer	ADJA	thebanisch
 tiefgeschnittene	ADJA tiefgeschnitten
 todlangweiliger	ADJA	todlangweilig
+trostloser	ADJA	trostlos
 twitterte	VVFIN	twittern
 überzeugter	ADJA	überzeugt
 unhintergehbare	ADJA	unhintergehbar
@@ -261,6 +285,8 @@ verkräuselte	VVFIN	verkräuseln
 vernuschelte	ADJA	vernuschelt
 vernuschelten	ADJA	vernuschelt
 verquollenem	ADJA	verquollen
+verreckter	ADJA	verreckt
+verreckter	ADJD	verreckt
 verrotzte	ADJA	verrotzt
 verrotzten	ADJA	verrotzt
 verschlüge	VVFIN	verschlagen
@@ -291,3 +317,4 @@ zurückließe	$	zurücklassen
 zusammengeschweißtem	ADJA	zusammengeschweißt
 zusammenscharrstest	ADV	zusammenscharren
 zusammenscharrstest	VVFIN	zusammenscharren
+zwickten	VVFIN	zwicken
