@@ -21,7 +21,7 @@ public class RemovePunctuationPreprocessor implements TextPreprocessor
 	{
 		if(null == contentData.getTokens() || contentData.getTokens().length == 0)
 		{
-			logger.error(errorMessagesBundle.getString("avve.textpreprocess.noTokensAvailable"));
+			logger.error(String.format(errorMessagesBundle.getString("avve.textpreprocess.noTokensAvailable"), "RemovePunctuationPreprocessor.process()"));
 		}
 		else
 		{

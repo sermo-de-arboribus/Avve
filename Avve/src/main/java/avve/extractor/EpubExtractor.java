@@ -98,16 +98,25 @@ public class EpubExtractor
 			
 			if(null != epubFile && languageCode.equals(language))
 			{
+				String lemmatizedText = ebookContentData.getLemmatizedText();
+				
 				// add the text to a Lucene index (for TF/IDF retrieval)
-				luceneService.addTextToLuceneIndex(ebookContentData.getLemmatizedText(), epubFile.getDocumentId(), epubFile, language);
+				luceneService.addTextToLuceneIndex(lemmatizedText, epubFile.getDocumentId(), epubFile, language);
+				
+				if(lemmatizedText.length() > 0)
+				{
+					// serialize temporary file to disk
+					serializeTempEbookContentFileToDisk(inputFile, warengruppe, ebookContentData);	
+				}
+				else
+				{
+					logger.error(String.format(errorMessageBundle.getString("avve.textpreprocess.noTokensAvailable"), "EpubExtractor.serializeTempEbookContentFileToDisk()"));
+				}
 			}
 			else
 			{
 				logger.error(String.format(errorMessageBundle.getString("InvalidLanguage"), languageCode));
 			}
-			
-			// serialize temporary file to disk
-			serializeTempEbookContentFileToDisk(inputFile, warengruppe, ebookContentData);
 		}
 		
 		ArrayList<File> preprocessedFiles = getCollectionOfSerializedTempFiles(fileService, "output/temp/");

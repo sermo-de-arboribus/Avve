@@ -20,7 +20,7 @@ public class WordFrequencyPreprocessor implements TextPreprocessor
 	@Override
 	public void process(EbookContentData contentData)
 	{
-		logger.trace(infoMessagesBundle.getString("avve.textpreprocess.wordFrequencyProcessorStart"));
+		logger.debug(infoMessagesBundle.getString("avve.textpreprocess.wordFrequencyProcessorStart"));
 		
 		SortedMap<String, Integer> sortedWordCount = contentData.getWordFrequencies();
 		
@@ -39,6 +39,6 @@ public class WordFrequencyPreprocessor implements TextPreprocessor
 			}
 		}
 		
-		logger.trace(String.format(infoMessagesBundle.getString("avve.textpreprocess.wordFrequencyCounted"), contentData.getWordFrequencies().size()));
+		logger.info(String.format(infoMessagesBundle.getString("avve.textpreprocess.wordFrequencyCounted"), contentData.getWordFrequencies().size()));
 	}
 }

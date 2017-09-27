@@ -73,7 +73,8 @@ public class Lemmatizer implements TextPreprocessor
 		// check if we already have a tokenized text as input for the lemmatizer
 		if(ebookContentData.getTokens() == null || ebookContentData.getTokens().length == 0)
 		{
-			this.logger.error(errorMessageBundle.getString("avve.textpreprocess.noTokensAvailable"));
+			ebookContentData.setLemmas(new String[0][0]);
+			this.logger.error(String.format(errorMessageBundle.getString("avve.textpreprocess.noTokensAvailable"), "Lemmatizer.process()"));
 		}
 		else
 		{
