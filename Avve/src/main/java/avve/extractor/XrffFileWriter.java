@@ -752,6 +752,10 @@ public class XrffFileWriter
 		{
 			logger.error(errorMessageBundle.getString("avve.extractor.luceneIndexAccessError"), exc);
 	    }
+		catch (NullPointerException exc)
+		{
+			logger.error(errorMessageBundle.getString("avve.extractor.luceneIndexAccessError"), exc);
+		}
 	}
 	
 	private final String filePath;
