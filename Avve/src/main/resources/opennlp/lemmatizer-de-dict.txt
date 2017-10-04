@@ -1,4 +1,4 @@
-﻿// manuell erfasst: 000000102.asset, 000000110.asset, 000000114.asset, 000000126.asset, 000000130.asset, 000000257.asset, 000003750.asset, 000003762.asset, 000009060.asset [bis 120], 005332618.asset
+﻿// manuell erfasst: 000000102.asset, 000000110.asset, 000000114.asset, 000000126.asset, 000000130.asset, 000000257.asset, 000003750.asset, 000003762.asset, 000009060.asset [bis 160], 005332618.asset
 abfederte	VVFIN	abfedern
 abgelutschtes	ADJA	abgelutscht
 abgetrenntem	ADJA	abgetrennt
@@ -34,6 +34,7 @@ are	FM	be
 arriviertere	ADJA	arriviert
 aspirierendes	ADJA	aspirierend
 aspirinschluckende	ADJA	aspirinschluckend
+attendants	FM	attendant
 aufgestutzte	ADJA	aufgestutzt
 aufgestutzten	ADJA	aufgestutzt
 aufhatten	VVFIN	aufhaben
@@ -77,6 +78,7 @@ besonntes	ADJA	besonnt
 bestoppelten	ADJA	bestoppelt
 betonfarbenem	ADJA	betonfarben
 beunruhigender	ADJA	beunruhigend
+birds	FM	bird
 bitt	VVFIN	bitten
 blätterlosen	ADJA	blätterlos
 blasiertes	ADJA	blasiert
@@ -87,6 +89,7 @@ bleichen	ADJA	bleich
 bleigrauer	ADJA	bleigrau
 blühten	VVFIN	blühen
 blutdurstige	ADJA	blutdurstig
+boats	FM	boat
 bös	ADV	böse
 brandrotes	ADJA	brandrot
 brandschatzender	ADJA	brandschatzend
@@ -94,12 +97,14 @@ brat	VVFIN	braten
 braungrauem	ADJA	braungrau
 bretonischen	ADJA	bretonisch
 brettartige	ADJA	brettartig
+bringen	FM	bring
 brought	FM	bring
 brustschwachen	ADJA	brustschwach
 buenas	FM	bueno
 buntgefleckter	ADJA	buntgefleckt
 bzw	KON	beziehungsweise
 chairs	FM	chair
+changed	FM	change
 charismatische	ADJA	charismatisch
 charismatischen	ADJA	charismatisch
 checks	FM	check
@@ -128,6 +133,7 @@ did	FM	do
 died	FM	die
 dimmte	VVFIN	dimmen
 documents	FM	document
+doors	FM	door
 draufgestanden	VVPP	draufstehen
 dreckigbrauner	ADJA	dreckigbraun
 drittältestes	ADJA	drittältest
@@ -216,6 +222,7 @@ helllichten	ADJA	helllicht
 heraussprudelte	VVFIN	heraussprudeln
 hervorsah	VVFIN	hervorsehen
 heuen	ADV	heute
+highwaymen	FM	highwayman
 hihi	APPR	ITJ
 hihi	NE	ITJ
 hihi	VVFIN	ITJ
@@ -279,6 +286,7 @@ lesen	FM	last
 lausigsten	ADJA	lausig
 learned	FM	learn
 leinendraperien	NN	leinendraperie
+letters	FM	letter
 lives	FM	life
 ll	FM	will
 looking	FM	look
@@ -303,6 +311,7 @@ nachtdunkle	ADJA	nachtdunkel
 nehm	VVFIN	nehmen
 neonblaue	ADJA	neonblau
 noches	FM	noche
+nothängen	FM	nothing
 numbers	FM	number
 orangenfarbenen	ADJA	orangenfarben
 outings	FM	outing
@@ -337,6 +346,7 @@ säbelzähnigen	ADJA	säbelzähnig
 said	ADJA	say
 sailors	FM	sailor
 salutierten	ADJA	salutiert
+samen	FM	same
 sausages	FM	sausage
 savait	FM	savoir
 schad	ADJA	schade
@@ -353,6 +363,7 @@ schnurgelt	VVFIN	schnurgeln
 schwarzsahen	VVFIN	schwarzsehen
 schwarzsahen	VVINF	schwarzsehen
 schwört	VVFIN	schwören
+seems	FM	seem
 seh	VVFIN	sehen
 seiest	VAFIN	sein
 seiten	NN	seite
@@ -370,6 +381,7 @@ sommersüße	ADV	sommersüß
 spingt	VVFIN	springen
 spoilt	FM	spoil
 spoons	FM	spoon
+started	FM	start
 staubflirrenden	ADJA	staubflirrend
 steiflippigen	ADJA	steiflippig
 stehn	VVINF	stehen
@@ -392,9 +404,11 @@ thebanische	ADJA	thebanisch
 thebanischer	ADJA	thebanisch
 things	FM	thing
 tiefgeschnittene	ADJA tiefgeschnitten
+timen	FM	time
 todlangweiliger	ADJA	todlangweilig
 told	FM	tell
 tränenüberströmte	ADJA	tränenüberströmt
+travellers	FM	traveller
 triefte	VVFIN	triefen
 trostloser	ADJA	trostlos
 türe	NN	tür
@@ -437,8 +451,8 @@ vors	APPRART	vor
 vorüberkamen	VVFIN	vorüberkommen
 wabernde	ADJA	wabernd
 wandt	VVFIN	wenden
-want	$(	FM
-we	VVFIN	FM
+wanted	FM	want
+wants	FM	want
 weiblichstes	ADJA	weiblich
 weißen	ADJD	weiß
 weißen	VVFIN	wissen
