@@ -1,39 +1,29 @@
 package avve.extractor;
 
 import avve.epubhandling.EbookContentData;
+import avve.services.ControlledVocabularyService;
 import avve.services.FileService;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.Map.Entry;
+
+import nu.xom.*;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.index.Terms;
-import org.apache.lucene.index.TermsEnum;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.index.*;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.QueryBuilder;
 
-import nu.xom.*;
-
 public class XrffFileWriter
 {
-	public XrffFileWriter(final String filePath, final FileService fileService, final Directory luceneIndexDirectory, final Logger logger)
+	public XrffFileWriter(final String filePath, final FileService fileService, final Directory luceneIndexDirectory, final Logger logger,
+			final ControlledVocabularyService controlledVocabularyService)
 	{
+		this.controlledVocabularyService = controlledVocabularyService;
 		this.filePath = filePath;
 		this.fileService = fileService;
 		this.logger = logger;
@@ -386,6 +376,22 @@ public class XrffFileWriter
 		modalVerbsElement.appendChild("" + content.getModalVerbRatio());
 		instanceElement.appendChild(modalVerbsElement);
 		
+		// handle controlled vocabulary terms, if an appropriate service is defined
+		if(null != controlledVocabularyService)
+		{
+			Iterator<String> cvIterator = controlledVocabularyService.getControlledVocabularyIterator();
+			while(cvIterator.hasNext())
+			{
+				String term = cvIterator.next();
+				int numberOfOccurrences = null != content.getLemmaFrequencies().get(term) ? content.getLemmaFrequencies().get(term) : 0;
+				Element termElement = new Element("value");
+				Comment termElementComment = new Comment("number of term occurrances for " + term);
+				termElement.appendChild(termElementComment);
+				termElement.appendChild("" + numberOfOccurrences);
+				instanceElement.appendChild(termElement);
+			}
+		}
+		
 		// print class
 		Element classElement = new Element("value");
 		Comment classComment = new Comment("class");
@@ -628,6 +634,20 @@ public class XrffFileWriter
 		modalVerbsElement.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(modalVerbsElement);
 		
+		// handle controlled vocabulary terms, if an appropriate service is defned
+		if(null != controlledVocabularyService)
+		{
+			Iterator<String> cvIterator = controlledVocabularyService.getControlledVocabularyIterator();
+			while(cvIterator.hasNext())
+			{
+				String term = cvIterator.next();
+				Element termElement = new Element("attribute");
+				termElement.addAttribute(new Attribute("name", "cv_" + term));
+				termElement.addAttribute(new Attribute("type", "numeric"));
+				attributes.appendChild(termElement);
+			}
+		}
+		
 		// class element
 		Element classElement = new Element("attribute");
 		classElement.addAttribute(new Attribute("class", "yes"));
@@ -758,10 +778,11 @@ public class XrffFileWriter
 		}
 	}
 	
+	private final ControlledVocabularyService controlledVocabularyService;
 	private final String filePath;
 	private final FileService fileService;
-	private Logger logger;
-	private Directory luceneIndexDirectory;
+	private final Logger logger;
+	private final Directory luceneIndexDirectory;
 	
 	private static final ResourceBundle errorMessageBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());

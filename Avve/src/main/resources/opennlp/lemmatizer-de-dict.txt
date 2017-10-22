@@ -29,6 +29,7 @@ antithetischer	ADJA	antithetisch
 anwandelte	VVFIN	anwandeln
 anwehende	ADJA	anwehend
 anxieties	FM	anxiety
+aphorismen	NN	aphorismus
 árchontes	NN	árchon
 are	FM	be
 arriviertere	ADJA	arriviert
@@ -329,6 +330,7 @@ mondbeschienene	ADJA	mondbeschienen
 months	FM	month
 mornings	FM	morning
 morschem	ADJA	morsch
+musikalien	NN	musikalie
 muslimischen	ADJA	muslimisch
 my	NE	FM
 nachtdunkle	ADJA	nachtdunkel

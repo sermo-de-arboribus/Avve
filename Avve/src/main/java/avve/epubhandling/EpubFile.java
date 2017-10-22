@@ -2,7 +2,6 @@ package avve.epubhandling;
 
 import avve.services.FileService;
 import avve.services.XmlService;
-import net.sf.saxon.s9api.XPathCompiler;
 
 import java.io.*;
 import java.util.*;

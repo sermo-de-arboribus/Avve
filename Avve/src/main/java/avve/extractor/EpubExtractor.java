@@ -45,6 +45,7 @@ public class EpubExtractor
 	private static XmlService xmlService = new XmlService(fileService, logger);
 	private static String statsDirectory = "output/stats";
 	private static String textDirectory = "output/text";
+	private static ControlledVocabularyService controlledVocabularyService = null;
 	private static LuceneService luceneService = new LuceneService(logger, fileService);
 	
 	/**
@@ -69,6 +70,19 @@ public class EpubExtractor
 		ArrayList<File> inputFiles = getCollectionOfInputFiles(fileService, cliArguments);
 
 		logger.info(String.format(infoMessagesBundle.getString("avve.extractor.numberOfFilesToProcess"), inputFiles.size()));
+		
+		if(cliArguments.hasOption(CommandLineArguments.CONTROLLEDVOCABULARY.toString()))
+		{
+			try
+			{
+				controlledVocabularyService = new ControlledVocabularyService(cliArguments.getOptionValue(CommandLineArguments.CONTROLLEDVOCABULARY.toString()), fileService, logger);
+			}
+			catch (IOException exc)
+			{
+				logger.error(exc.getLocalizedMessage(), exc);
+				System.exit(1);
+			}
+		}
 		
 		// process all input files, first run: preprocess input files, push text to Lucene index, write serialized temp files
 		for(File inputFile : inputFiles)
@@ -326,7 +340,7 @@ public class EpubExtractor
 				wordVectorSize = wordVectorSizeDefaultValue;
 			}
 			
-			XrffFileWriter xrffFile = new XrffFileWriter(outputAttributes, fileService, luceneService.getLuceneIndexDirectory(), logger);
+			XrffFileWriter xrffFile = new XrffFileWriter(outputAttributes, fileService, luceneService.getLuceneIndexDirectory(), logger, controlledVocabularyService);
 			xrffFile.saveEbookContentData(ebookContentData, wordVectorSize);
 		}
 		catch (FileNotFoundException exc)
