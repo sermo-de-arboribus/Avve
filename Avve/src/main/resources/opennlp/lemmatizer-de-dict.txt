@@ -1,4 +1,4 @@
-﻿// manuell erfasst: 000000102.asset, 000000110.asset, 000000114.asset, 000000126.asset, 000000130.asset, 000000257.asset, 000003750.asset, 000003762.asset, 000009060.asset [bis 160], 005332618.asset
+﻿// manuell erfasst: 000000102.asset, 000000110.asset, 000000114.asset, 000000126.asset, 000000130.asset, 000000257.asset, 000003750.asset, 000003762.asset, 000009060.asset [bis 250], 005332618.asset, 005555565.asset
 abfederte	VVFIN	abfedern
 abgelutschtes	ADJA	abgelutscht
 abgetrenntem	ADJA	abgetrennt
@@ -9,7 +9,7 @@ abstrahlten	VVFIN	abstrahlen
 abstrichen	VVINF	abstreichen
 abtaubenden	ADJA	abtaubend
 achttürigen	ADJA	achttürig
-actually	XY	FM
+affairs	FM	affair
 akklimatisierten	ADJD	akklimatisiert
 altersbrüchigen	ADJA	altersbrüchig
 andrerseits	ADV	andererseits
@@ -63,6 +63,7 @@ beaux	FM	beau
 bedürfte	VVFIN	bedürfen
 bedurfte	VVFIN	bedürfen
 been	FM	be
+began	FM	begin
 begriffloser	ADJA	begrifflos
 beigeseidenen	ADJA	beigeseiden
 behosten	ADJA	behost
@@ -91,6 +92,8 @@ blühten	VVFIN	blühen
 blutdurstige	ADJA	blutdurstig
 boats	FM	boat
 bös	ADV	böse
+bottles	FM	bottle
+bowlen	FM	bowl
 brandrotes	ADJA	brandrot
 brandschatzender	ADJA	brandschatzend
 brat	VVFIN	braten
@@ -112,7 +115,9 @@ chicos	FM	chico
 chicos	NE	chico
 choclos	FM	choclo
 clients	FM	client
+coming	FM	come
 convirtió	FM	convertir
+corpses	FM	corpse
 crèmefarbenen	ADJA	cremefarben
 crèmeweißem	ADJA	cremeweiß
 cremeweißer	ADJA	cremeweiß
@@ -124,6 +129,7 @@ daherphilosophierenden	ADJA	daherphilosophierend
 dauergeiler	ADJA	dauergeil
 davongelaufen	VVPP	davonlaufen
 days	FM	day
+dazwischenging	VVFIN	dazwischengehen
 demografische	ADJA	demografisch
 demografischen	ADJA	demografisch
 dickbrüstige	ADJA	dickbrüstig
@@ -171,14 +177,20 @@ esprits	FM	esprit
 ess	VVFIN	essen
 estrellas	FM	estrella
 fad	ADJD	fade
+families	FM	family
 fernster	ADJA	fern
 fertigkriegte	VVFIN	fertigkriegen
+fertiltiy	FM	fertility
+files	FM	file
 find	VVFIN	finden
 flamboyanten	ADJA	flamboyant
 fliesen	FM	fly
 flirrten	VVFIN	flirren
+floors	FM	floor
 flüsterte	VVFIN	flüstern
 flutschte	VVFIN	flutschen
+forgot	FM	forget
+forks	FM	fork
 frug	VVFIN	fragen
 füllte	VVFIN	füllen
 füllten	VVFIN	füllen
@@ -188,6 +200,7 @@ gallische	ADJA	gallisch
 gefahren	NN	gefahr
 gehn	VVFIN	gehen
 gerad	KOKOM	gerade
+geschönte	ADJA	geschönt
 getönter	ADJA	getönt
 geschehn	VVFIN|VVINF	geschehen
 geschmeichelten	ADJA	geschmeichelt
@@ -213,6 +226,7 @@ gutginge	VVFIN	gutgehen
 had	FM	have
 hätt	VVFIN	haben
 halbweiches	ADJA	halbweich
+hands	FM	hand
 happened	FM	happen
 harmloser	ADJA	harmlos
 harmloser	ADJD	harmlos
@@ -238,6 +252,7 @@ hinunterzuwürgen	VVIZU	hinunterwürgen
 hinzurücken	VVIZU	hinrücken
 hochöchst	ADV	höchst
 hochöchst	VVFIN	höchst
+homes	FM	home
 Hours	FM	hour
 hours	FM	hour
 houses	FM	house
@@ -257,11 +272,13 @@ irgendeine	PIS	irgendein
 islamistischen	ADJA	islamistisch
 jammervollem	ADJA	jammervoll
 jdn	PIS	jemand
+jewels	FM	jewel
 jobs	FM	job
 jubelst	VVFIN	jubeln
 jungüngst	ADV	jung
 käm	VVFIN	kommen
 katapultierte	VVFIN	katapultieren
+keeps	FM	keep
 kept	FM	keep
 kifft	VVFIN	kiffen
 kimmt	VVFIN	kommen
@@ -271,7 +288,9 @@ klingender	ADJA	klingend
 knacksenden	ADJA	knacksend
 knackste	VVFIN	knacksen
 knarrender	ADJA	knarrend
+knew	FM	know
 knochenspitzen	NN	knochenspitze
+knocken	FM	knock
 knüpfte	VVFIN	knüpfen
 konsiderablen	ADJA	konsiderabel
 konstatiert	VVFIN	konstatieren
@@ -280,6 +299,7 @@ krawattierten	ADJA	krawattiert
 läut	VVFIN	läuten
 läutn	VVFIN	läuten
 laughing	FM	laugh
+lawyers	FM	lawyer
 lawyers	NE	lawyer
 leasen	FM	least
 lesen	FM	last
@@ -289,21 +309,25 @@ leinendraperien	NN	leinendraperie
 letters	FM	letter
 lives	FM	life
 ll	FM	will
+locations	NN	location
 looking	FM	look
 looks	FM	look
 loswird	VVFIN	loswerden
 makedonische	ADJA	makedonisch
 makedonischen	ADJA	makedonisch
 makedonischen	NN	makedonische
-métoikoi	FM	métoikos
 malos	FM	malo
+marin	NN	marine
 mediale	ADJA	medial
 melken	FM	milk
 men	FM	man
+métoikoi	FM	métoikos
 mimetischen	ADJA	mimetisch
 miserablige	ADJA	miserablig
 möcht	VVFIN	mögen
 mondbeschienene	ADJA	mondbeschienen
+months	FM	month
+mornings	FM	morning
 morschem	ADJA	morsch
 muslimischen	ADJA	muslimisch
 my	NE	FM
@@ -316,6 +340,7 @@ numbers	FM	number
 orangenfarbenen	ADJA	orangenfarben
 outings	FM	outing
 peloponnesischen	ADJA	peloponnesisch
+perpetrators	FM	perpetrator
 petite	ADJA	petit
 petite	FM	petit
 phrasenhaftes	ADJA	phrasenhaft
@@ -335,12 +360,15 @@ publications	NN	publication
 quiero	FM	querer
 rechen	ADJD	recht
 rechtspopulistischen	ADJA	rechtspopulistisch
+rechtsradikaler	ADJA	rechtsradikal
 red	VVFIN	reden
 reindrängelten	VVFIN	reindrängeln
 reindrängelten	VVIZU	reindrängeln
 rencontrent	FM	rencontrer
 repetitiven	ADJA	repetitiv
+resources	FM	resource
 ritualisierten	ADJA	ritualisiert
+roaming	FM	roam
 rüstete	VVFIN	rüsten
 säbelzähnigen	ADJA	säbelzähnig
 said	ADJA	say
@@ -349,6 +377,7 @@ salutierten	ADJA	salutiert
 samen	FM	same
 sausages	FM	sausage
 savait	FM	savoir
+says	FM	say
 schad	ADJA	schade
 schaun	VVFIN	schauen
 schiefliefe	VVFIN	schieflaufen
@@ -363,6 +392,7 @@ schnurgelt	VVFIN	schnurgeln
 schwarzsahen	VVFIN	schwarzsehen
 schwarzsahen	VVINF	schwarzsehen
 schwört	VVFIN	schwören
+scrubbed	FM	scrub
 seems	FM	seem
 seh	VVFIN	sehen
 seiest	VAFIN	sein
@@ -370,9 +400,12 @@ seiten	NN	seite
 selbstbewußter	ADJD	selbstbewusst
 servants	FM	servant
 shelves	FM	shelf
+ships	FM	ship
 shoes	FM	shoe
+shutting	FM	shut
 silberhellem	ADJA	silberhell
 sin	VAFIN	sein
+sins	FM	sin
 skatete	VVFIN	skaten
 solang	ADV	solange
 soltauschen	ADJA	soltausche
@@ -381,6 +414,7 @@ sommersüße	ADV	sommersüß
 spingt	VVFIN	springen
 spoilt	FM	spoil
 spoons	FM	spoon
+spreading	FM	spread
 started	FM	start
 staubflirrenden	ADJA	staubflirrend
 steiflippigen	ADJA	steiflippig
@@ -390,6 +424,7 @@ stehn	VVFIN|VVINF	stehen
 sterb	VVFIN	sterben
 sth	FM	something
 stockdumme	ADJA stockdumm
+strang	FM	strange
 streets	FM	street
 streichelndes	ADJA streichelnd
 strullte	VVFIN	strullen
@@ -397,12 +432,14 @@ stückelten	VVFIN	stückeln
 sueddeutsche	ADJA	süddeutsch
 superscharfes	ADJA superscharf
 tät	VVFIN	tun
+taking	FM	take
 talking	FM	talk
 taunassen	ADJA	taunass
 terribel	FM	terrible
 thebanische	ADJA	thebanisch
 thebanischer	ADJA	thebanisch
 things	FM	thing
+thousands	FM	thousand
 tiefgeschnittene	ADJA tiefgeschnitten
 timen	FM	time
 todlangweiliger	ADJA	todlangweilig
@@ -411,10 +448,12 @@ tränenüberströmte	ADJA	tränenüberströmt
 travellers	FM	traveller
 triefte	VVFIN	triefen
 trostloser	ADJA	trostlos
+trying	FM	try
 türe	NN	tür
 twitterte	VVFIN	twittern
 überm	APPRART	über
 überzeugter	ADJA	überzeugt
+umfragen	NN	umfrage
 umzukleiden	VVIZU	umkleiden
 unhintergehbare	ADJA	unhintergehbar
 unsre	PPOSAT	unser
@@ -422,6 +461,7 @@ untern	APPRART	unter
 unterschwellige	ADJA	unterschwellig
 unterzeichen	ART	unterzeichnen
 unterzeichen	VVFIN	unterzeichnen
+uploads	FM	upload
 vergnügen	ADJA	vergnügt
 verkräuselte	VVFIN	verkräuseln
 verneigten	ADJA	verneigt
@@ -443,6 +483,7 @@ verwitweten	ADJA	verwitwet
 verwitwetes	ADJA	verwitwet
 verübelst	VVFIN	verübeln
 verwöhnst	VVFIN	verwöhnen
+victims	FM	victim
 volksbeschlusses	NN	volksbeschluss
 vollgelogen	VVPP	volllügen
 vorhabe	VVFIN	vorhaben
@@ -453,11 +494,13 @@ wabernde	ADJA	wabernd
 wandt	VVFIN	wenden
 wanted	FM	want
 wants	FM	want
+weeks	FM	week
 weiblichstes	ADJA	weiblich
 weißen	ADJD	weiß
 weißen	VVFIN	wissen
 weißt	VVFIN	wissen
 weiterbrachte	VVFIN	weiterbringen
+wellen	FM	well
 werd	VAFIN	werden
 werd	VVFIN	werden
 were	FM	be
@@ -467,13 +510,16 @@ wiedersehn	NN|VVFIN	wiedersehen
 wiedersehn	VVFIN	wiedersehen
 wiegte	VVFIN	wiegen
 wiegten	VVFIN	wiegen
+windows	FM	window
 wohlnähren	ADJD	wohlgenährt
 wollenes	ADJA	wollen
+worked	FM	work
 würd	VAFIN	sein
 wummert	VVFIN	wummern
 wummerte	VVFIN	wummern
 wundervoller	ADJA	wundervoll
 wurd	VAFIN	werden
+years	FM	year
 zauste	VVFIN	zausen
 zerschleißt	ADJA	zerschlissen
 ziehn	VVINF	ziehen

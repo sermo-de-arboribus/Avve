@@ -163,7 +163,7 @@ public class Lemmatizer implements TextPreprocessor
 			ebookContentData.setLemmas(lemmaArray);
 			
 			//TODO test output, remove later
-			StringBuffer sb = new StringBuffer();
+/*			StringBuffer sb = new StringBuffer();
 			
 			for(int i = 0; i < posArray.length; i++)
 			{
@@ -193,7 +193,7 @@ public class Lemmatizer implements TextPreprocessor
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 			
 			logger.info(String.format(infoMessagesBundle.getString("avve.textpreprocess.numberOfLemmasDetected"), lemmaFrequencies.size()));
 		}
