@@ -177,6 +177,7 @@ erziehst	VVFIN	erziehen
 esprits	FM	esprit
 ess	VVFIN	essen
 estrellas	FM	estrella
+extraweichen	ADJA	extraweich
 fad	ADJD	fade
 families	FM	family
 fernster	ADJA	fern
@@ -244,6 +245,7 @@ hihi	VVFIN	ITJ
 hihihi	$	ITJ
 hihihi	NE	ITJ
 hineinpasse	VVFIN	hineinpassen
+hinlief	VVFIN	hinlaufen
 hinübersah	VVFIN	hinübersehen
 hinübertraute	VVFIN	hinübertrauen
 hinuntersah	VVFIN	hinuntersehen
@@ -444,6 +446,7 @@ things	FM	thing
 thousands	FM	thousand
 tiefgeschnittene	ADJA tiefgeschnitten
 timen	FM	time
+tippst	VVFIN	tippen
 todlangweiliger	ADJA	todlangweilig
 told	FM	tell
 tränenüberströmte	ADJA	tränenüberströmt

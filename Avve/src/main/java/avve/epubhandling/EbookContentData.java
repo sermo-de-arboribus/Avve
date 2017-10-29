@@ -238,6 +238,12 @@ public class EbookContentData implements Serializable
 		return calculatePosTokenRatio("PTKNEG");
 	}
 	
+	public double getNormalizedLemmaFrequency(String lemma)
+	{
+		int lemmaFrequency = null != getLemmaFrequencies().get(lemma) ? getLemmaFrequencies().get(lemma) : 0;
+		return lemmaFrequency / (double)lemmaFrequencies.size();
+	}
+	
 	/**
 	 * Get the number of nouns, divided by the number of tokens in this ebook text.
 	 * The noun count includes general nouns as well as named entities
@@ -523,8 +529,8 @@ public class EbookContentData implements Serializable
 	
 	private void initializeWarengruppenMap()
 	{
-		warengruppenMap.put("111", "110");
-		warengruppenMap.put("112", "110");
+		//warengruppenMap.put("111", "110");
+		//warengruppenMap.put("112", "110");
 	}
 
 	public int getNumberOfChapters()

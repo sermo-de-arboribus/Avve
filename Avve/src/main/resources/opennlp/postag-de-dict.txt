@@ -135,6 +135,7 @@ boats	$(	FM
 bollocks	NE	FM
 boredom	NE	FM
 both	NE	FM
+both	VVFIN	FM
 bottles	NE	FM
 boy	VVFIN	FM
 breath	$(	FM
@@ -177,6 +178,7 @@ come	NN	FM
 come	$(	FM
 coming	NE	FM
 comme	ADJA	FM
+completely	NE	FM
 cómo	NE	FM
 containing	NE	FM
 contre	NE	FM
@@ -906,6 +908,7 @@ thought	VVFIN	FM
 thousands	NE	FM
 threat	NE	FM
 through	NE	FM
+tiefgekühlt	VVFIN	ADJA|ADJD
 tiene	ADJA	FM
 time	ART	FM
 time	$(	FM

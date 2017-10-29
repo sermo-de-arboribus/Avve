@@ -383,7 +383,7 @@ public class XrffFileWriter
 			while(cvIterator.hasNext())
 			{
 				String term = cvIterator.next();
-				int numberOfOccurrences = null != content.getLemmaFrequencies().get(term) ? content.getLemmaFrequencies().get(term) : 0;
+				double numberOfOccurrences = content.getNormalizedLemmaFrequency(term);
 				Element termElement = new Element("value");
 				Comment termElementComment = new Comment("number of term occurrances for " + term);
 				termElement.appendChild(termElementComment);

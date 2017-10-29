@@ -15,6 +15,7 @@ import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.LockObtainFailedException;
 
 import avve.epubhandling.EpubFile;
 import avve.services.FileService;
@@ -43,7 +44,28 @@ public class LuceneService
 		{
 		    Directory directory = getLuceneIndexDirectory();
 		    IndexWriterConfig config = new IndexWriterConfig(analyzer);
-		    iwriter = new IndexWriter(directory, config);
+		    
+		    int retryCount = 0;
+		    while(null == iwriter && retryCount < 5)
+		    {
+			    try
+			    {
+				    iwriter = new IndexWriter(directory, config);	
+			    }
+			    catch(LockObtainFailedException exc)
+			    {
+			    	retryCount++;
+			    	try
+			    	{
+						Thread.sleep((int)Math.pow(10, retryCount));
+					}
+			    	catch (InterruptedException iexc)
+			    	{
+			    		// ignore
+					}
+			    }
+		    }
+
 		    Document luceneDocument = new Document();
 		    
 		    // arrange the document id field
@@ -64,9 +86,15 @@ public class LuceneService
 		    Field luceneField = new Field("plaintext", plainText, luceneFieldType);
 		    luceneDocument.add(luceneField);
 		    
-			//iwriter.addDocument(luceneDocument);
-			iwriter.updateDocument(new Term(documentId), luceneDocument);
-		    iwriter.close();
+			if(null != iwriter)
+			{
+				iwriter.updateDocument(new Term(documentId), luceneDocument);
+			    iwriter.close();
+			}
+			else
+			{
+				logger.error(String.format(errorMessageBundle.getString("avve.extractor.luceneIndexWritingError"), epubFile.getDocumentId()));
+			}
 		}
 		catch (final IOException exc)
 		{

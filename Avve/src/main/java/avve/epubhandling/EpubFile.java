@@ -164,7 +164,8 @@ public class EpubFile implements Serializable
 					}
 					catch (NumberFormatException exc)
 					{
-						logger.error(exc.getLocalizedMessage(), exc);
+						// the depthOfToc variable will be 0 if this error is raised
+						logger.warn(errorMessagesBundle.getString("avve.epubhandling.tocDepthNumberFormatError"));
 					}
 					break;
 					
@@ -261,7 +262,8 @@ public class EpubFile implements Serializable
 		return resultList;
 	}
 
-	// Try to determine the document ID from the EPUB's metadata and store it in the documentId instance variable. If no ID is found, a timestamp is used as the ID instead
+	// Try to determine the document ID from the EPUB's metadata and store it in the documentId instance variable.
+	// To ensure uniqueness of the ID even in cases where several ebooks share the same ID, the file size is appended
 	private void determineDocumentId(final Document parsedOebpsFile)
 	{
 		Nodes uniqueIdentifierNodes = parsedOebpsFile.query("/opf:package/opf:metadata/*[@id = /opf:package/@unique-identifier]", opfNamespace);
@@ -270,13 +272,15 @@ public class EpubFile implements Serializable
 			try
 			{
 				String uniqueIdentifier = uniqueIdentifierNodes.get(0).getValue();
+				uniqueIdentifier = uniqueIdentifier + "_" + fileSize;
 				logger.trace(String.format(infoMessagesBundle.getString("avve.epubhandling.uniqueIdentifierFound"), uniqueIdentifier));
 				setDocumentId(uniqueIdentifier);
 			}
 			catch(Exception exc)
 			{
+				// we didn't find an ID within the ebook file, use the file path as a default
 				logger.error(errorMessagesBundle.getString("avve.epubhandling.documentIdDeterminationException"));
-				setDocumentId("" + (System.currentTimeMillis() / 100));
+				setDocumentId(filePath);
 			}
 		}
 	}
