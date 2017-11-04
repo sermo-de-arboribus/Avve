@@ -35,6 +35,7 @@ public class EpubFile implements Serializable
 	private String language;
 	transient private Logger logger;
 	private int numberOfChapters;
+	private int numberOfImages;
 	private int numberOfTocItems;
 	private String pathToTocFile;
 	private int depthOfToc;
@@ -133,6 +134,11 @@ public class EpubFile implements Serializable
 	{
 		return numberOfChapters;
 	}
+	
+	public int getNumberOfImages()
+	{
+		return numberOfImages;
+	}
 
 	public int getNumberOfTocItems()
 	{
@@ -216,6 +222,7 @@ public class EpubFile implements Serializable
 			Document parsedOebpsFile = xmlService.build(instream);
 			determineLanguage(parsedOebpsFile);
 			determineDocumentId(parsedOebpsFile);
+			determineNumberOfImages(parsedOebpsFile);
 			Nodes spine = parsedOebpsFile.query("/opf:package/opf:spine/opf:itemref/@idref", opfNamespace);
 			numberOfChapters = spine.size();
 
@@ -300,6 +307,12 @@ public class EpubFile implements Serializable
 				logger.error(String.format(errorMessagesBundle.getString("avve.epubhandling.languageDeterminationException"), dublinCoreLanguage.get(0).getValue().length()));
 			}
 		}
+	}
+	
+	private void determineNumberOfImages(Document parsedOebpsFile)
+	{
+		Nodes imageItems = parsedOebpsFile.query("/opf:package/opf:manifest/opf:item[starts-with(@media-type, 'image')]'", opfNamespace);
+		numberOfImages = imageItems.size();
 	}
 
 	private String getOebpsFilePath(final String epubDir) throws IOException, ParsingException, SAXException

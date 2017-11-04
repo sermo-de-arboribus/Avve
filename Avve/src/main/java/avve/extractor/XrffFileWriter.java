@@ -376,6 +376,13 @@ public class XrffFileWriter
 		modalVerbsElement.appendChild("" + content.getModalVerbRatio());
 		instanceElement.appendChild(modalVerbsElement);
 		
+		// print number of images
+		Element numberOfImagesElement = new Element("value");
+		Comment numberOfImagesElementComment = new Comment("number of images");
+		numberOfImagesElement.appendChild(numberOfImagesElementComment);
+		numberOfImagesElement.appendChild("" + content.getNumberOfImages());
+		instanceElement.appendChild(numberOfImagesElement);
+		
 		// handle controlled vocabulary terms, if an appropriate service is defined
 		if(null != controlledVocabularyService)
 		{
@@ -634,7 +641,13 @@ public class XrffFileWriter
 		modalVerbsElement.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(modalVerbsElement);
 		
-		// handle controlled vocabulary terms, if an appropriate service is defned
+		// number of images
+		Element numberOfImagesElement = new Element("attribute");
+		numberOfImagesElement.addAttribute(new Attribute("name", "numberOfImages"));
+		numberOfImagesElement.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(numberOfImagesElement);
+		
+		// handle controlled vocabulary terms, if an appropriate service is defined
 		if(null != controlledVocabularyService)
 		{
 			Iterator<String> cvIterator = controlledVocabularyService.getControlledVocabularyIterator();
@@ -665,6 +678,7 @@ public class XrffFileWriter
 			int totalNumberOfDocumentsInLuceneIndex = luceneIndexReader.numDocs();
 			// termThreshold is a value to prevent very rare words to be used in the output. The threshold is at least 2 and grows moderately (i.e. logarithmically) with the number of indexed documents 
 			int termThreshold = 2 + (int)Math.log10(totalNumberOfDocumentsInLuceneIndex);
+			int upperThreshold = totalNumberOfDocumentsInLuceneIndex - (2 * (int)Math.log10(totalNumberOfDocumentsInLuceneIndex));
 			
 			logger.info(String.format(infoMessagesBundle.getString("avve.extractor.retrievingTfIdfForDocument"), documentId));
 			
@@ -708,7 +722,7 @@ public class XrffFileWriter
 				    	{
 				    		// only use words that don't appear in (nearly) all documents and that appear at least in three documents
 				    		int docFreq = luceneIndexReader.docFreq(new Term("plaintext", bytesRefToTerm));
-				    		if(docFreq > termThreshold && docFreq < (numberOfDocuments * 0.9))
+				    		if(docFreq > termThreshold && docFreq < upperThreshold)
 				    		{
 					    		// initialize term frequency and calculate inverse document frequency (only need to do that once per term)
 					    		double idf = 1 + Math.log(numberOfDocuments / docFreq + 1.0);

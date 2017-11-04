@@ -254,6 +254,11 @@ public class EbookContentData implements Serializable
 		return calculatePosTokenRatio(new String[]{"NN", "NE"});
 	}
 	
+	public int getNumberOfImages()
+	{
+		return epubFile.getNumberOfImages();
+	}
+	
 	/**
 	 * This method returns a rough estimation of sentence that contain passive tenses. The method is expected to over-estimate the actual number
 	 * of passive tense sentences, because it doesn't disambiguate homonymous forms, e.g.
