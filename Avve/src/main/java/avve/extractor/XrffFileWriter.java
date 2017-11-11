@@ -46,7 +46,7 @@ public class XrffFileWriter
 			
 			// workaround for internal DTD subset, see http://www.xom.nu/tutorial.xhtml
 			Builder builder = new Builder();
-			Document tempDoc = builder.build(dtd, null);
+			Document tempDoc = builder.build(dtd + System.lineSeparator() + "<root />", null);
 			DocType doctype = tempDoc.getDocType();
 			doctype.detach();
 			xmlOutputDocument.setDocType(doctype);
@@ -801,7 +801,7 @@ public class XrffFileWriter
 	private static final ResourceBundle errorMessageBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	
-	private static final String dtd = "<!DOCTYPE dataset [" + System.lineSeparator() + 
+	public static final String dtd = "<!DOCTYPE dataset [" + System.lineSeparator() + 
 			"<!ELEMENT dataset (header,body)>" + System.lineSeparator() + 
 			"<!ATTLIST dataset name CDATA #REQUIRED>" + System.lineSeparator() + 
 			"<!ATTLIST dataset version CDATA \"3.5.4\">" + System.lineSeparator() + 
@@ -830,6 +830,5 @@ public class XrffFileWriter
 			"<!ELEMENT value (#PCDATA|instances)*>" + System.lineSeparator() + 
 			"<!ATTLIST value index CDATA #IMPLIED>   <!-- 1-based index (only used for instance format \"sparse\") -->" + System.lineSeparator() + 
 			"<!ATTLIST value missing (yes|no) \"no\">" + System.lineSeparator() + 
-			"]>" + System.lineSeparator() +
-			"<root />";
+			"]>";
 }

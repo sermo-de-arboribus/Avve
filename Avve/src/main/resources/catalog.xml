@@ -4,4 +4,5 @@
   <nextCatalog catalog="xhtml/dtd/xhtmlcatalog.xml"/>
   <nextCatalog catalog="xhtml11/dtd/xhtmlcatalog.xml"/>
   <nextCatalog catalog="daisy/daisycatalog.xml"/>
+  <nextCatalog catalog="wekadtd/wekacatalog.xml"/>
 </catalog>
