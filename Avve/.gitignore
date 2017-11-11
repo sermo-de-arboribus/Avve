@@ -3,3 +3,7 @@
 /output/
 /.settings/
 /.externalToolBuilders/
+/weka/
+/AvveClassify.jar
+/avveRun.log
+/build.xml

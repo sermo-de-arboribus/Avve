@@ -166,19 +166,26 @@ public class XrffFileWriter
 		uniquePartsOfSpeech.appendChild("" + content.getPartsOfSpeechFrequencies().size());
 		instanceElement.appendChild(uniquePartsOfSpeech);
 		
+		// print total number of words
+		Element totalNumberOfWords = new Element("value");
+		Comment totalNumberOfWordsComment = new Comment("total number of words");
+		totalNumberOfWords.appendChild(totalNumberOfWordsComment);
+		totalNumberOfWords.appendChild("" + content.getNumberOfWords());
+		instanceElement.appendChild(totalNumberOfWords);
+		
 		// print number of unique words
 		Element uniqueNumberOfWords = new Element("value");
 		Comment uniqueNumberOfWordsComment = new Comment("unique number of words");
 		uniqueNumberOfWords.appendChild(uniqueNumberOfWordsComment);
-		uniqueNumberOfWords.appendChild("" + content.getWordFrequencies().size());
+		uniqueNumberOfWords.appendChild("" + content.getUniqueNumberOfWords());
 		instanceElement.appendChild(uniqueNumberOfWords);
-
-		// print unique-to-total-words-ratio
-		Element uniquetoTotalNumberOfWords = new Element("value");
-		Comment uniquetoTotalNumberOfWordsComment = new Comment("ratio of unique to total number of words");
-		uniquetoTotalNumberOfWords.appendChild(uniquetoTotalNumberOfWordsComment);
-		uniquetoTotalNumberOfWords.appendChild("" + ((double)content.getWordFrequencies().size() / (double)content.getNumberOfTokens()));
-		instanceElement.appendChild(uniquetoTotalNumberOfWords);
+		
+		// print average word length
+		Element averageWordLength = new Element("value");
+		Comment averageWordLengthComment = new Comment("average word length");
+		averageWordLength.appendChild(averageWordLengthComment);
+		averageWordLength.appendChild("" + content.getAverageWordLength());
+		instanceElement.appendChild(averageWordLength);
 		
 		// print ratio of passive sentences
 		Element ratioOfPassiveSentences = new Element("value");
@@ -461,17 +468,23 @@ public class XrffFileWriter
 		uniquePartsOfSpeech.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(uniquePartsOfSpeech);
 		
+		// total number of words
+		Element totalNumberOfWords = new Element("attribute");
+		totalNumberOfWords.addAttribute(new Attribute("name", "totalNumberOfWords"));
+		totalNumberOfWords.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(totalNumberOfWords);
+		
 		// unique number of words
 		Element uniqueNumberOfWords = new Element("attribute");
 		uniqueNumberOfWords.addAttribute(new Attribute("name", "uniqueNumberOfWords"));
 		uniqueNumberOfWords.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(uniqueNumberOfWords);
-
-		// ratio of unique to total number of words
-		Element uniqueToTotalNumberOfWords = new Element("attribute");
-		uniqueToTotalNumberOfWords.addAttribute(new Attribute("name", "uniqueToTotalNumberOfWordsRatio"));
-		uniqueToTotalNumberOfWords.addAttribute(new Attribute("type", "numeric"));
-		attributes.appendChild(uniqueToTotalNumberOfWords);
+		
+		// average word length
+		Element averageWordLength = new Element("attribute");
+		averageWordLength.addAttribute(new Attribute("name", "averageWordLength"));
+		averageWordLength.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(averageWordLength);
 		
 		// ratio of passive sentences
 		Element ratioOfPassiveSentences = new Element("attribute");

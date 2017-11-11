@@ -22,23 +22,14 @@ public class WordFrequencyPreprocessor implements TextPreprocessor
 	{
 		logger.debug(infoMessagesBundle.getString("avve.textpreprocess.wordFrequencyProcessorStart"));
 		
-		SortedMap<String, Integer> sortedWordCount = contentData.getWordFrequencies();
-		
 		for(String[] sentence : contentData.getTokens())
 		{
 			for(String token : sentence)
 			{
-				if(sortedWordCount.containsKey(token))
-				{
-					sortedWordCount.put(token, sortedWordCount.get(token) + 1);
-				}
-				else
-				{
-					sortedWordCount.put(token, 1);
-				}
+				contentData.countWord(token);
 			}
 		}
 		
-		logger.info(String.format(infoMessagesBundle.getString("avve.textpreprocess.wordFrequencyCounted"), contentData.getWordFrequencies().size()));
+		logger.info(String.format(infoMessagesBundle.getString("avve.textpreprocess.wordFrequencyCounted"), contentData.getUniqueNumberOfWords()));
 	}
 }

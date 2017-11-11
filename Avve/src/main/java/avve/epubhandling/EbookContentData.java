@@ -26,6 +26,29 @@ public class EbookContentData implements Serializable
 		
 		initializeWarengruppenMap();
 	}
+	
+	/**
+	 * Word counts are maintained to retrieve several statistics, such as word frequency or average word length
+	 * For this purpose every word encountered in a document should be passed to the countWord() function exactly once
+	 * to initialize the data structures for the aforementioned statistics.
+	 * @param word The word to be added to the statistics
+	 */
+	public void countWord(String word)
+	{
+		// add new words to the word frequency counter
+		if(wordFrequencies.containsKey(word))
+		{
+			wordFrequencies.put(word, wordFrequencies.get(word) + 1);
+		}
+		else
+		{
+			wordFrequencies.put(word, 1);
+		}
+		
+		// add new words to word length variables, to be able to calculate average word length
+		numberOfWords++;
+		wordLength += word.length();
+	}
 
 	/**
 	 * Get the number of adjectives, divided by the number of tokens in this text.
@@ -97,6 +120,15 @@ public class EbookContentData implements Serializable
 	public double getAuxiliarVerbsRatio()
 	{
 		return calculatePosTokenRatio(new String[]{"VAFIN", "VAIMP", "VAINF", "VAPP"});
+	}
+	
+	/**
+	 * Get the average word length; note that this call only provides accurate values, if all words have been passed to the countWord() function
+	 * @return The average word length of this e-book.
+	 */
+	public double getAverageWordLength()
+	{
+		return (double)wordLength / (double)numberOfWords;
 	}
 	
 	/**
@@ -212,6 +244,15 @@ public class EbookContentData implements Serializable
 	}
 	
 	/**
+	 * Get the number of main verbs in perfect participle form, divided by the number of tokens in this ebook text.
+	 * @return The verbs-to-tokens ratio
+	 */
+	public double 	getMainVerbPerfectParticiplesRatio()
+	{
+		return calculatePosTokenRatio("VVPP");
+	}
+	
+	/**
 	 * Get the number of modal verbs, divided by the number of tokens in this ebook text.
 	 * @return The modal-verb-to-tokens ratio
 	 */
@@ -251,7 +292,7 @@ public class EbookContentData implements Serializable
 	 */
 	public double getNounRatio()
 	{
-		return calculatePosTokenRatio(new String[]{"NN", "NE"});
+		return calculatePosTokenRatio("NN");
 	}
 	
 	public int getNumberOfImages()
@@ -337,12 +378,12 @@ public class EbookContentData implements Serializable
 	}
 	
 	/**
-	 * Get the number of main verbs in perfect participle form, divided by the number of tokens in this ebook text.
-	 * @return The verbs-to-tokens ratio
+	 * The overall number of words of this e-book. Note that returned values are only accurate, if all words have been passed to the countWords() function before
+	 * @return The overall number of words (not normalized)
 	 */
-	public double 	getMainVerbPerfectParticiplesRatio()
+	public int getNumberOfWords()
 	{
-		return calculatePosTokenRatio("VVPP");
+		return numberOfWords;
 	}
 	
 	public String[][] getPartsOfSpeech()
@@ -436,6 +477,15 @@ public class EbookContentData implements Serializable
 		return calculatePosTokenRatio("PRELAT");
 	}
 	
+	/**
+	 * Get the unique number of non-lemmatized words. Note that this function only returns accurate values after all words have been passed to the countWord() function
+	 * @return The unique number of words.
+	 */
+	public int getUniqueNumberOfWords()
+	{
+		return wordFrequencies.size();
+	}
+	
 	public String getWarengruppe()
 	{
 		// we might want to map some Warengruppe codes onto a common code, so we don't return the actual code, but go through a map
@@ -447,11 +497,6 @@ public class EbookContentData implements Serializable
 		{
 			return warengruppe;
 		}
-	}
-	
-	public SortedMap<String, Integer> getWordFrequencies()
-	{
-		return wordFrequencies;
 	}
 	
 	public SortedMap<String, Integer> getPartsOfSpeechFrequencies()
@@ -489,7 +534,7 @@ public class EbookContentData implements Serializable
 		this.plainText = plainText;
 	}
 	
-	private double calculatePosTokenRatio(String posToken)
+	private double calculatePosTokenRatio(final String posToken)
 	{
 		if(null == posToken || !partsOfSpeechFrequencies.containsKey(posToken))
 		{
@@ -502,7 +547,7 @@ public class EbookContentData implements Serializable
 		}
 	}
 	
-	private double calculatePosTokenRatio(String[] posTokens)
+	private double calculatePosTokenRatio(final String[] posTokens)
 	{
 		int posTokenCount = 0;
 		for(int i = 0; i < posTokens.length; i++)
@@ -520,7 +565,7 @@ public class EbookContentData implements Serializable
 		return calculateRatio(posTokenCount, getNumberOfTokens());
 	}
 	
-	private double calculateRatio(int numerator, int denominator)
+	private double calculateRatio(final int numerator, final int denominator)
 	{
 		if(denominator != 0)
 		{
@@ -571,5 +616,7 @@ public class EbookContentData implements Serializable
 	private SortedMap<String, Integer> wordFrequencies;
 	private SortedMap<String, Integer> partsOfSpeechFrequencies;
 	private int numberOfTokens;
+	private int numberOfWords;
 	private final Map<String, String> warengruppenMap;
+	private long wordLength;
 }
