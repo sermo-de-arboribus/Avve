@@ -54,6 +54,5 @@ public class ClassPredictor
 	    ois.close();
 
 	    return classifier;
-	}	
-	
+	}
 }

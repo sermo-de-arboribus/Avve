@@ -1,9 +1,6 @@
 package avve.textpreprocess;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,7 +12,6 @@ import java.util.SortedMap;
 import org.annolab.tt4j.TreeTaggerException;
 import org.annolab.tt4j.TreeTaggerWrapper;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Logger;
 
 import avve.epubhandling.EbookContentData;
