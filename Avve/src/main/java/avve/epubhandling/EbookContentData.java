@@ -485,6 +485,16 @@ public class EbookContentData implements Serializable
 	{
 		return wordFrequencies.size();
 	}
+
+	/**
+	 * Returns the ratio of number of words N divided by unique number of words V.
+	 * Note that longer texts usually have a smaller vocabulary richness than shorter ones and consider a normalization, if necessary.
+	 * @return Number of words divided by unique number of words.
+	 */
+	public double getVocabularyRichness()
+	{
+		return (double)numberOfWords / (double)getUniqueNumberOfWords();
+	}
 	
 	public String getWarengruppe()
 	{

@@ -156,6 +156,7 @@ ebendiese	PDAT	ebendies
 ebendieser	PDAT	ebendieser
 eggs	FM	egg
 ehrverletzendes	ADJA	ehrverletzend
+eingetrocknetem	ADJA	eingetrocknet
 einmotorige	ADJA	einmotorig
 einmotorigen	ADJA	einmotorig
 einschlafenden	ADJA	einschlafend
@@ -193,6 +194,7 @@ flüsterte	VVFIN	flüstern
 flutschte	VVFIN	flutschen
 forgot	FM	forget
 forks	FM	fork
+fröre	VVFIN	frieren
 frug	VVFIN	fragen
 füllte	VVFIN	füllen
 füllten	VVFIN	füllen

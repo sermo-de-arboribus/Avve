@@ -1,17 +1,21 @@
 package avve.services.lucene;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
 import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.de.GermanAnalyzer;
+import org.apache.lucene.analysis.util.ResourceLoader;
 
 /**
  * A wrapper class for Lucene's StopFilterFactory, which allows to use an in-memory stop words objects, rather than reading stopwords from disc
  */
 public class GermanStopFilterFactory extends org.apache.lucene.analysis.core.StopFilterFactory
 {
-	private CharArraySet stopWords;
+	private CharArraySet germanStopWords;
 
 	public GermanStopFilterFactory(Map<String, String> args)
 	{
@@ -19,20 +23,28 @@ public class GermanStopFilterFactory extends org.apache.lucene.analysis.core.Sto
 	}
 	
 	@Override
-	public CharArraySet getStopWords()
+	public TokenStream create(TokenStream input)
 	{
-		if(null == stopWords)
-		{
-			Collection<Object> stopWordsCollection = GermanAnalyzer.getDefaultStopSet();
+	    StopFilter stopFilter = new StopFilter(input, germanStopWords);
+	    return stopFilter;
+	}
+	  
+	@Override
+	public CharArraySet getStopWords()
+	{	
+		return germanStopWords;
+	}
+	
+	@Override
+	public void inform(ResourceLoader loader) throws IOException
+	{
+		Collection<Object> stopWordsCollection = GermanAnalyzer.getDefaultStopSet();
 			
-			stopWordsCollection.add("dass");
-			stopWordsCollection.add("schon");
-			stopWordsCollection.add("mehr");
-			stopWordsCollection.add("Cover");
+		stopWordsCollection.add("dass");
+		stopWordsCollection.add("schon");
+		stopWordsCollection.add("mehr");
+		stopWordsCollection.add("cover");
 			
-			stopWords = new CharArraySet(stopWordsCollection, false);
-		}
-		
-		return stopWords;
+		germanStopWords = new CharArraySet(stopWordsCollection, false);
 	}
 }

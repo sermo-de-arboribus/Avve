@@ -180,6 +180,13 @@ public class XrffFileWriter
 		uniqueNumberOfWords.appendChild("" + content.getUniqueNumberOfWords());
 		instanceElement.appendChild(uniqueNumberOfWords);
 		
+		// print vocabulary richness value
+		Element vocabularyRichness = new Element("value");
+		Comment vocabularyRichnessComment = new Comment("vocabulary richness");
+		vocabularyRichness.appendChild(vocabularyRichnessComment);
+		vocabularyRichness.appendChild("" + content.getVocabularyRichness());
+		instanceElement.appendChild(vocabularyRichness);
+		
 		// print average word length
 		Element averageWordLength = new Element("value");
 		Comment averageWordLengthComment = new Comment("average word length");
@@ -480,6 +487,12 @@ public class XrffFileWriter
 		uniqueNumberOfWords.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(uniqueNumberOfWords);
 		
+		// vocabulary richness
+		Element vocabularyRichness = new Element("attribute");
+		vocabularyRichness.addAttribute(new Attribute("name", "vocabularyRichness"));
+		vocabularyRichness.addAttribute(new Attribute("type", "numeric"));
+		attributes.appendChild(vocabularyRichness);
+		
 		// average word length
 		Element averageWordLength = new Element("attribute");
 		averageWordLength.addAttribute(new Attribute("name", "averageWordLength"));
@@ -691,7 +704,7 @@ public class XrffFileWriter
 			int totalNumberOfDocumentsInLuceneIndex = luceneIndexReader.numDocs();
 			// termThreshold is a value to prevent very rare words to be used in the output. The threshold is at least 2 and grows moderately (i.e. logarithmically) with the number of indexed documents 
 			int termThreshold = 2 + (int)Math.log10(totalNumberOfDocumentsInLuceneIndex);
-			int upperThreshold = totalNumberOfDocumentsInLuceneIndex - (2 * (int)Math.log10(totalNumberOfDocumentsInLuceneIndex));
+			int upperThreshold = totalNumberOfDocumentsInLuceneIndex - (2 * (int)Math.log(totalNumberOfDocumentsInLuceneIndex));
 			
 			logger.info(String.format(infoMessagesBundle.getString("avve.extractor.retrievingTfIdfForDocument"), documentId));
 			

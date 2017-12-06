@@ -91,6 +91,12 @@
 		    <artifactId>lucene-analyzers-common</artifactId>
 		    <version>6.6.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-suggest -->
+		<dependency>
+		    <groupId>org.apache.lucene</groupId>
+		    <artifactId>lucene-suggest</artifactId>
+		    <version>6.6.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.maven/maven-core -->
 		<dependency>
 		    <groupId>org.apache.maven</groupId>
