@@ -8,6 +8,7 @@ import org.apache.commons.cli.Options;
 public enum CommandLineArguments
 {
 	CONTROLLEDVOCABULARY("cv"),
+	DONOTINDEXFOREIGNWORDS("dnifw"),
 	FOLDER("folder"), 
 	INPUT("i"), 
 	LEMMACORRECTION("lc"), 
@@ -34,6 +35,7 @@ public enum CommandLineArguments
 	{
 		Options options = new Options();
 		options.addOption(CommandLineArguments.CONTROLLEDVOCABULARY.toString(), "controlledvocabulary", true, infoMessagesBundle.getString("explainControlledVocabularyOption"));
+		options.addOption(CommandLineArguments.DONOTINDEXFOREIGNWORDS.toString(), "donotindexforeignwords", false, infoMessagesBundle.getString("explainDoNotIndexForeignWordsOption"));
 		options.addOption(CommandLineArguments.INPUT.toString(), "input", true, infoMessagesBundle.getString("explainInputOption"));
 		options.addOption(CommandLineArguments.FOLDER.toString(), "inputfolder", true, infoMessagesBundle.getString("explainInputFolderOption"));
 		options.addOption(CommandLineArguments.LEMMACORRECTION.toString(), "lemmacorrection", false, infoMessagesBundle.getString("explainLemmaCorrectionOption"));

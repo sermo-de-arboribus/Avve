@@ -1,13 +1,24 @@
 ﻿// Korrektur falscher POS-Tags //
-–	ADJD	$
-–	APPR	$
-–	VVFIN	$
+—	ADJA	$(
+–	ADJD	$(
+–	APPR	$(
+–	VVFIN	$(
 à	ADJD	FM
 a	NE	FM|ITJ
 aaaaah	NE	ITJ
+abbüßten	VVINF	VVFIN
+abcahn	NN	NE
+abcashen	ADJA	VVINF
+abcbirds	ADV	NE
+abces	APPR	FM
+abcesso	ADV	FM
+abcheckt	KOKOM	VVFIN
 abglühte	ADV	VVFIN
+abkäschn	ADJA	VVINF
 able	ADJA	FM
 about	ADV	FM
+abˈßäßu	ADJA	FM
+abszess	NE	NN
 abuela	$	FM
 abuela	ADV	FM
 abzuschwingen	APPR	VVIZU
@@ -74,6 +85,7 @@ ask	NE	FM
 assistant	ADJD	FM
 assistant	ADJD	FM
 at	NE	FM
+atembeschwerde	NE	NN
 athenischer	NE	ADJA
 attendants	NE	FM
 aufm	APPR	APPRART
@@ -180,6 +192,7 @@ coming	NE	FM
 comme	ADJA	FM
 completely	NE	FM
 cómo	NE	FM
+constipação	NE	FM
 containing	NE	FM
 contre	NE	FM
 convirtió	NE	FM
@@ -193,6 +206,7 @@ cover	NE	NN
 cuatro	NE	FM
 customer	NE	FM
 dacht	NN	VVFIN
+dancen	ART	VVINF
 danebenbenahm	ART	VVFIN
 danger	ART	FM
 darinnen	VVFIN	ADV
@@ -494,6 +508,7 @@ jörn	NN	NE
 judgemental	ADJD	FM
 just	PRF	ADV|FM
 just	$(	ADV|FM
+justus	NN	NE
 jute	ADV	ADJA
 käm	ADJD	VVFIN
 käm	ART	VVFIN
@@ -513,6 +528,7 @@ knew	XY	FM
 knock	$.	FM
 know	ADJD	FM
 know	VVFIN	FM
+köjt	$,	FM
 können	$.	VMINF|VMFIN
 komm	NN	VVFIN
 koochie	ADJA	FM
@@ -557,6 +573,7 @@ loswird	VVINF	VVFIN
 lovely	VVFIN	FM
 ma	VVFIN	$
 maarten	ADJA	NE
+männer	ART	NN
 make	NE	FM
 malos	ADJA	FM
 Mama	FM	NN
@@ -876,6 +893,7 @@ tea	XY	FM
 ten	ADJA	FM
 ten	VVFIN	FM
 teneros	NE	FM
+tensão	NE	FM
 terrible	ADJA	FM
 terrible	ADV	FM
 terrible	VVINF	FM

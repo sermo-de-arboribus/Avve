@@ -13,11 +13,9 @@ import org.apache.lucene.analysis.miscellaneous.LengthFilterFactory;
 import org.apache.lucene.analysis.standard.*;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.LockObtainFailedException;
+import org.apache.lucene.store.*;
 
-import avve.epubhandling.EpubFile;
+import avve.epubhandling.EbookContentData;
 import avve.services.FileService;
 
 public class LuceneService
@@ -30,13 +28,13 @@ public class LuceneService
 	private Logger logger;
 	private FileService fileService;
 	
-	public LuceneService(Logger logger, FileService fileService)
+	public LuceneService(final Logger logger, final FileService fileService)
 	{
 		this.fileService = fileService;
 		this.logger = logger;
 	}
 	
-	public void addTextToLuceneIndex(String plainText, String documentId, EpubFile epubFile, String language)
+	public void addTextToLuceneIndex(final EbookContentData ebookContent, final String language, final boolean excludeForeignWords)
 	{		
 		IndexWriter iwriter = null;
 		
@@ -74,7 +72,7 @@ public class LuceneService
 		    documentIdFieldType.setStored(true);
 		    documentIdFieldType.setStoreTermVectors(false);
 		    documentIdFieldType.setTokenized(false);
-		    Field documentIdField = new Field("docId", documentId, documentIdFieldType);
+		    Field documentIdField = new Field("docId", ebookContent.getDocumentId(), documentIdFieldType);
 		    luceneDocument.add(documentIdField);
 		    
 		    // arrange the text content field
@@ -83,22 +81,31 @@ public class LuceneService
 		    luceneFieldType.setStored(false);
 		    luceneFieldType.setStoreTermVectors(true);
 		    luceneFieldType.setTokenized(true);
-		    Field luceneField = new Field("plaintext", plainText, luceneFieldType);
-		    luceneDocument.add(luceneField);
+		    Field fullTextField = null;
+		    if(excludeForeignWords)
+		    {
+		    	fullTextField = new Field("fulltext", ebookContent.getLemmatizedTextWithoutForeignWords(), luceneFieldType);
+		    }
+		    else
+		    {
+		    	fullTextField = new Field("fulltext", ebookContent.getLemmatizedText(), luceneFieldType);
+		    }
+		    
+		    luceneDocument.add(fullTextField);
 		    
 			if(null != iwriter)
 			{
-				iwriter.updateDocument(new Term(documentId), luceneDocument);
+				iwriter.updateDocument(new Term(ebookContent.getDocumentId()), luceneDocument);
 			    iwriter.close();
 			}
 			else
 			{
-				logger.error(String.format(errorMessageBundle.getString("avve.extractor.luceneIndexWritingError"), epubFile.getDocumentId()));
+				logger.error(String.format(errorMessageBundle.getString("avve.extractor.luceneIndexWritingError"), ebookContent.getDocumentId()));
 			}
 		}
 		catch (final IOException exc)
 		{
-			logger.error(String.format(errorMessageBundle.getString("avve.extractor.luceneIndexWritingError"), epubFile.getDocumentId()), exc);
+			logger.error(String.format(errorMessageBundle.getString("avve.extractor.luceneIndexWritingError"), ebookContent.getDocumentId()), exc);
 		}
 		finally
 		{

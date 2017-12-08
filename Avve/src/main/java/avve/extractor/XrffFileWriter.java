@@ -717,18 +717,18 @@ public class XrffFileWriter
 		    ScoreDoc[] hits = isearcher.search(query, 1).scoreDocs;
 		    if(hits.length > 0)
 		    {
-			    Terms terms = luceneIndexReader.getTermVector(hits[0].doc, "plaintext");
+			    Terms terms = luceneIndexReader.getTermVector(hits[0].doc, "fulltext");
 			    // Beware that there may be differences between the tokenization in EbookContentData and in the Lucene index. The programmer should 
 			    // ensure that tokenization is done in a similar way on both sides, so that the number of tokens in EbookContentData is similar with the
 			    // number of tokens in the Lucene index
-		    	int numberOfTermsInPlainTextField = content.getNumberOfTokens();
+		    	int numberOfTermsInFullTextField = content.getNumberOfTokens();
 		    	
-			    long numberOfDocuments = luceneIndexReader.getDocCount("plaintext");
+			    long numberOfDocuments = luceneIndexReader.getDocCount("fulltext");
 			    TermsEnum termsEnum = terms.iterator();
 			    BytesRef bytesRefToTerm = null;
 			    SortedMap<String, TfIdfTuple> tdIdfTuples = new TreeMap<String, TfIdfTuple>();
 			    
-			    // iterate through all terms in the current document's "plaintext" field
+			    // iterate through all terms in the current document's "fulltext" field
 			    while ((bytesRefToTerm = termsEnum.next()) != null)
 			    {
 			    	String term = bytesRefToTerm.utf8ToString();
@@ -747,12 +747,12 @@ public class XrffFileWriter
 				    	else
 				    	{
 				    		// only use words that don't appear in (nearly) all documents and that appear at least in three documents
-				    		int docFreq = luceneIndexReader.docFreq(new Term("plaintext", bytesRefToTerm));
+				    		int docFreq = luceneIndexReader.docFreq(new Term("fulltext", bytesRefToTerm));
 				    		if(docFreq > termThreshold && docFreq < upperThreshold)
 				    		{
 					    		// initialize term frequency and calculate inverse document frequency (only need to do that once per term)
 					    		double idf = 1 + Math.log(numberOfDocuments / docFreq + 1.0);
-					    		tdIdfTuples.put(term, new TfIdfTuple(termFrequencyInDocumentField, idf, 1.0 / Math.sqrt(numberOfTermsInPlainTextField)));
+					    		tdIdfTuples.put(term, new TfIdfTuple(termFrequencyInDocumentField, idf, 1.0 / Math.sqrt(numberOfTermsInFullTextField)));
 				    		}
 				    	}
 			    	}

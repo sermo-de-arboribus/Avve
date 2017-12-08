@@ -278,6 +278,8 @@ public class XmlService
 			"		<xsl:text>&#xD;&#xA; </xsl:text>" +
 			"	</xsl:template>"+
 	
+			"   <xsl:template match=\"*[local-name() = 'span' and (@reg-begriff1 or @reg-begriff2 or @reg-begriff3 or @reg-begriff4)]\" />"+
+			
 			"   <xsl:template match=\"*[local-name() = 'style']|*[local-name() = 'script']\" />" +
 			
 			"	<xsl:template match=\"text()\">" +

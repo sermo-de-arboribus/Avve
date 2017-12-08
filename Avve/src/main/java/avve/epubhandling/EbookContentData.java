@@ -149,6 +149,11 @@ public class EbookContentData implements Serializable
 		return calculatePosTokenRatio("TRUNC");
 	}
 	
+	public int getDepthOfToc()
+	{
+		return epubFile.getDepthOfToc();
+	}
+
 	/**
 	 * Retrieve the unique ID of the EPUB document that this object represents
 	 * @return A unique ID for the underlying EPUB document
@@ -407,21 +412,24 @@ public class EbookContentData implements Serializable
 	
 	public String getLemmatizedText()
 	{
-		StringBuilder stringbuilder = new StringBuilder();
-			
-		for(int i = 0; i < lemmatizedSentences.length; i++)
-		{
-			for(int j = 0; j < lemmatizedSentences[i].length; j++)
-			{
-				stringbuilder.append(lemmatizedSentences[i][j]);
-				stringbuilder.append(" ");
-			}
-			stringbuilder.append(System.lineSeparator());
-		}
-		
-		return stringbuilder.toString();
+		return lemmasToString(true);
 	}
 	
+	public String getLemmatizedTextWithoutForeignWords()
+	{
+		return lemmasToString(false);
+	}
+	
+	public int getNumberOfChapters()
+	{
+		return epubFile.getNumberOfChapters();
+	}
+
+	public int getNumberOfTocItems()
+	{
+		return epubFile.getNumberOfTocItems();
+	}
+
 	/**
 	 * Get the number of pronominal adverbs, divided by the number of tokens in this ebook text.
 	 * @return The pronoun-to-tokens ratio
@@ -593,21 +601,32 @@ public class EbookContentData implements Serializable
 		//warengruppenMap.put("112", "110");
 	}
 
-	public int getNumberOfChapters()
+	private String lemmasToString(boolean withForeignWords)
 	{
-		return epubFile.getNumberOfChapters();
-	}
+		StringBuilder stringbuilder = new StringBuilder();
+			
+		for(int i = 0; i < lemmatizedSentences.length; i++)
+		{
+			for(int j = 0; j < lemmatizedSentences[i].length; j++)
+			{
+				if(withForeignWords)
+				{
+					stringbuilder.append(lemmatizedSentences[i][j]);
+					stringbuilder.append(" ");
+				}
+				else
+				{
+					String lemma = partsOfSpeech[i][j].equals("FM") ? "" : lemmatizedSentences[i][j] + " ";
+					stringbuilder.append(lemma);
+				}
 
-	public int getNumberOfTocItems()
-	{
-		return epubFile.getNumberOfTocItems();
+			}
+			stringbuilder.append(System.lineSeparator());
+		}
+		
+		return stringbuilder.toString();
 	}
-
-	public int getDepthOfToc()
-	{
-		return epubFile.getDepthOfToc();
-	}
-
+	
 	private static final long serialVersionUID = 3022250504362756894L;
 	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());

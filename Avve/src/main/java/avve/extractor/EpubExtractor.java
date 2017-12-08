@@ -47,6 +47,7 @@ public class EpubExtractor
 	private static String textDirectory = "output/text";
 	private static ControlledVocabularyService controlledVocabularyService = null;
 	private static LuceneService luceneService = new LuceneService(logger, fileService);
+	private static DataPreprocessorService textPreprocessor = null;
 	
 	/**
 	 * The main method parses all EPUB files in the input folder (INPUT command line argument) and writes the respective output after
@@ -115,7 +116,7 @@ public class EpubExtractor
 				String lemmatizedText = ebookContentData.getLemmatizedText();
 				
 				// add the text to a Lucene index (for TF/IDF retrieval)
-				luceneService.addTextToLuceneIndex(lemmatizedText, epubFile.getDocumentId(), epubFile, language);
+				luceneService.addTextToLuceneIndex(ebookContentData, language, cliArguments.hasOption(CommandLineArguments.DONOTINDEXFOREIGNWORDS.toString()));
 				
 				if(lemmatizedText.length() > 0)
 				{
@@ -272,7 +273,11 @@ public class EpubExtractor
 	
 	private static EbookContentData preprocessText(String plainText, EpubFile epubFile, String warengruppe, CommandLine cliArguments)
 	{
-		DataPreprocessorService textPreprocessor = new DataPreprocessorService(logger, cliArguments);
+		// only instantiate preprocessor service once to save on resources
+		if(null == textPreprocessor)
+		{
+			textPreprocessor = new DataPreprocessorService(logger, cliArguments);
+		}
 		// The pre-processing results will be stored in the EbookContentData object
 		EbookContentData ebookContentData = new EbookContentData(epubFile, plainText, warengruppe, logger);
 		
