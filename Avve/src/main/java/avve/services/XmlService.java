@@ -271,13 +271,17 @@ public class XmlService
 			"	</xsl:template>" +
 			
 			"	<xsl:template match=\"*[local-name() = 'p'] | *[local-name() = 'div']\">" +
-			"		<xsl:text> </xsl:text><xsl:apply-templates/><xsl:text> </xsl:text>"+
+			"		<xsl:text> </xsl:text><xsl:apply-templates/><xsl:text>&#xD;&#xA; </xsl:text>"+
 			"	</xsl:template>"+
 	
 			"	<xsl:template match=\"*[local-name() = 'br']\">"+
 			"		<xsl:text>&#xD;&#xA; </xsl:text>" +
 			"	</xsl:template>"+
 	
+			"	<xsl:template match=\"*[local-name() = 'td']\">"+
+			"		<xsl:text> </xsl:text><xsl:apply-templates/><xsl:text> </xsl:text>" + 
+			"	</xsl:template>"+
+			
 			"   <xsl:template match=\"*[local-name() = 'span' and (@reg-begriff1 or @reg-begriff2 or @reg-begriff3 or @reg-begriff4)]\" />"+
 			
 			"   <xsl:template match=\"*[local-name() = 'style']|*[local-name() = 'script']\" />" +
