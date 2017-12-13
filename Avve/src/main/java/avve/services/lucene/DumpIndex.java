@@ -15,6 +15,7 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.search.spell.LuceneDictionary;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.BytesRefIterator;
@@ -54,6 +55,8 @@ public class DumpIndex
 
         out.writeStartDocument();
         out.writeStartElement("documents");
+        out.writeAttribute("numDocs", "" + luceneIndexReader.numDocs());
+        out.writeAttribute("indexDir", luceneService.getLuceneIndexDirectory().toString());
         
         if(args.length > 0 && null != args[0] && args[0].equals("docs"))
         {
@@ -96,11 +99,15 @@ public class DumpIndex
     	try
     	{
         	BytesRefIterator iterator = ld.getEntryIterator();
-        	BytesRef byteRef = null;
+    		BytesRef byteRef = null;
         	
 			while ( ( byteRef = iterator.next() ) != null )
 			{
+				Term term = new Term("plaintext", byteRef);
+				int docFreq = luceneIndexReader.docFreq(term);
+				
 				out.writeStartElement("term");
+				out.writeAttribute("docFreq", "" + docFreq);
 			    out.writeCharacters(byteRef.utf8ToString());
 			    out.writeEndElement();
 			}
