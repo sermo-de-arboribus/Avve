@@ -18,6 +18,12 @@ public class TextTokenizer implements TextPreprocessor
 	private Logger logger;
 	private Tokenizer tokenizer;
 	
+	@Override
+	public String getName()
+	{
+		return "TextTokenizer";
+	}
+	
 	public TextTokenizer(Logger logger)
 	{
 		this.logger = logger;

@@ -18,6 +18,12 @@ public class WordFrequencyPreprocessor implements TextPreprocessor
 	}
 
 	@Override
+	public String getName()
+	{
+		return "WordFrequencyPreprocessor";
+	}
+	
+	@Override
 	public void process(EbookContentData contentData)
 	{
 		logger.debug(infoMessagesBundle.getString("avve.textpreprocess.wordFrequencyProcessorStart"));

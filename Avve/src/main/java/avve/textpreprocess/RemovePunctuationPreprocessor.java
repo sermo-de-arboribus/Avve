@@ -17,6 +17,12 @@ public class RemovePunctuationPreprocessor implements TextPreprocessor
 	}
 
 	@Override
+	public String getName()
+	{
+		return "RemovePunctuationPreprocessor";
+	}
+	
+	@Override
 	public void process(EbookContentData contentData)
 	{
 		if(null == contentData.getTokens() || contentData.getTokens().length == 0)

@@ -27,6 +27,12 @@ public class PartOfSpeechTagger implements TextPreprocessor
 	private Logger logger;
 	private POSTaggerME tagger;
 	
+	@Override
+	public String getName()
+	{
+		return "PartOfSpeechTagger";
+	}
+	
 	public PartOfSpeechTagger(Logger logger, CommandLine cliArguments)
 	{
 		this.cliArguments = cliArguments;
@@ -70,6 +76,8 @@ public class PartOfSpeechTagger implements TextPreprocessor
 	@Override
 	public void process(EbookContentData ebookContentData)
 	{
+		logger.info(infoMessagesBundle.getString("avve.textpreprocess.partOfSpeechTaggingStarted"));
+		
 		if(ebookContentData.getTokens() == null || ebookContentData.getTokens().length == 0)
 		{
 			this.logger.error(String.format(errorMessageBundle.getString("avve.textpreprocess.noTokensAvailable"), "PartOfSpeechTagger.process()"));

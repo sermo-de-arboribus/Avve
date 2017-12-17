@@ -19,6 +19,12 @@ public class ToLowerCasePreprocessor implements TextPreprocessor
 	}
 	
 	@Override
+	public String getName()
+	{
+		return "ToLowerCasePreprocessor";
+	}
+	
+	@Override
 	public void process(EbookContentData ebookContentData)
 	{
 		logger.info(infoMessagesBundle.getString("avve.textpreprocess.toLowerCaseStarted"));

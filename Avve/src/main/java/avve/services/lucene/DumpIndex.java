@@ -95,7 +95,7 @@ public class DumpIndex
     {
     	out.writeStartElement("terms");
     	
-    	LuceneDictionary ld = new LuceneDictionary(luceneIndexReader, "plaintext");
+    	LuceneDictionary ld = new LuceneDictionary(luceneIndexReader, "fulltext");
     	try
     	{
         	BytesRefIterator iterator = ld.getEntryIterator();
@@ -103,7 +103,7 @@ public class DumpIndex
         	
 			while ( ( byteRef = iterator.next() ) != null )
 			{
-				Term term = new Term("plaintext", byteRef);
+				Term term = new Term("fulltext", byteRef);
 				int docFreq = luceneIndexReader.docFreq(term);
 				
 				out.writeStartElement("term");

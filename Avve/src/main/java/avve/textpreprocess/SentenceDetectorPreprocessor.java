@@ -19,6 +19,12 @@ public class SentenceDetectorPreprocessor implements TextPreprocessor
 	private Logger logger;
 	private SentenceModel model;
 	
+	@Override
+	public String getName()
+	{
+		return "SentenceDetectorPreprocessor";
+	}
+	
 	public SentenceDetectorPreprocessor(Logger logger)
 	{
 		this.logger = logger;

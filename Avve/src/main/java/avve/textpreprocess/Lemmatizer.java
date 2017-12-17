@@ -59,6 +59,12 @@ public class Lemmatizer implements TextPreprocessor
 	}
 	
 	@Override
+	public String getName()
+	{
+		return "Lemmatizer";
+	}
+	
+	@Override
 	public void process(EbookContentData ebookContentData)
 	{
 		boolean isCorrectionRequired = cliArguments.hasOption(CommandLineArguments.POSCORRECTION.toString()) && null != correctionMap;
