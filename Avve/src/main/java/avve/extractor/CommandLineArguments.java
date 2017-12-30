@@ -1,5 +1,9 @@
 package avve.extractor;
 
+/**
+ * A typical call:
+ * -folder "/home/kai/Dokumente/E-Books/Trainingsmenge" -lc -pc -wvs 100 -cv "/home/kai/git/Avve/Avve/src/main/resources/controlledvocabulary/vlb_wg_cv.txt"
+ */
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -13,7 +17,8 @@ public enum CommandLineArguments
 	INPUT("i"), 
 	LEMMACORRECTION("lc"), 
 	MULTILABEL("ml"), 
-	POSCORRECTION("pc"), 
+	POSCORRECTION("pc"),
+	USETHESAURUS("usethesaurus"),
 	WARENGRUPPE("wg"), 
 	WORDVECTORSIZE("wvs");
 	
@@ -41,6 +46,7 @@ public enum CommandLineArguments
 		options.addOption(CommandLineArguments.LEMMACORRECTION.toString(), "lemmacorrection", false, infoMessagesBundle.getString("explainLemmaCorrectionOption"));
 		options.addOption(CommandLineArguments.MULTILABEL.toString(), "multilabel", false, infoMessagesBundle.getString("explainMultiLabelOption"));
 		options.addOption(CommandLineArguments.POSCORRECTION.toString(), "poscorrection", false, infoMessagesBundle.getString("explainPosCorrectionOption"));
+		options.addOption(CommandLineArguments.USETHESAURUS.toString(), "usethesaurus", false, infoMessagesBundle.getString("explainThesaurusOption"));
 		options.addOption(CommandLineArguments.WARENGRUPPE.toString(), "warengruppe", true, infoMessagesBundle.getString("explainWarengruppeOption"));
 		options.addOption(CommandLineArguments.WORDVECTORSIZE.toString(), "wordvectorsize", true, infoMessagesBundle.getString("explainWordVectorSizeOption"));
 		return options;

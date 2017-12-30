@@ -9,6 +9,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.logging.log4j.Logger;
 
 import avve.epubhandling.EbookContentData;
+import avve.extractor.CommandLineArguments;
 import avve.textpreprocess.*;
 
 public class DataPreprocessorService
@@ -29,7 +30,11 @@ public class DataPreprocessorService
 		preprocessorQueue.add(new PartOfSpeechTagger(logger, cliArguments));
 		preprocessorQueue.add(new NumberProcessor());
 		preprocessorQueue.add(new Lemmatizer(logger, cliArguments));
-		preprocessorQueue.add(new ToLowerCasePreprocessor(logger));
+		if(cliArguments.hasOption(CommandLineArguments.USETHESAURUS.toString()))
+		{
+			preprocessorQueue.add(new HyperonymPreprocessor(logger));
+		}
+		// preprocessorQueue.add(new ToLowerCasePreprocessor(logger));
 		
 		for(TextPreprocessor preprocessor : preprocessorQueue)
 		{
