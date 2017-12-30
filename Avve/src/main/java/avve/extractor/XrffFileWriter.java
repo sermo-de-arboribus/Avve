@@ -418,12 +418,13 @@ public class XrffFileWriter
 			Element hyperonymElement = new Element("value");
 			Comment hyperonymElementComment = new Comment("hyperonyms");
 			hyperonymElement.appendChild(hyperonymElementComment);
+			int numberOfHyperonyms = content.getHyperonymFrequencies().size();
 			StringBuilder sb = new StringBuilder();
 			for(String hyperonym : content.getHyperonymFrequencies().keySet())
 			{
-				sb.append(hyperonym);
+				sb.append(hyperonym.replace(' ', '_'));
 				sb.append(" ");
-				sb.append(content.getHyperonymFrequencies().get(hyperonym).toString());
+				sb.append("<!-- " + ((double)content.getHyperonymFrequencies().get(hyperonym) / (double)numberOfHyperonyms) + " -->");
 				sb.append(System.lineSeparator());
 			}
 			hyperonymElement.appendChild(sb.toString());
