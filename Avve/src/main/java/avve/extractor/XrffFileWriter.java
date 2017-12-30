@@ -40,7 +40,7 @@ public class XrffFileWriter
 			root.addAttribute(new Attribute("name", "avve"));
 			Document xmlOutputDocument = new Document(root);
 			
-			writeHeader(root);
+			writeHeader(root, content);
 			writeBody(root, content);
 			addTfIdfStatistics(root, content, wordVectorSize);
 			
@@ -413,6 +413,23 @@ public class XrffFileWriter
 			}
 		}
 		
+		if(null != content.getHyperonymFrequencies())
+		{
+			Element hyperonymElement = new Element("value");
+			Comment hyperonymElementComment = new Comment("hyperonyms");
+			hyperonymElement.appendChild(hyperonymElementComment);
+			StringBuilder sb = new StringBuilder();
+			for(String hyperonym : content.getHyperonymFrequencies().keySet())
+			{
+				sb.append(hyperonym);
+				sb.append(" ");
+				sb.append(content.getHyperonymFrequencies().get(hyperonym).toString());
+				sb.append(System.lineSeparator());
+			}
+			hyperonymElement.appendChild(sb.toString());
+			instanceElement.appendChild(hyperonymElement);
+		}
+		
 		// print class
 		Element classElement = new Element("value");
 		Comment classComment = new Comment("class");
@@ -421,7 +438,7 @@ public class XrffFileWriter
 		instanceElement.appendChild(classElement);
 	}
 
-	private void writeHeader(final Element root)
+	private void writeHeader(final Element root, final EbookContentData content)
 	{
 		Element headerElement = new Element("header");
 		root.appendChild(headerElement);
@@ -685,6 +702,15 @@ public class XrffFileWriter
 				termElement.addAttribute(new Attribute("type", "numeric"));
 				attributes.appendChild(termElement);
 			}
+		}
+		
+		// handle hyperonyms, if they're available
+		if(null != content.getHyperonymFrequencies())
+		{
+			Element hyperonymElement = new Element("attribute");
+			hyperonymElement.addAttribute(new Attribute("name", "hyperonyms"));
+			hyperonymElement.addAttribute(new Attribute("type", "string"));
+			attributes.appendChild(hyperonymElement);
 		}
 		
 		// class element

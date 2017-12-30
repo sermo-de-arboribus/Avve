@@ -19,6 +19,7 @@ public class EbookContentData implements Serializable
 		this.logger = logger;
 		this.plainText = plainText;
 		this.warengruppe = warengruppe;
+		setHyperonymFrequencies(new TreeMap<String, Integer>());
 		lemmaFrequencies = new TreeMap<String, Integer>();
 		wordFrequencies = new TreeMap<String, Integer>();
 		partsOfSpeechFrequencies = new TreeMap<String, Integer>();
@@ -627,6 +628,16 @@ public class EbookContentData implements Serializable
 		return stringbuilder.toString();
 	}
 	
+	public SortedMap<String, Integer> getHyperonymFrequencies()
+	{
+		return hyperonymFrequencies;
+	}
+
+	public void setHyperonymFrequencies(SortedMap<String, Integer> hyperonymFrequencies)
+	{
+		this.hyperonymFrequencies = hyperonymFrequencies;
+	}
+
 	private static final long serialVersionUID = 3022250504362756894L;
 	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
@@ -642,6 +653,7 @@ public class EbookContentData implements Serializable
 	private String[][] lemmatizedSentences;
 	private String[][] partsOfSpeech;
 	private SortedMap<String, Integer> lemmaFrequencies;
+	private SortedMap<String, Integer> hyperonymFrequencies;
 	private SortedMap<String, Integer> wordFrequencies;
 	private SortedMap<String, Integer> partsOfSpeechFrequencies;
 	private int numberOfTokens;
