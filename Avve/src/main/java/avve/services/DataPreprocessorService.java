@@ -23,6 +23,10 @@ public class DataPreprocessorService
 		preprocessorQueue = new ArrayList<TextPreprocessor>(12);
 		
 		// TODO: for the time being, just configure the services here; if useful, refactor later to an approach using external configuration
+		if(cliArguments.hasOption(CommandLineArguments.NORMALIZEURLS.toString()))
+		{
+			preprocessorQueue.add(new UrlNormalizer(logger));
+		}
 		preprocessorQueue.add(new SentenceDetectorPreprocessor(logger));
 		preprocessorQueue.add(new TextTokenizer(logger));
 		preprocessorQueue.add(new RemovePunctuationPreprocessor(logger));

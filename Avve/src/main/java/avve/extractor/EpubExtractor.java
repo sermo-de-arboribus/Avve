@@ -53,7 +53,7 @@ public class EpubExtractor
 	 * The main method parses all EPUB files in the input folder (INPUT command line argument) and writes the respective output after
 	 * transformations and statistics have been built.
 	 * 
-	 * 	INPUT("i"), FOLDER("folder"), WARENGRUPPE("wg"), LEMMACORRECTION("lc"), MULTICLASS("mc"), POSCORRECTION("pc");
+	 * 	For complete information on command line arguments see getCommandLineOptions() in the CommandLineArguments class
 	 * 
 	 * @param args Command line arguments: "i" a single input file, "wg" a Warengruppe class label for the input file, "folder" an input folder, with subfolders named after the class labels for the input files contained within each subfolder
 	 */

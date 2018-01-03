@@ -66,7 +66,7 @@ public class EbookContentData implements Serializable
 	 */
 	public double getAdverbRatio()
 	{
-		return calculatePosTokenRatio("ADV");
+		return calculatePosTokenRatio(new String[]{"ADV", "ADV|FM"});
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class EbookContentData implements Serializable
 	 */
 	public double getAttributiveDemonstrativePronounRatio()
 	{
-		return calculatePosTokenRatio("PDAT");
+		return calculatePosTokenRatio(new String[]{"PDAT", "PDAT|PDS"});
 	}
 	
 	/**
@@ -206,7 +206,7 @@ public class EbookContentData implements Serializable
 	 */
 	public double getInfinitiveMainVerbsRatio()
 	{
-		return calculatePosTokenRatio(new String[]{"VVINF", "VVIZU"});
+		return calculatePosTokenRatio(new String[]{"VVINF", "VVIZU", "VVFIN|VVINF"});
 	}
 	
 	/**
@@ -456,7 +456,7 @@ public class EbookContentData implements Serializable
 	 */
 	public double getSubstitutingDemonstrativePronounRatio()
 	{
-		return calculatePosTokenRatio("PDS");
+		return calculatePosTokenRatio(new String[]{"PDS", "PDAT|PDS"});
 	}
 	
 	/**
