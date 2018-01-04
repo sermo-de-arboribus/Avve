@@ -294,12 +294,18 @@ aado#	APPR	NN
 aado#	NE	NN
 aaf	ADV	APPR
 aaf	VVFIN	APPR
+aaf	XY	APPR
 aafach	PRF	ADV
 aafa-film	NN	NE
 aafder	ART	APPRART
 aafgschau	NE	NN
 aafje	NN	NE
 aafn	NN	APPRART
+aafs	ADV	APPRART
+aafschneggln	NE	VVINF
+aagapē	NE	FM
+aagayi	ADJA	FM
+aagayi	NE	FM
 aah	NE	ITJ
 aasmaani	$,	NE
 aasmaani	NN	NE
@@ -445,6 +451,7 @@ abkäschn	ADJA	VVINF
 able	ADJA	FM
 about	ADV	FM
 abs	NE	NN
+absorption	ADJA	NN
 abˈßäßu	ADJA	FM
 abszess	NE	NN
 abuela	$	FM
@@ -478,6 +485,7 @@ again	APPR	FM
 again	NE	FM
 again	NN	FM
 again	$,	FM
+agapē	VVFIN	FM
 age	$.	FM
 agencies	NE	FM
 agorá	ADJA	FM
@@ -511,6 +519,7 @@ ambulant	NE	ADJA
 ambulante	NE	ADJA
 amen	$.	ADV
 amused	$.	FM
+anaesthetic	NE	FM
 and	ADJA	FM
 and	NE	FM
 anfangen	NN	VVFIN|VVINF
@@ -629,6 +638,7 @@ belong	$(	FM
 belonged	$(	FM
 benannt	APPR	VVPP
 bera	ADJA	NE
+bernstorffske	NE	FM
 beside	ADJA FM
 besides	NN	FM
 besondern	ADV	ADJA
@@ -707,6 +717,7 @@ chinchulines	ADJA	FM
 chobotnice	NN	NE
 choclos ADJD	FM
 choroidal	NE	ADJA|ADJD|FM
+christkindl	NE	NN
 clam	ADJA	FM
 clients	XY	FM
 clothes	ADJA	FM
@@ -867,6 +878,7 @@ ekklesía	KOUI	FM
 elsevier	NN	NE
 empire	VVFIN	NN
 empty	XY	FM
+energy	ADJA	FM
 enough	ADJD	FM
 enough	VVINF	FM
 entfernung	NE	NN
@@ -958,6 +970,7 @@ friends	ADV	FM
 frug	$	VVFIN
 füllten	VVPP	VVFIN
 für	FM	APPR
+für	NE	APPR
 fürn	VVFIN	APPRART
 fürs	APPR	APPRART
 fürs	FM	APPRART
@@ -970,6 +983,7 @@ gaaaanz	NN	ADJD
 gaaanz	NN	ADV
 gäb	APPR	VVFIN
 gauche	VVFIN	FM
+-gebräuche	NN	TRUNC
 gehn	NN	VVFIN
 gehts	ADV	VVFIN
 geht	PWAV	VVFIN
@@ -991,6 +1005,7 @@ give	ADJA	FM
 give	NE	FM
 glad	ADJD	FM
 glad	$(	FM
+glamouröse	VVFIN	ADJA
 glass	ADJA	FM
 glass	NE	FM
 gleißte	ADJA	VVFIN
@@ -1012,6 +1027,7 @@ grew	APPR	FM
 grinste	ADJA	VVFIN
 gsagt	$	VVPP
 gschissn	APPR	VVPP
+guidelines	NE	FM
 gutginge	NN	VVFIN
 gwen	NN	NE
 haaach	NE	ITJ
@@ -1106,6 +1122,7 @@ hören	$	VVFIN|VVINF
 hoho	XY	ITJ
 hohoho	ADJA	ITJ
 hohoho	XY	ITJ
+hoid	$,	ADV
 hold	NE	FM
 home	ADJA	FM
 home	$.	FM
@@ -1196,6 +1213,8 @@ justus	NN	NE
 jute	ADV	ADJA
 ka-aaalt	NN	ADJA|ADJD
 kaaalt	VVFIN	ADJA|ADJD
+kaafst	NE	VVFIN
+kaaft	$.	VVFIN|VVPP
 käm	ADJD	VVFIN
 käm	ART	VVFIN
 karlspreis	NE	NN
@@ -1226,11 +1245,13 @@ können	$.	VMINF|VMFIN
 komm	NN	VVFIN
 komter	NN	NE
 kontrastmittelverstärkte	NN	ADJA
+kopenhagen	NN	NE
 kopf-	$(	TRUNC
 koochie	ADJA	FM
 korrigierte	ART	VVFIN
 kreatinin	NE	NN
 kreischen	$.	VVFIN|VVINF
+kripomann	NE	NN
 kronin	NN	NE
 krrrrronnnnnnk	NN	XY
 küchendecke	$,	NN
@@ -1269,6 +1290,7 @@ liliis	ADJA	FM
 little	VVFIN	FM
 lives	ADJA	FM
 ll	ADJD	FM
+local	NE	FM
 locations	ADV	NN
 locations	NE	NN
 lóchos	ADJD	FM
@@ -1285,14 +1307,17 @@ maaaaaahhh	NE	ITJ
 maarten	ADJA	NE
 määääääh	NE	ITJ
 männer	ART	NN
+magnusson	NN	NE
 mail	KOUS	FM
 make	NE	FM
 malos	ADJA	FM
 mama	FM	NN
+management	NE	NN
 mannmannmannmannmann	PIS	ITJ
 many	NE	FM
 many	PIS	FM
 mariés	PRELS	FM
+matinee-auftritte	NE	NN
 mate	ADJA	NN
 me	ADJA	FM
 me	VVFIN	FM
@@ -1441,6 +1466,7 @@ o	ADV	ITJ
 o	NE	ITJ
 obi	NN	NE
 obliquus	ADJA	FM
+october	NE	FM
 oculomotorii	ADJA	FM
 oculomotorii	APPR	FM
 oculomotorius	APPR	FM
@@ -1487,10 +1513,12 @@ padre	ADJA	NN
 país	APPR	FM
 paisano	$	FM
 paper	NE	FM
+papirer	NN	FM
 parameter	ADJA	NN
 parish	ADJD	FM
 partij	NN	FM
 pascuntur	ADV	FM
+passive	VVFIN	ADJA
 pdf	APPR	NN
 peloponnesischen	NN	ADJA
 people	ADJA	FM
@@ -1643,6 +1671,7 @@ servants	NE	FM
 seven	ADJA	FM
 several	ADV	FM
 severe	ADJA	FM
+severe	NE	FM
 shall	ADJD	FM
 shall	NE	FM
 shall	PRF	FM
@@ -1779,6 +1808,7 @@ tantôt	VVFIN	FM
 tariq	NN	NE
 taupe	ART	ADJA
 tea	XY	FM
+temperature	ADJA	FM
 ten	ADJA	FM
 ten	VVFIN	FM
 teneros	NE	FM
@@ -1832,12 +1862,14 @@ too	XY	FM
 tooorten-aaalaaarrrm	NE	NN
 tornatilis	ADJA	FM
 torturer	PPOSAT	FM
+toxicity	NE	FM
 trafalgar	NN	NE
 transitorisch	NN	ADJA|ADJD
 transversus	APPR	FM
 trata	VVFIN	FM
 treatment	ADJD	FM
 tremendum	VVFIN	NN
+trials	NN	FM
 tripa	ADV	FM
 tritici	NE	FM
 try	VVINF	FM
@@ -1854,6 +1886,7 @@ uaaaaaaaaarrr	NN	ITJ
 uaaaaaaah	NE	ITJ
 uaaaahhhh	KON	ITJ
 uaaaahhhh	NE	ITJ
+über	$.	APPR
 übern	VVINF	APPRART
 übernehmen	NN	VVINF
 übersetzung	VVINF	NN
@@ -1885,6 +1918,7 @@ upstairs	NE	FM
 upstairs	$(	FM
 used	$(	FM
 vagina	NE	NN
+vakaafs	ADV	VVFIN
 vallatus	APPR	FM
 velocity	NE	FM
 ventriculi	NE	FM
@@ -1898,6 +1932,7 @@ verwöhnst	VVPP	VVFIN
 very	VVFIN	FM
 very	$,	FM
 victim	$.	FM
+views	NE	FM
 village	VVFIN	FM
 visit	ADJD	FM
 visit	NE	FM
@@ -1928,6 +1963,7 @@ wanted	$(	FM
 wants	VAFIN	FM
 wants	$(	FM
 war-party	VAFIN	FM
+wartma	VVFIN	warten
 waste	VVFIN	FM
 watch	PRF	FM
 watch	$(	FM
@@ -1986,6 +2022,7 @@ within	ADV	FM
 without	ADV	FM
 wogegen	$	KON
 wogegen	$,	KON
+wolln	$.	VAFIN|VAINF
 wonderful	NE	FM
 wooden	ADJA	FM
 wooden	$(	FM

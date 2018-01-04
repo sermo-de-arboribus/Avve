@@ -120,7 +120,7 @@ public class EbookContentData implements Serializable
 	 */
 	public double getAuxiliarVerbsRatio()
 	{
-		return calculatePosTokenRatio(new String[]{"VAFIN", "VAIMP", "VAINF", "VAPP"});
+		return calculatePosTokenRatio(new String[]{"VAFIN", "VAIMP", "VAINF", "VAPP", "VAFIN|VAINF"});
 	}
 	
 	/**
@@ -150,6 +150,19 @@ public class EbookContentData implements Serializable
 		return calculatePosTokenRatio("TRUNC");
 	}
 	
+	/**
+	 * Get the coordinating conjunctions (e.g. "and", "und", "or", "oder"), divided by the number of tokens in this ebook text.
+	 * @return The conjunction-to-tokens ratio
+	 */
+	public double getCoordinatingConjunctions()
+	{
+		return calculatePosTokenRatio("KON");
+	}
+	
+	/**
+	 * Determine the depth of the ebook's table of contents. A table of content with no sub-chapters has depth 1, a TOC with main chapters (1, 2, ...) and one level of subchapters (1.1, 1.2, 1.3) has depth 2 etc. 
+	 * @return The depth of the ebook's table of contents as an integer. If no TOC can be found, -1 will be returned
+	 */
 	public int getDepthOfToc()
 	{
 		return epubFile.getDepthOfToc();
@@ -448,6 +461,15 @@ public class EbookContentData implements Serializable
 	public String[][] getTokens()
 	{
 		return tokenizedSentences;
+	}
+	
+	/**
+	 * Get the subordinating conjunctions (e.g. "um ... [zu]", "dass", "weil", "obwohl", ...), divided by the number of tokens in this ebook text.
+	 * @return
+	 */
+	public double getSubordinatingConjunctions()
+	{
+		return calculatePosTokenRatio(new String[]{"KOUI", "KOUS"});
 	}
 	
 	/**

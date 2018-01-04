@@ -1,4 +1,5 @@
 ﻿// manuell erfasst: 000000102.asset, 000000110.asset, 000000114.asset, 000000126.asset, 000000130.asset, 000000257.asset, 000003750.asset, 000003762.asset, 000009060.asset [bis 250], 005332618.asset, 005555565.asset
+aa	NE	a
 aaaa	ITJ	aaa
 aaaaa	ITJ aaa
 aaaaaa	ITJ aaa
@@ -211,6 +212,7 @@ aaadoooolf	NE	adolf
 aaaeeehh	ITJ	aeh
 aaaeeeiiiooouuu	ITJ	aeiou
 aaaf	ITJ	af
+aagapē	FM	agapē
 aaagh	ITJ	agh
 aaaghh	ITJ	agh
 aaah	ITJ	ah
@@ -306,9 +308,12 @@ aafach	ADV	einfach
 aafd	APPR	auf
 aafder	APPRART	auf
 aafn	APPRART	auf
+aafs	APPRART	auf
+aaftbömer	NN	aaftböm
 aah	ITJ	ah
 a-auf	APPR	auf
 a-axel	NE	axel
+aba	ADV	aber
 abaelards	NE	abaelard
 abakterielle	ADJA	abakteriell
 abakteriellen	ADJA	abakteriell
@@ -968,6 +973,10 @@ abendanlässen	NN	abendanlass
 abendanzugs	NN	abendanzug
 abendanzüge	NN	abendanzug
 abenandzügen	NN	abendanzug
+abendappelle	NN	abendappell
+abendauftritte	NN	abendauftritt
+abendauktionen	NN	abendauktion
+abendausgaben	NN	abendausgabe
 abfederte	VVFIN	abfedern
 abgelutschtes	ADJA	abgelutscht
 abgetrenntem	ADJA	abgetrennt
@@ -1086,6 +1095,7 @@ belästigtes	ADJA	belästigt
 belegter	ADJA	belegt
 beliebe	VVFIN	belieben
 belonged	FM	belong
+benefizauftritte	NN	benefizauftritt
 beschämter	ADJA	beschämt
 besonder	ADJA	besondere
 besondern	ADJA	besondere
@@ -1267,6 +1277,7 @@ flüsterte	VVFIN	flüstern
 flutschte	VVFIN	flutschen
 forgot	FM	forget
 forks	FM	fork
+freitagabend-auftritte	NN	freitagabendauftritt
 fröre	VVFIN	frieren
 frrreund	NN	freund
 frug	VVFIN	fragen
@@ -1281,6 +1292,7 @@ gaaaanz	ADJD	ganz
 gaaaanz	ADV	ganz
 gaaanz	ADV	ganz
 gasaustauschs	NN	gasaustausch
+-gebräuche	TRUNC	gebrauch
 gefahren	NN	gefahr
 gehn	VVFIN	gehen
 gemelli	FM	gemellus
@@ -1303,6 +1315,7 @@ gigantesken	ADJA	gigantesk
 gipsabdruckes	NN	gipsabdruck
 girrte	VVFIN	girren
 gläsernes	ADJA	gläsern
+glamouröse	VVFIN	glamourös
 globalisierten	ADJA	globalisiert
 going	FM	go
 gottver	ADJA	gottverdammt
@@ -1312,6 +1325,7 @@ grade	ADV	gerade
 grew	FM	grow
 gsagt	VVFIN	sagen
 guachos NN	guacho
+guidelines	FM	guideline
 gutginge	NN	gutgehen
 gutginge	VVFIN	gutgehen
 guuustaaav	NE	gustav
@@ -1320,6 +1334,7 @@ haaach	ITJ	hach
 haaandtücheeer	NN	handtuch
 haarclips	NN	haarclip
 habbe	VVFIN|VVINF	haben
+habts	VAFIN	haben
 had	FM	have
 häääätte	VAFIN	haben
 haeresibus	FM	haeresis
@@ -1412,6 +1427,7 @@ internetseiten	NN	internetseite
 interviewleitfadens	NN	interviewleitfaden
 intraabdominalem	ADJA	intraabdominal
 intraabdominaler	ADJA	intraabdominal
+intramuscular	ADJD	intramuskulär
 irdischn	ADJA	irdisch
 irgendeine	PIAT	irgendein
 irgendeine	PIS	irgendein
@@ -1434,11 +1450,14 @@ jeeee-suuuus	ITJ	jessas
 jewels	FM	jewel
 jjjjjjjjjjjj	XY	j
 jobs	FM	job
+johnny-cash-auftrittes	NN	johnny-cash-auftritt
 jubelst	VVFIN	jubeln
 jungüngst	ADV	jung
 ka-aaalt	ADJA|ADJD	kalt
 kaaaiseer	NN	kaiser
 kaaalt	ADJA|ADJD	kalt
+kaafst	VVFIN	kaufen
+kaaft	VVFIN|VVPP	kaufen
 käm	VVFIN	kommen
 kakakann	VMFIN	können
 kapillare	NN	kapillar
@@ -1518,6 +1537,7 @@ makedonischen	NN	makedonische
 malos	FM	malo
 marin	NN	marine
 massenschlafplätzen	NN	massenschlafplatz
+matinee-auftritte	NN	matineeauftritt
 mediale	ADJA	medial
 medialer	ADJA	medial
 medulläres	ADJA	medullär
@@ -1647,6 +1667,7 @@ repetitiven	ADJA	repetitiv
 resources	FM	resource
 ritualisierten	ADJA	ritualisiert
 roaming	FM	roam
+routineauftritten	NN	routineauftritt
 rrreiiiinhaaarrrd	NE	reinhard
 rrrund	ADJA|ADJD|ADV	rund
 ruoaaaahh	ITJ	ruoah
@@ -1706,6 +1727,7 @@ shelves	FM	shelf
 ships	FM	ship
 shoes	FM	shoe
 shutting	FM	shut
+siehg	VVFIN	sehen
 siiiiebzehn	CARD	siebzehn
 silberhellem	ADJA	silberhell
 sin	VAFIN	sein
@@ -1759,6 +1781,7 @@ tät	VVFIN	tun
 taking	FM	take
 talking	FM	talk
 taunassen	ADJA	taunass
+teiersten	ADJA	teuer
 terribel	FM	terrible
 the-aaaater	NN	theater
 thebanische	ADJA	thebanisch
@@ -1771,10 +1794,13 @@ tippst	VVFIN	tippen
 todlangweiliger	ADJA	todlangweilig
 told	FM	tell
 tooorten-aaalaaarrrm	NN	tortenalarm
+tourneeauftritten	NN	tourneeauftritt
+tourneeverpflichtungen	NN	tourneeverpflichtung
 trachealer	ADJA	tracheal
 tränenüberströmte	ADJA	tränenüberströmt
 trauma-fokussierte	ADJA	traumafokussiert
 travellers	FM	traveller
+trials	FM	trial
 triefte	VVFIN	triefen
 triggerbänder	NN	triggerband
 tritici	FM	triticum
@@ -1817,6 +1843,7 @@ uploads	FM	upload
 u-u-unheimlich	ADJD	unheimlich
 uuuuhs	NN	uh
 uuuuuuuhs	NN	uh
+vakaafs	VVFIN	verkaufen
 venöse	ADJA	venös
 ventriculi	FM	ventriculus
 vergnügen	ADJA	vergnügt
@@ -1842,6 +1869,7 @@ verwitwetes	ADJA	verwitwet
 verübelst	VVFIN	verübeln
 verwöhnst	VVFIN	verwöhnen
 victims	FM	victim
+views	FM	view
 vitamin-aabkömmling	NN	vitamin-a-abkömmling
 vöööögel	NN	vogel
 volksbeschlusses	NN	volksbeschluss
@@ -1868,6 +1896,7 @@ weißt	VVFIN	wissen
 weiterbrachte	VVFIN	weiterbringen
 wei-wei-weitergehen	VVINF	weitergehen
 wellen	FM	well
+werbeauftritten	NN	werbeauftritt
 werd	VAFIN	werden
 werd	VVFIN	werden
 were	FM	be
@@ -1880,6 +1909,7 @@ wiegten	VVFIN	wiegen
 windows	FM	window
 wohlnähren	ADJD	wohlgenährt
 wollenes	ADJA	wollen
+wolln	VAFIN|VAINF	wollen
 worked	FM	work
 wuaaaaaaahhh	ITJ	wuah
 würd	VAFIN	sein

@@ -390,6 +390,20 @@ public class XrffFileWriter
 		modalVerbsElement.appendChild("" + content.getModalVerbRatio());
 		instanceElement.appendChild(modalVerbsElement);
 		
+		// print ratio of coordinating conjunctions
+		Element coordConjunctionsElement = new Element("value");
+		Comment coordConjunctionsComment = new Comment("ratio of coordinating conjunctions");
+		coordConjunctionsElement.appendChild(coordConjunctionsComment);
+		coordConjunctionsElement.appendChild("" + content.getCoordinatingConjunctions());
+		instanceElement.appendChild(coordConjunctionsElement);
+		
+		// print ratio of subordinating conjunctions
+		Element subConjunctionsElement = new Element("value");
+		Comment subConjunctionsComment = new Comment("ratio of subordinating conjunctions");
+		subConjunctionsElement.appendChild(subConjunctionsComment);
+		subConjunctionsElement.appendChild("" + content.getCoordinatingConjunctions());
+		instanceElement.appendChild(subConjunctionsElement);
+		
 		// print number of images
 		Element numberOfImagesElement = new Element("value");
 		Comment numberOfImagesElementComment = new Comment("number of images");
@@ -684,6 +698,18 @@ public class XrffFileWriter
 		modalVerbsElement.addAttribute(new Attribute("name", "modalVerbsRatio"));
 		modalVerbsElement.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(modalVerbsElement);
+		
+		// ratio of coordinating conjunctions
+		Element coordConjunctionsElement = new Element("attribute");
+		coordConjunctionsElement.addAttribute(new Attribute("name", "coordinatingConjunctionsRatio"));
+		coordConjunctionsElement.appendChild(new Attribute("type", "numeric"));
+		attributes.appendChild(coordConjunctionsElement);
+		
+		// ratio of subordinating conjunctions
+		Element subordConjunctionsElement = new Element("attribute");
+		subordConjunctionsElement.addAttribute(new Attribute("name", "subordinatingConjunctionsRatio"));
+		subordConjunctionsElement.appendChild(new Attribute("type", "numeric"));
+		attributes.appendChild(subordConjunctionsElement);
 		
 		// number of images
 		Element numberOfImagesElement = new Element("attribute");
