@@ -750,6 +750,16 @@ public class XrffFileWriter
 
 	public void addTfIdfStatistics(final Element root, final EbookContentData content, int wordVectorSize)
 	{
+	    Nodes attributesNode = root.query("/dataset/header/attributes");
+	    Element attributesElement = (Element)attributesNode.get(0);
+	    Element attributeElement = new Element("attribute");
+	    attributeElement.addAttribute(new Attribute("name", "top-idf"));
+	    attributeElement.addAttribute(new Attribute("type", "string"));
+	    attributesElement.insertChild(attributeElement, attributesElement.getChildCount() - 1);
+	    
+	    Nodes instanceNode = root.query("/dataset/body/instances/instance");
+	    Element instanceElement = (Element)instanceNode.get(0);
+	    
 		try
 		{
 			IndexReader luceneIndexReader = DirectoryReader.open(luceneIndexDirectory);
@@ -826,15 +836,6 @@ public class XrffFileWriter
 			    	}
 			    });
 			    
-			    Nodes attributesNode = root.query("/dataset/header/attributes");
-			    Element attributesElement = (Element)attributesNode.get(0);
-			    Element attributeElement = new Element("attribute");
-			    attributeElement.addAttribute(new Attribute("name", "top-idf"));
-			    attributeElement.addAttribute(new Attribute("type", "string"));
-			    attributesElement.insertChild(attributeElement, attributesElement.getChildCount() - 1);
-			    
-			    Nodes instanceNode = root.query("/dataset/body/instances/instance");
-			    Element instanceElement = (Element)instanceNode.get(0);
 			    int numberOfIdfValuesToInclude = sortedByIdfDescending.size() > wordVectorSize ? wordVectorSize : sortedByIdfDescending.size();
 			    
 			    Element newValueElement = new Element("value");
@@ -858,7 +859,8 @@ public class XrffFileWriter
 		    }
 		    else
 		    {
-		    	logger.debug(String.format(infoMessagesBundle.getString("avve.extractor.couldNotFindDocumentInLuceneIndex"), documentId));
+		    	instanceElement.insertChild(new Element("value"), instanceElement.getChildCount() - 1);
+		    	logger.debug(String.format(infoMessagesBundle.getString("avve.extractor.couldNotFindDocumentInLuceneIndex"), documentId));		    	
 		    }
 	    }
 		catch (IOException exc)
