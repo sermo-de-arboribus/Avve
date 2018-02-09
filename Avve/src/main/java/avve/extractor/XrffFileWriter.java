@@ -789,7 +789,7 @@ public class XrffFileWriter
 			    long numberOfDocuments = luceneIndexReader.getDocCount("fulltext");
 			    TermsEnum termsEnum = terms.iterator();
 			    BytesRef bytesRefToTerm = null;
-			    SortedMap<String, TfIdfTuple> tdIdfTuples = new TreeMap<String, TfIdfTuple>();
+			    SortedMap<String, TfIdfTuple> tfIdfTuples = new TreeMap<String, TfIdfTuple>();
 			    
 			    // iterate through all terms in the current document's "fulltext" field
 			    while ((bytesRefToTerm = termsEnum.next()) != null)
@@ -802,10 +802,10 @@ public class XrffFileWriter
 			    		int termFrequencyInDocumentField = content.getLemmaFrequencies().get(term);	
 			    		
 				    	// calculate term frequency
-				    	if(tdIdfTuples.containsKey(term))
+				    	if(tfIdfTuples.containsKey(term))
 				    	{
 				    		// increment term frequency of existing entry
-				    		tdIdfTuples.get(term).incrementTermFrequency(termFrequencyInDocumentField);
+				    		tfIdfTuples.get(term).incrementTermFrequency(termFrequencyInDocumentField);
 				    	}
 				    	else
 				    	{
@@ -815,7 +815,7 @@ public class XrffFileWriter
 				    		{
 					    		// initialize term frequency and calculate inverse document frequency (only need to do that once per term)
 					    		double idf = 1 + Math.log(numberOfDocuments / docFreq + 1.0);
-					    		tdIdfTuples.put(term, new TfIdfTuple(termFrequencyInDocumentField, idf, 1.0 / Math.sqrt(numberOfTermsInFullTextField)));
+					    		tfIdfTuples.put(term, new TfIdfTuple(termFrequencyInDocumentField, idf, 1.0 / Math.sqrt(numberOfTermsInFullTextField)));
 				    		}
 				    	}
 			    	}
@@ -825,7 +825,7 @@ public class XrffFileWriter
 			    	}
 			    }
 			    
-			    List<Entry<String, TfIdfTuple>> sortedByIdfDescending = new ArrayList<Entry<String, TfIdfTuple>>(tdIdfTuples.entrySet());
+			    List<Entry<String, TfIdfTuple>> sortedByIdfDescending = new ArrayList<Entry<String, TfIdfTuple>>(tfIdfTuples.entrySet());
 			    
 			    Collections.sort(sortedByIdfDescending, new Comparator<Entry<String, TfIdfTuple>>()
 			    {
