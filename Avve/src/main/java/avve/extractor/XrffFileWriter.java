@@ -750,6 +750,16 @@ public class XrffFileWriter
 
 	public void addTfIdfStatistics(final Element root, final EbookContentData content, int wordVectorSize)
 	{
+	    Nodes attributesNode = root.query("/dataset/header/attributes");
+	    Element attributesElement = (Element)attributesNode.get(0);
+	    Element attributeElement = new Element("attribute");
+	    attributeElement.addAttribute(new Attribute("name", "top-idf"));
+	    attributeElement.addAttribute(new Attribute("type", "string"));
+	    attributesElement.insertChild(attributeElement, attributesElement.getChildCount() - 1);
+	    
+	    Nodes instanceNode = root.query("/dataset/body/instances/instance");
+	    Element instanceElement = (Element)instanceNode.get(0);
+	    
 		try
 		{
 			IndexReader luceneIndexReader = DirectoryReader.open(luceneIndexDirectory);
@@ -779,7 +789,7 @@ public class XrffFileWriter
 			    long numberOfDocuments = luceneIndexReader.getDocCount("fulltext");
 			    TermsEnum termsEnum = terms.iterator();
 			    BytesRef bytesRefToTerm = null;
-			    SortedMap<String, TfIdfTuple> tdIdfTuples = new TreeMap<String, TfIdfTuple>();
+			    SortedMap<String, TfIdfTuple> tfIdfTuples = new TreeMap<String, TfIdfTuple>();
 			    
 			    // iterate through all terms in the current document's "fulltext" field
 			    while ((bytesRefToTerm = termsEnum.next()) != null)
@@ -792,10 +802,10 @@ public class XrffFileWriter
 			    		int termFrequencyInDocumentField = content.getLemmaFrequencies().get(term);	
 			    		
 				    	// calculate term frequency
-				    	if(tdIdfTuples.containsKey(term))
+				    	if(tfIdfTuples.containsKey(term))
 				    	{
 				    		// increment term frequency of existing entry
-				    		tdIdfTuples.get(term).incrementTermFrequency(termFrequencyInDocumentField);
+				    		tfIdfTuples.get(term).incrementTermFrequency(termFrequencyInDocumentField);
 				    	}
 				    	else
 				    	{
@@ -805,7 +815,7 @@ public class XrffFileWriter
 				    		{
 					    		// initialize term frequency and calculate inverse document frequency (only need to do that once per term)
 					    		double idf = 1 + Math.log(numberOfDocuments / docFreq + 1.0);
-					    		tdIdfTuples.put(term, new TfIdfTuple(termFrequencyInDocumentField, idf, 1.0 / Math.sqrt(numberOfTermsInFullTextField)));
+					    		tfIdfTuples.put(term, new TfIdfTuple(termFrequencyInDocumentField, idf, 1.0 / Math.sqrt(numberOfTermsInFullTextField)));
 				    		}
 				    	}
 			    	}
@@ -815,7 +825,7 @@ public class XrffFileWriter
 			    	}
 			    }
 			    
-			    List<Entry<String, TfIdfTuple>> sortedByIdfDescending = new ArrayList<Entry<String, TfIdfTuple>>(tdIdfTuples.entrySet());
+			    List<Entry<String, TfIdfTuple>> sortedByIdfDescending = new ArrayList<Entry<String, TfIdfTuple>>(tfIdfTuples.entrySet());
 			    
 			    Collections.sort(sortedByIdfDescending, new Comparator<Entry<String, TfIdfTuple>>()
 			    {
@@ -826,15 +836,6 @@ public class XrffFileWriter
 			    	}
 			    });
 			    
-			    Nodes attributesNode = root.query("/dataset/header/attributes");
-			    Element attributesElement = (Element)attributesNode.get(0);
-			    Element attributeElement = new Element("attribute");
-			    attributeElement.addAttribute(new Attribute("name", "top-idf"));
-			    attributeElement.addAttribute(new Attribute("type", "string"));
-			    attributesElement.insertChild(attributeElement, attributesElement.getChildCount() - 1);
-			    
-			    Nodes instanceNode = root.query("/dataset/body/instances/instance");
-			    Element instanceElement = (Element)instanceNode.get(0);
 			    int numberOfIdfValuesToInclude = sortedByIdfDescending.size() > wordVectorSize ? wordVectorSize : sortedByIdfDescending.size();
 			    
 			    Element newValueElement = new Element("value");
@@ -858,7 +859,8 @@ public class XrffFileWriter
 		    }
 		    else
 		    {
-		    	logger.debug(String.format(infoMessagesBundle.getString("avve.extractor.couldNotFindDocumentInLuceneIndex"), documentId));
+		    	instanceElement.insertChild(new Element("value"), instanceElement.getChildCount() - 1);
+		    	logger.debug(String.format(infoMessagesBundle.getString("avve.extractor.couldNotFindDocumentInLuceneIndex"), documentId));		    	
 		    }
 	    }
 		catch (IOException exc)
