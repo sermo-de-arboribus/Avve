@@ -30,7 +30,10 @@ public class DataPreprocessorService
 		preprocessorQueue.add(new SentenceDetectorPreprocessor(logger));
 		preprocessorQueue.add(new TextTokenizer(logger));
 		preprocessorQueue.add(new RemovePunctuationPreprocessor(logger));
-		preprocessorQueue.add(new ReplaceLigaturesPreprocessor(logger));
+		if(cliArguments.hasOption(CommandLineArguments.NOLIGATURES.toString()))
+		{
+			preprocessorQueue.add(new ReplaceLigaturesPreprocessor(logger));
+		}
 		preprocessorQueue.add(new WordFrequencyPreprocessor(logger));
 		preprocessorQueue.add(new PartOfSpeechTagger(logger, cliArguments));
 		preprocessorQueue.add(new NumberProcessor());

@@ -1,6 +1,5 @@
 package avve.textpreprocess;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 

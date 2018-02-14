@@ -17,6 +17,7 @@ public enum CommandLineArguments
 	INPUT("i"), 
 	LEMMACORRECTION("lc"), 
 	MULTILABEL("ml"), 
+	NOLIGATURES("nolig"),
 	NORMALIZEURLS("urlnorm"),
 	POSCORRECTION("pc"),
 	USETHESAURUS("usethesaurus"),
@@ -46,6 +47,7 @@ public enum CommandLineArguments
 		options.addOption(CommandLineArguments.FOLDER.toString(), "inputfolder", true, infoMessagesBundle.getString("explainInputFolderOption"));
 		options.addOption(CommandLineArguments.LEMMACORRECTION.toString(), "lemmacorrection", false, infoMessagesBundle.getString("explainLemmaCorrectionOption"));
 		options.addOption(CommandLineArguments.MULTILABEL.toString(), "multilabel", false, infoMessagesBundle.getString("explainMultiLabelOption"));
+		options.addOption(CommandLineArguments.NOLIGATURES.toString(), "noligatures", false, infoMessagesBundle.getString("explainNoLigaturesOption"));
 		options.addOption(CommandLineArguments.NORMALIZEURLS.toString(), "normalizeurls", false, infoMessagesBundle.getString("explainUrlNormOption"));
 		options.addOption(CommandLineArguments.POSCORRECTION.toString(), "poscorrection", false, infoMessagesBundle.getString("explainPosCorrectionOption"));
 		options.addOption(CommandLineArguments.USETHESAURUS.toString(), "usethesaurus", false, infoMessagesBundle.getString("explainThesaurusOption"));
