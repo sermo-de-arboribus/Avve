@@ -702,13 +702,13 @@ public class XrffFileWriter
 		// ratio of coordinating conjunctions
 		Element coordConjunctionsElement = new Element("attribute");
 		coordConjunctionsElement.addAttribute(new Attribute("name", "coordinatingConjunctionsRatio"));
-		coordConjunctionsElement.appendChild(new Attribute("type", "numeric"));
+		coordConjunctionsElement.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(coordConjunctionsElement);
 		
 		// ratio of subordinating conjunctions
 		Element subordConjunctionsElement = new Element("attribute");
 		subordConjunctionsElement.addAttribute(new Attribute("name", "subordinatingConjunctionsRatio"));
-		subordConjunctionsElement.appendChild(new Attribute("type", "numeric"));
+		subordConjunctionsElement.addAttribute(new Attribute("type", "numeric"));
 		attributes.appendChild(subordConjunctionsElement);
 		
 		// number of images

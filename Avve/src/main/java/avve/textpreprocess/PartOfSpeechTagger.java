@@ -91,6 +91,7 @@ public class PartOfSpeechTagger implements TextPreprocessor
 			for(int i = 0; i < partsOfSpeech.length; i++)
 			{
 				String[] currentSentence = ebookContentData.getTokens()[i];
+				
 				partsOfSpeech[i] = tagger.tag(currentSentence);
 				
 				// if we have a command line argument set for POS-tag correction, we process the tagging results through a replacement table

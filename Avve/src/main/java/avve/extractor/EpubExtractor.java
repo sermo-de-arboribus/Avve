@@ -33,6 +33,8 @@ import avve.services.lucene.LuceneService;
  * 
  * @author "Kai Weber"
  *
+ * Example for parameters:
+ * -folder "D:\Users\u0558\Documents\Warengruppen\VLB-Warengruppe" -lc -pc -dnifw -wvs 500 -cv "C:\Users\u0558\git\Avve\Avve\src\main\resources\controlledvocabulary\vlb_wg_cv.txt" -usethesaurus -urlnorm
  */
 public class EpubExtractor
 {

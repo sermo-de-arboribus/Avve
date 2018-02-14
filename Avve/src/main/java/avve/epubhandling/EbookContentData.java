@@ -93,7 +93,7 @@ public class EbookContentData implements Serializable
 	 */
 	public double getAttributiveIndefinitePronounRatio()
 	{
-		return calculatePosTokenRatio("PIS");
+		return calculatePosTokenRatio(new String[]{"PIS", "PIAT|PIS"});
 	}
 
 	/**
