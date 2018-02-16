@@ -76,8 +76,8 @@ public class EpubFile implements Serializable
 		    
 		    // read text from Epub
 			String pathToOebpsFile = getOebpsFilePath(tempDir);
-			List<String> pathsToContentFiles = getPlainTextFromContentFiles(pathToOebpsFile);
-			for(String chapter : pathsToContentFiles)
+			List<String> textOfAllContentFiles = getPlainTextFromContentFiles(pathToOebpsFile);
+			for(String chapter : textOfAllContentFiles)
 			{
 				sb.append(chapter);
 				sb.append(System.lineSeparator());
