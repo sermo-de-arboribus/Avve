@@ -59,6 +59,8 @@ public class HyperonymPreprocessor implements TextPreprocessor
 		{
 			SortedMap<String, Integer> hyperonymFrequencies = new TreeMap<String, Integer>();
 			SortedMap<String, Integer> terms = new TreeMap<String, Integer>();
+			// A memory cache to reduce number of DB lookups
+			HashSet<String> termCache = new HashSet<String>();
 			
 			Connection dbConnection = getMysqlDbConnnection();
 			PreparedStatement sqlStatement = null;
@@ -81,26 +83,41 @@ public class HyperonymPreprocessor implements TextPreprocessor
 						{
 							String[] currentWindow = Arrays.copyOfRange(sentence, i-1, i + j - 1);
 							String currentTerm = String.join(" ", currentWindow);
-							sqlStatement.setString(1, currentTerm);
-							ResultSet rs = sqlStatement.executeQuery();
-							numberOfLookups++;
 							
-							if(rs.first())
+							// this currentTerm has already been found in the hyperonym database; just increment the term's count
+							if(termCache.contains(currentTerm) && terms.containsKey(currentTerm))
 							{
-								if(terms.containsKey(currentTerm))
-								{
-									terms.put(currentTerm, terms.get(currentTerm) + 1);
-								}
-								else
-								{
-									terms.put(currentTerm, 1);
-								}
-								i = i + j;
-								break;
+								terms.put(currentTerm, terms.get(currentTerm) + 1);
 							}
-							else if ( j == 1)
+							// this currentTerm has already been looked up and is not found in the database; just ignore it
+							else if (termCache.contains(currentTerm))
 							{
-								i = i + j;
+							}
+							// look up current term in database
+							else
+							{
+								sqlStatement.setString(1, currentTerm);
+								ResultSet rs = sqlStatement.executeQuery();
+								numberOfLookups++;
+								termCache.add(currentTerm);
+								
+								if(rs.first())
+								{
+									if(terms.containsKey(currentTerm))
+									{
+										terms.put(currentTerm, terms.get(currentTerm) + 1);
+									}
+									else
+									{
+										terms.put(currentTerm, 1);
+									}
+									i = i + j;
+									break;
+								}
+								else if ( j == 1)
+								{
+									i = i + j;
+								}	
 							}
 						}	
 					}
