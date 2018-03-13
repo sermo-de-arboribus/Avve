@@ -88,10 +88,15 @@ public class HyperonymPreprocessor implements TextPreprocessor
 							if(termCache.contains(currentTerm) && terms.containsKey(currentTerm))
 							{
 								terms.put(currentTerm, terms.get(currentTerm) + 1);
+								i = i + j;
 							}
 							// this currentTerm has already been looked up and is not found in the database; just ignore it
 							else if (termCache.contains(currentTerm))
 							{
+								if ( j == 1)
+								{
+									i = i + j;
+								}	
 							}
 							// look up current term in database
 							else

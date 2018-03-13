@@ -33,7 +33,7 @@ public class UrlNormalizer implements TextPreprocessor
 		// using a regex suggested by CodeWrite on Stack Overflow: https://stackoverflow.com/questions/6038061/regular-expression-to-find-urls-within-a-string
 		Pattern pattern = Pattern.compile("(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
 		Matcher matcher = pattern.matcher(contentData.getPlainText());
-		
+		    
 		int numberOfReplacements = 0;
 		StringBuffer sb = new StringBuffer();
 		

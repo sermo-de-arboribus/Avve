@@ -15,7 +15,10 @@ aaaaaaaaa	NE	ITJ
 aaaaaaaaaaaa	NE	ITJ
 aaaaaaaaaaaaa	NE	ITJ
 aaaaaaa-aaaaaaa	NE	ITJ
+aaaaaaaaaa-aaaaaaaaaaa	NN	ITJ
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah	NN	ITJ
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah	NE	ITJ
+aaaaaaaaaaaaaaaaaaaaaaaaahhhhhhhhhhhhhh	NE	ITJ
 aaaaaaaaaaaaaaaaaaaaaah	NE	ITJ
 aaaaaaaaaaaaaaaaaaaaahhhh	NE	ITJ
 aaaaaaaaaaaaaaaaaaaaahhhhhhhhhhhhhhhhhhh	NE	ITJ
@@ -26,14 +29,18 @@ aaaa­a­a­a­a­a­a­a­a­a­a­a­a­h­h­h­h­h­h­h­h­h­h­hhhh	NE	
 aaaaaaaaaaaaaaahhhhhhhh	NE	ITJ
 aaaaaaaaaaaaaaallllllllllllttttttttttttt	NE	ADJA|ADJD
 aaaaaaaaaaaaaajaaaaaaaa	NE	ITJ
+aaaaaaaaaaaaaaw	NE	ITJ
 aaaaaaaaaaaaah	NE	ITJ
 aaaaaaaaaaaaah	NN	ITJ
+aaaaaaaaaaaaahhhhhhhhhhhhhhhhhhhhhhhhhh	NN	ITJ
 a-a-a-a-a-a-a-aaaaa	NE	ITJ
 aaaaaaaaaaaah	NE	ITJ
 aaaaaaaaaaaah	$,	ITJ
 aaaaaaaaaaaahhhhhhhh	$(	ITJ
 aaaaaaaaaaaargh	NE	ITJ
 aaaaaaaaaaah	NE	ITJ
+aaaaaaaaaaahhhhhhh	ADV	ITJ
+aaaaaaaaaah	ADV	ITJ
 aaaaaaaaaah	NE	ITJ
 aaaaaaaaaah	NN	ITJ
 aaaaaaaaaahhhh	NE	ITJ
@@ -42,6 +49,7 @@ aaaaaaaaaaiiii	NE	ITJ
 aaaaaaaaah	NE	ITJ
 aaaaa-aaaah	NE	ITJ
 aaaaaaaaahhh	NE	ITJ
+aaaaaaaaahhhh	NE	ITJ
 aaaaaaaaahhhhhhhhh	NE	ITJ
 aaaaaa-a-a-a-lso	NN	ADV
 aaaaa-aaaarggggghhh	NN	ITJ
@@ -517,7 +525,15 @@ aansluiting	NE	FM
 aansteker	NE	FM
 aantrekken	$,	FM
 aanu	NE	ADV
+aanwezig	ADJD	FM
 aanzichs	NE	ADJA
+aaooommmmmmm	NE	ITJ
+aaooommmmmmmmm	NE	ITJ
+aaooommmmmmmmmmm	NE	ITJ
+aaoooommmmm	NE	ITJ
+aaooooommmmmmmmmm	NE	ITJ
+aaouu	NE	ITJ
+aapestart	VVPP	FM
 aardappelen	VVFIN	FM
 aasmaani	$,	NE
 aasmaani	NN	NE
@@ -570,7 +586,7 @@ abdominaltraumas	NE	NN
 abdominaltraumata	NE	NN
 abdominaltumors	NE	NN
 abdomines	ADJA	FM
-abdomini	KOM	FM
+abdomini	KON	FM
 abdomini	VVFIN	FM
 abdominis	ADJA	FM
 abdominis	ADV	FM
@@ -673,7 +689,7 @@ absinth	NE	NN
 absorption	ADJA	NN
 abˈßäßu	ADJA	FM
 abszess	NE	NN
-abuela	$	FM
+abuela	$.	FM
 abuela	ADV	FM
 abzuschwingen	APPR	VVIZU
 açaíaçaíaçaí	NE	ITJ
@@ -702,6 +718,7 @@ aesthetica	NE	FM
 ätzender	NN	ADJA
 afd	NN	NE
 affairs	NE	FM
+affenschwanz	$,	NN
 affenstarke	NN	ADJA
 afraid	$(	FM
 afraid	NE	FM
@@ -796,6 +813,7 @@ aːnßteːkər	NE	XY
 aːntrekə	VVFIN	XY
 anund	NN	NE
 anund	$(	NE
+aːnˈweːsəch	APPR	XY
 anything	ART	FM
 anything	KON	FM
 anything	NE	FM
@@ -835,7 +853,7 @@ ask	ADJD	FM
 ask	NE	FM
 as-salamu	NE	FM
 asset-backed	NE	FM
-assistant	ADJD	FM
+assistant	ADJA	FM
 assistant	ADJD	FM
 aßländer	ADJA	NE
 association	NE	FM
@@ -871,6 +889,7 @@ außerdem	ART	ADV
 außerdem	$,	ADV
 auswich	APPR	VVFIN
 auszudenke	VVFIN	VVIZU
+auszusetzen	APPR	VVIZU
 auszuweichen	VVFIN	VVIZU
 automated	ADJD	FM
 automated	NE	FM
@@ -971,6 +990,7 @@ both	NE	FM
 both	VVFIN	FM
 bottles	NE	FM
 boy	VVFIN	FM
+boyer	NN	NE
 brain	ADJA	FM
 brain	NN	FM
 brainstem	ADJA	FM
@@ -1022,6 +1042,7 @@ chère	$	FM
 chère	NE	FM
 chester	NN	NE
 chinchulines	ADJA	FM
+chiocciolina	NE	FM
 chobotnice	NN	NE
 choclos ADJD	FM
 chocolate	ADJA	FM
@@ -1141,6 +1162,7 @@ die	$,	ART
 died	ART	FM
 died	PRELS	FM
 diefstal	ART	FM
+diesssesss	ART	PDAT
 differences	ADJA	FM
 different	ADJD	FM
 diːfßtal	NE	XY
@@ -1220,8 +1242,9 @@ eisenbahnkomitees	NE	NN
 eiskaltes	NN	ADJA
 ekklesía	$	FM
 ekklesía	KOUI	FM
-elfter	ADJA|NN
+elfter	NE	ADJA|NN
 elsevier	NN	NE
+embla	NN	NE
 empire	VVFIN	NN
 empty	XY	FM
 ən	ADJA	XY
@@ -1413,8 +1436,11 @@ guidelines	NE	FM
 gutginge	NN	VVFIN
 gwen	NN	NE
 gyldendal	NN	NE
+haaaaaaaaaaaaaaaaaaaaaa	NE	ITJ
+haaaaaaouuuuuuuaaaaahhhhh	NE	ITJ
 haaaahhhhh	NE	ITJ
 haaach	NE	ITJ
+haaahaaahaaaaaaaaaaaaaaaaa	NE	ITJ
 haaandtücheeer	NE	NN
 haaienvinnensoep	VAFIN	FM
 haarclips	NE	NN
@@ -1475,7 +1501,6 @@ heh	ADV	ITJ
 heh	VVFIN	ITJ
 heike	ADJA	NE
 heimfuhren	VVPP	VVFIN
-hellen	ADJA	hell
 help	NE	FM
 helping	NE	FM
 hepatozelluläres	NE	ADJA
@@ -1516,6 +1541,7 @@ himself $.	FM
 himself	$(	FM
 hinabgingen	VVPP	VVFIN
 hinaufzugehen	VVFIN	VVIZU
+hineintrage	ART	VVFIN
 hingehn	ADV	VVFIN
 hinnuli	VVINF	FM
 hinrichsen	NN	NE
@@ -1525,6 +1551,8 @@ hinunterzuwürgen	VVFIN	VVIZU
 hiːr	ADJA	XY
 his	ADJA	FM
 hm	NE	ITJ
+hmmmmjaaaahmmmaaaaaaa	NE	ITJ
+hmmmmmjaaaaaahmmmaaaaaaa	NE	ITJ
 hmmmpff	NE	ITJ
 hmms	NE	NN
 höchst	VVFIN	ADV
@@ -1611,10 +1639,12 @@ it	NE	FM
 it	$(	FM
 jaaaa	NE	PTKANT
 jaaaaa	ADV	PTKANT
+jaaaaa	$.	PTKANT
 jaaaaaaaa	NE	PTKANT
 jaaaaaaaa	XY	PTKANT
 jaaaaaaaaaaaaaaaaaa	NN	PTKANT
 jaaaaaaaaaaaaaaaaaaaaaaa	NE	PTKANT
+jaaaaaaaaaaaaaaaaaaaaaah	NE	PTKANT
 jaaaaahaaa	ADV	PTKANT
 jaaaahaaa	ADV	PTKANT
 jaaahhh	NE	PTKANT
@@ -1624,6 +1654,7 @@ jacks	NN	NE
 jahaaa	NE	PTKANT
 jahhhhhhhhhhhhhh	NE	PTKANT
 jahre	NE	NN
+jajaaajaaaaaaaaaaaaaaaaaaah	NE	PTKANT
 james-perse-t-shirts	NE	NN
 jan-aage	NN	NE
 jarre	NN	NE
@@ -1798,6 +1829,8 @@ mannmannmannmannmann	PIS	ITJ
 many	NE	FM
 many	PIS	FM
 mariés	PRELS	FM
+marnie	NN	NE
+marnie	$(	NE
 massacre	NE	FM
 massage	ADJA	NN
 matinee-auftritte	NE	NN
@@ -1843,6 +1876,7 @@ miiaaauu	NE	ITJ
 mijn	APPR	FM
 milk	APPR	FM
 millennium	ADJA	NN
+min	NN	NE
 ministère	NN	FM
 minute	ADV	NN
 minute	APPR	NN
@@ -1860,11 +1894,13 @@ mmmöööch	ADV	PPER
 mmmuuuaaaahhhh	NN	ITJ
 möcht	$	VVFIN
 mögen	$	VVFIN|VVINF
+moïra	$,	NE
 mon	NE	FM
 monde	ADJA	FM
 money	NE	FM
 months	ADJA	FM
 moooochööönnn	ADV	VVFIN
+morgan	NN	NE
 morning	NE	FM
 mornings	ADV	FM
 morten	NN	NE
@@ -1887,6 +1923,7 @@ müssen	$	VMINF
 mulford	NN	NE
 muränen	NE	NN
 musculoskeletale	NN	ADJA
+muskuloskelettale	NN	ADJA
 muss	PRELS	VMFIN
 musse	VVFIN	VMFIN
 mussten	ADJA	VMFIN
@@ -1997,7 +2034,7 @@ often	ADJA	FM
 og	VVFIN	FM
 oh	APPR	ITJ
 oh	NE	ITJ
-ooohhhhhhmaaaaaaiiiiinnn	NE	ITJ
+ohhhhhhhhhhhhhhhhhhhhhhh	NE	ITJ
 oje	ADV	ITJ
 oje	NE	ITJ
 ok-aaaay	NE	ITJ
@@ -2006,8 +2043,10 @@ oma	NE	NN
 ontdekking	NE	FM
 oooh	NE	ITJ
 ooohhh	NE	ITJ
+ooohhhhhhmaaaaaaiiiiinnn	NE	ITJ
 ooooohs	NE	NN
 ooouuuaaah	NE	ITJ
+ooooooohaaaaaaaaoooooooh	NE	ITJ
 once	NE	FM
 one	XY	FM
 one	$.	FM
@@ -2019,7 +2058,9 @@ ooooh	NE	ITJ
 oooohh	NE	ITJ
 oooooh	NE	ITJ
 ooooohh	NN	ITJ
+ooooohjaaaa	NE	ITJ
 ooooooohhhhh	NE	ITJ
+oooooooooooohhhhhhh	NE	ITJ
 oosterhesselen	NN	NE
 open	VVFIN	FM
 oprah	NN	NE
@@ -2043,6 +2084,7 @@ pakje	ADJA	FM
 país	APPR	FM
 paisano	$	FM
 palácio	NN	FM
+palaverten	ADJA	VVFIN
 paper	NE	FM
 papirer	NN	FM
 parameter	ADJA	NN
@@ -2055,6 +2097,7 @@ peloponnesischen	NN	ADJA
 penelope	NN	NE
 people	ADJA	FM
 père	VVFIN	FM
+performte	APPR	ADJA|VVFIN
 perhaps	APPR	FM
 perpetrators	APPR	FM
 perspective	NN	FM
@@ -2145,6 +2188,7 @@ ridiculous	NE	FM
 right	ADJD	FM
 right	NE	FM
 rincewind	NN	NE
+ringos	NN	NE
 riskieren	ART	VVFIN|VVINF
 roboter	ADJA	NN
 roept	NN	FM
@@ -2197,6 +2241,7 @@ scheissmaschinenraum	NE	NN
 schleusen	NE	NN
 schließsch	NN	VVFIN
 schnarrte	ADJA	VVFIN
+schnecklein	NE	NN
 s-c-h-n-e-l-l	$,	ADJA|ADJD
 schön	XY	ADJD|ADJD
 schööööön	NE	ADJA
@@ -2265,6 +2310,7 @@ shouldn	APPR	FM
 shouldn	VVFIN	FM
 shouting	$.	FM
 show	PPOSAT	FM|NN
+shtrudel	VAFIN	FM
 shut	NE	FM
 shut	PRF	FM
 shut	VVFIN	FM
@@ -2297,6 +2343,7 @@ skagen	NN	NE
 skoliose	NE	NN
 sleep	$.	FM
 small	NE	FM
+snail	$.	FM
 s-o	ADJA	ADV
 s-o	ADJD	ADV
 society	KON	NN
@@ -2560,15 +2607,18 @@ vlucht	VVPP	FM
 vlug	VVFIN	FM
 volkspartij	NN	NE
 vonnöten	ART	ADJD
+vooooolaaaaare	NN	FM
 voor	APPR	FM
 vorstellte	ADJA	VVFIN
 vorüber	APPR	ADV
 vorüberkamen	ADJA	VVFIN
 vorüberkamen	APPR	VVFIN
+vorwärts	APPR	ADV
 vorzustellen	$.	VVIZU
 vous	APPR	FM
 v-versteh	VAFIN	VVFIN
 v-vielleicht	PTKNEG	ADV
+waaaaaaaaaaaah	NE	ITJ
 waaaaah	NE	ITJ
 waaaas	NE	PWS
 waarde	VAFIN	FM
@@ -2634,6 +2684,7 @@ wenn	$,	KOUS
 werden	$.	VAINF
 were	ADJA	FM
 were	VAFIN	FM
+whaaaaaaaaaaaaaaaaaaaaaaaat	NN	FM
 what	VVFIN	FM
 whatever	ADJA	FM
 when	ADJA	FM
@@ -2665,6 +2716,7 @@ wobbad	NN	NE
 wogegen	$	KON
 wogegen	$,	KON
 wohlert	NN	NE
+wohlfühlte	ADJA	VVFIN
 wolfsfell	NE	NN
 wolln	$.	VAFIN|VAINF
 wonderful	NE	FM
@@ -2700,6 +2752,7 @@ w-was	NE	PWAV
 w-woher	NE	PWAV
 www	KOUS	XY
 wwwwwwann	ADV	PWAV
+yeaaaaah	NE	ITJ
 years	NE	FM
 years	NN	FM
 yes	NE	FM
@@ -2710,6 +2763,7 @@ your	NE	FM
 your	NN	FM
 yourself	NE	FM
 zange	NE	NN
+zavináč	VVFIN	FM
 zeeeehn	NN	CARD
 zich	$,	FM
 ziehe	ADJA	VVFIN
