@@ -109,6 +109,12 @@
 		    <artifactId>maven-artifact</artifactId>
 		    <version>3.5.2</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sf.meka/meka -->
+		<dependency>
+		    <groupId>net.sf.meka</groupId>
+		    <artifactId>meka</artifactId>
+		    <version>1.9.1</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
 		<dependency>
 		    <groupId>org.mockito</groupId>
