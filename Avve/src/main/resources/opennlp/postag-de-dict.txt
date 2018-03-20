@@ -2786,4 +2786,4 @@ zuschritten	VVINF	VVFIN
 zuzelte	ADJA	VVFIN
 zwemlessen	ADV	FM
 zweifellos	NE	ADV
-zwerg-ulviye	NN	NE
+zwerg-ulviye	NN	NE 

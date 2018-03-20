@@ -1,5 +1,6 @@
 package avve.meka;
 
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -14,14 +15,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.ConverterUtils.DataSink;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
+
 import weka.filters.unsupervised.attribute.Remove;
 import weka.filters.unsupervised.attribute.Reorder;
+import weka.filters.unsupervised.attribute.StringToWordVector;
+
 
 public class ThemaTrainer
 {
@@ -30,6 +35,7 @@ public class ThemaTrainer
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
 	private static final int TRAINING_CLASS_THRESHOLD = 10;
 	private static final int TEST_CLASS_THRESHOLD = 2;
+	private static final String TRAINING_FLAG_NAME = "IsTrainingSet";
 	
 	public static void main(String[] args)
 	{		
@@ -160,7 +166,7 @@ public class ThemaTrainer
 		    {
 		    	if(trainingClassFrequencies[i] < trainingClassThreshold || testClassFrequencies[i] < testingClassThreshold)
 		    	{
-		    		classesToBeRemoved.add(i /*filteredTrainingSet.attribute(i).index()*/);
+		    		classesToBeRemoved.add(i);
 		    		numberOfRemovedClasses++;
 		    	}
 		    }
@@ -170,16 +176,55 @@ public class ThemaTrainer
 		    filteredTrainingSet = filterClassAttributes("Avve multiclass training dataset", filteredTrainingSet, classesToBeRemoved, false);
 		    filteredTestingSet = filterClassAttributes("Avve multiclass test dataset", filteredTestingSet, classesToBeRemoved, false);
 		    
-		    // Open question: Do we want to remove instances without any class labels left?
 		    
+		    // Open question: Do we want to remove instances without any class labels left?
+
+		    // we need to calculate the word vector on the union of train and test instances
+		    // so we set a flag first to be able to separate those two sets again later
+		    addTrainingSetFlag(filteredTrainingSet, true);
+		    addTrainingSetFlag(filteredTestingSet, false);
+		    
+		    // combine the training and testing sets
+		    Instances combinedTrainAndTestSet = new Instances(filteredTrainingSet);
+		    combinedTrainAndTestSet.addAll(filteredTestingSet);
+		    
+		    // Transform String attributes to word vectors for hyperonyms
+		    Instances combinedHyperonymSet = stringAttributeToWordVector("hyperonyms", "hy_", combinedTrainAndTestSet);
+		    
+		    // Transform String attributes to word vectors for normal word vector
+		    Instances combinedWordVectorizedSet = stringAttributeToWordVector("top-idf", "wv_", combinedHyperonymSet);
+		    
+		    // separate the training and testing set again
+		    Instances wordVectorizedTrainingSet = new Instances(combinedWordVectorizedSet, 0);
+		    Instances wordVectorizedTestingSet = new Instances(combinedWordVectorizedSet, 0);
+		    int trainingFlagIndex = combinedWordVectorizedSet.attribute(TRAINING_FLAG_NAME).index();
+		    		
+		    for(Instance instance : combinedWordVectorizedSet)
+		    {
+		    	if(instance.value(trainingFlagIndex) != 0.0)
+		    	{
+		    		wordVectorizedTrainingSet.add(instance);
+		    	}
+		    	else
+		    	{
+		    		wordVectorizedTestingSet.add(instance);
+		    	}
+		    }
+		    combinedWordVectorizedSet.clear();
+		                                                                                                         
+    		// instantiate an attribute filter         
+    		removeTrainingSetFlag("Avve multiclass training set", wordVectorizedTrainingSet);
+    		removeTrainingSetFlag("Avve multiclass testing set", wordVectorizedTestingSet);                                                                 
+    		
+                    
 		    // Dump cleaned training and test set files
 		    ArffSaver saver = new ArffSaver();
 		    saver.setFile(new File("tmp_train.arff"));
-		    DataSink.write(saver, filteredTrainingSet);
+		    DataSink.write(saver, wordVectorizedTrainingSet);
 		    
 		    saver.setFile(new File("tmp_test.arff"));
-		    DataSink.write(saver, filteredTestingSet);
-		    
+			DataSink.write(saver, wordVectorizedTestingSet);
+
 		    // Train
 		    
 		    // Evaluate
@@ -188,6 +233,35 @@ public class ThemaTrainer
 		{
 			logger.error(exc.getLocalizedMessage(), exc);
 		}
+	}
+
+	private static void addTrainingSetFlag(Instances instances, boolean isTrainingSet) throws Exception
+	{
+		instances.insertAttributeAt(new Attribute(TRAINING_FLAG_NAME), instances.numAttributes());
+		
+		int newAttributeIndex = instances.numAttributes() - 1;
+		
+		for(Instance instance : instances)
+		{
+			instance.setValue(newAttributeIndex, isTrainingSet ? 1.0 : 0.0);
+		}
+	}
+
+	private static Instances stringAttributeToWordVector(String attributeName, String prefix, Instances instances) throws Exception
+	{
+		Instances filteredInstances = instances;
+		
+		StringToWordVector stringToWordVector = new StringToWordVector();
+		if(null != instances.attribute(attributeName))
+		{
+			int attributeIndex = instances.attribute(attributeName).index();
+			stringToWordVector.setAttributeIndicesArray(new int[] { attributeIndex });
+			stringToWordVector.setAttributeNamePrefix(prefix);
+			stringToWordVector.setInputFormat(instances);
+			filteredInstances = Filter.useFilter(instances, stringToWordVector);
+		}
+		// if attributeName cannot be found, this will return the unmodified Instances object
+		return filteredInstances;
 	}
 
 	private static Instances filterClassAttributes(String relationName, Instances instances, ArrayList<Integer> classesToBeRemoved, boolean invertSelection) throws Exception
@@ -287,4 +361,19 @@ public class ThemaTrainer
 		instances.setClassIndex(classIndex);
 		return instances;
 	}
-}
+
+	private static void removeTrainingSetFlag(String relationName, Instances instances) throws Exception
+	{
+	    		Remove removeTrainingSetFlag = new Remove();                                               
+        		removeTrainingSetFlag.setAttributeIndicesArray(new int[] { instances.attribute(TRAINING_FLAG_NAME).index() });                                                    
+        		removeTrainingSetFlag.setInputFormat(instances);
+        		                                                                                          
+        		// do the filtering                                                                       
+        		instances = Filter.useFilter(instances, removeTrainingSetFlag);          
+        		                                                                                          
+        		// postprocess: update class index and relation name                                      
+        		instances.setRelationName(relationName);                            
+        		MLUtils.fixRelationName(instances, instances.classIndex());
+    } 
+}                                                           
+        		                                                                                          
