@@ -1,6 +1,5 @@
 package avve.meka;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -8,13 +7,17 @@ import java.util.ResourceBundle;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import meka.classifiers.multilabel.BR;
+import meka.classifiers.multilabel.Evaluation;
 import meka.core.MLUtils;
+import meka.core.Result;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import weka.classifiers.functions.SMO;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -176,7 +179,6 @@ public class ThemaTrainer
 		    filteredTrainingSet = filterClassAttributes("Avve multiclass training dataset", filteredTrainingSet, classesToBeRemoved, false);
 		    filteredTestingSet = filterClassAttributes("Avve multiclass test dataset", filteredTestingSet, classesToBeRemoved, false);
 		    
-		    
 		    // Open question: Do we want to remove instances without any class labels left?
 
 		    // we need to calculate the word vector on the union of train and test instances
@@ -215,8 +217,7 @@ public class ThemaTrainer
     		// instantiate an attribute filter         
     		removeTrainingSetFlag("Avve multiclass training set", wordVectorizedTrainingSet);
     		removeTrainingSetFlag("Avve multiclass testing set", wordVectorizedTestingSet);                                                                 
-    		
-                    
+    		                    
 		    // Dump cleaned training and test set files
 		    ArffSaver saver = new ArffSaver();
 		    saver.setFile(new File("tmp_train.arff"));
@@ -226,8 +227,20 @@ public class ThemaTrainer
 			DataSink.write(saver, wordVectorizedTestingSet);
 
 		    // Train
+			BR brClassifier = new BR();
+			//RAkELd rakeldClassifier = new RAkELd();
+			SMO smoClassifier = new SMO();
+			brClassifier.setClassifier(smoClassifier);
+			//rakeldClassifier.setClassifier(smoClassifier);
+			brClassifier.buildClassifier(wordVectorizedTrainingSet);
+			//rakeldClassifier.buildClassifier(wordVectorizedTrainingSet);
 		    
 		    // Evaluate
+			Result result = Evaluation.evaluateModel(brClassifier, wordVectorizedTrainingSet, wordVectorizedTestingSet, "PCut1", "5");
+			//Result result = Evaluation.evaluateModel(rakeldClassifier, wordVectorizedTrainingSet, wordVectorizedTestingSet, "PCut1", "5");
+			logger.info(brClassifier.getModel());
+			logger.info(result);
+
 		}
 		catch (Exception exc)
 		{
