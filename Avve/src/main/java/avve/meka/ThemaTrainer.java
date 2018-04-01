@@ -36,7 +36,18 @@ import weka.filters.unsupervised.attribute.Remove;
 import weka.filters.unsupervised.attribute.Reorder;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
-
+/**
+ * ThemaTrainer is a runnable program that expects two ARFF files for multi-label classification with MEKA, one file for training, one
+ * for testing. The input files are expected to have the format that is output by EpubExtractor with the -ml parameter.
+ * 
+ * ThemaTrainer first unifies the class sets of the two files and removes those classes whose number of instances is below a given
+ * threshold. It then combines the two files for building a common word vector, then separates
+ * them again and builds a MEKA Binary Relevance model with the training data. Then it runs an evaluation on the testing data.
+ * The evaluation is posted to the command line and to the log file.
+ *  
+ * @author Kai Weber
+ *
+ */
 public class ThemaTrainer
 {
 	private static final Logger logger = LogManager.getLogger();

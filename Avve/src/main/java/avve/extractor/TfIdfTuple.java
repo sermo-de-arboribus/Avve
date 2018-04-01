@@ -2,6 +2,13 @@ package avve.extractor;
 
 import org.apache.commons.lang3.builder.*;
 
+/**
+ * This class represents TF/IDF-tupels (term frequency / inverse document frequency) in a sortable / comparable way. An optional
+ * normalizing factor can be added.
+ * 
+ * @author Kai Weber
+ *
+ */
 public class TfIdfTuple implements Comparable<TfIdfTuple>
 {
 	public TfIdfTuple(int termFrequency, double inverseDocumentFrequency)

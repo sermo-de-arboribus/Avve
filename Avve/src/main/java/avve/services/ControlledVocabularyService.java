@@ -5,6 +5,12 @@ import java.util.*;
 
 import org.apache.logging.log4j.Logger;
 
+/**
+ * This service handles controlled vocabulary files. It provides an iterator through a list of controlled vocabulary terms
+ * 
+ * @author Kai Weber
+ *
+ */
 public class ControlledVocabularyService
 {
 	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());

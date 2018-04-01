@@ -13,6 +13,13 @@ import java.util.Collection;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
+/**
+ * A concrete implemenetation of the FileService interface that delegates all file system access methods to their common Java I/O 
+ * equivalents. Used for production environments.
+ *  
+ * @author Kai Weber
+ *
+ */
 public class FileServiceImpl implements FileService
 {
 	@Override

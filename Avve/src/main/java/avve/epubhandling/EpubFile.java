@@ -63,6 +63,11 @@ public class EpubFile implements Serializable
 		opfNamespace.addNamespace("dc", "http://purl.org/dc/elements/1.1/");
 	}
 	
+	/**
+	 * Extracts the plain text of the e-book, using some XSLT script and thus stripping (X)HTML tags. 
+	 * 
+	 * @return The plain text of all e-book chapters as a single String
+	 */
 	public String extractPlainText()
 	{
 		StringBuffer sb = new StringBuffer();
@@ -106,21 +111,41 @@ public class EpubFile implements Serializable
 		return sb.toString();
 	}
 
+	/**
+	 * The depth of the table of contents is the nesting level / maximum path length from the top level chapter to the deepest nested subchapter
+	 * 
+	 * @return The maximum depth of the e-book's table of contents
+	 */
 	public int getDepthOfToc()
 	{
 		return depthOfToc;
 	}
-	
+
+	/**
+	 * The document ID is the ID stored in the e-book's OPF manifest as the book id
+	 * 
+	 * @return The Document ID string
+	 */
 	public String getDocumentId()
 	{
 		return documentId;
 	}
-	
+
+	/**
+	 * The file size of the e-book file
+	 * 
+	 * @return File size in bytes
+	 */
 	public long getFileSize()
 	{
 		return fileSize;
 	}
-	
+
+	/**
+	 * The language code from the e-book manifest's metadata
+	 * 
+	 * @return A two-character ISO language code lower case characters
+	 */
 	public String getLanguageCode()
 	{
 		if(language == null)
@@ -129,17 +154,32 @@ public class EpubFile implements Serializable
 		}
 		return language;
 	}
-	
+
+	/**
+	 * The number of top-level chapters
+	 * 
+	 * @return Number of top-level chapters
+	 */
 	public int getNumberOfChapters()
 	{
 		return numberOfChapters;
 	}
 	
+	/**
+	 * The number of images contained in this e-book. The images are counted through the entries given in the e-book's OPF manifest
+	 * 
+	 * @return The number of images contained in this e-book
+	 */
 	public int getNumberOfImages()
 	{
 		return numberOfImages;
 	}
 
+	/**
+	 * The overall number of entries in the table of contents, on all chapter nesting levels.
+	 * 
+	 * @return The overall number of chapters
+	 */
 	public int getNumberOfTocItems()
 	{
 		return numberOfTocItems;

@@ -449,7 +449,7 @@ public class XrffFileWriter
 		Element classElement = new Element("value");
 		Comment classComment = new Comment("class");
 		classElement.appendChild(classComment);
-		classElement.appendChild(content.getWarengruppe());
+		classElement.appendChild(content.getTargetClass());
 		instanceElement.appendChild(classElement);
 	}
 

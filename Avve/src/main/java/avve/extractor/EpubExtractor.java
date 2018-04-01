@@ -168,7 +168,7 @@ public class EpubExtractor
 			if(null != ebookContentData && ebookContentData.getLanguage().equals(language))
 			{
 				// determine "warengruppe" class code, either from command line parameter or from folder name
-				String warengruppe = ebookContentData.getWarengruppe();
+				String warengruppe = ebookContentData.getTargetClass();
 				
 				// save the processing result to the file system, one file with plain text, one file with statistical attributes
 				writePreprocessingResultsToFileSystem(warengruppe, ebookContentData, preprocessedFile, cliArguments);

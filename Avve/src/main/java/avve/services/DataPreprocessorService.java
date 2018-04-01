@@ -12,6 +12,14 @@ import avve.epubhandling.EbookContentData;
 import avve.extractor.CommandLineArguments;
 import avve.textpreprocess.*;
 
+/**
+ * This service orchestrates a list of text preprocessing services for an e-book file and provides a preProcessText() method
+ * that iterates through the configured preprocessors one after another. The preprocessors all modify or populate certain
+ * data in an EbookContentData object.
+ * 
+ * @author Kai Weber
+ *
+ */
 public class DataPreprocessorService
 {	
 	public DataPreprocessorService(final Logger logservice, final CommandLine cliArguments)

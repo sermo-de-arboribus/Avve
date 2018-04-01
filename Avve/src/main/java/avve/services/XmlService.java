@@ -39,6 +39,12 @@ import nu.xom.Document;
 import nu.xom.ParsingException;
 import nu.xom.converters.DOMConverter;
 
+/**
+ * A service class for providing XML-related functionality like executing XSLT, extracting text from XHTML, combining XRFF files.
+ * 
+ * @author Kai Weber
+ *
+ */
 public class XmlService
 {
 	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());

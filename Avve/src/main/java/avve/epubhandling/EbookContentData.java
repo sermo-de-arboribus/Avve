@@ -5,20 +5,51 @@ import java.util.*;
 
 import org.apache.logging.log4j.Logger;
 
+/**
+ * This class is the central piece of information, which holds all data retrieved from an e-book. When an object is created,
+ * the plain text will be stored. Subsequently this object can be passed to objects that implement the TextPreprocessor interface.
+ * These preprocessors will each handle certain tasks and either store or modify information on the given e-book.
+ * 
+ * Once populated, the objects of this class will also provide statistical information about the text, through its many getter methods.
+ * 
+ * @author Kai Weber
+ *
+ */
 public class EbookContentData implements Serializable
 {
+	private static final long serialVersionUID = 3022250504362756894L;
+	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
+	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
+	
+	private Logger logger;
+	private EpubFile epubFile;
+	private String plainText;
+	private String[] sentences;
+	private String targetClass;
+	private String[][] tokenizedSentences;
+	private String[][] lemmatizedSentences;
+	private String[][] partsOfSpeech;
+	private SortedMap<String, Integer> lemmaFrequencies;
+	private SortedMap<String, Integer> hyperonymFrequencies;
+	private SortedMap<String, Integer> wordFrequencies;
+	private SortedMap<String, Integer> partsOfSpeechFrequencies;
+	private int numberOfTokens;
+	private int numberOfWords;
+	private final Map<String, String> warengruppenMap;
+	private long wordLength;
+	
 	/**
 	 * Constructor
 	 * @param plainText The input text
-	 * @param warengruppe The Warengruppe class
+	 * @param targetClass The target class which is supposed to be learned by an ML algorithm
 	 * @param logger The logger to be used
 	 */
-	public EbookContentData(EpubFile epubFile, String plainText, String warengruppe, Logger logger)
+	public EbookContentData(EpubFile epubFile, String plainText, String targetClass, Logger logger)
 	{
 		this.epubFile = epubFile;
 		this.logger = logger;
 		this.plainText = plainText;
-		this.warengruppe = warengruppe;
+		this.targetClass = targetClass;
 		setHyperonymFrequencies(new TreeMap<String, Integer>());
 		lemmaFrequencies = new TreeMap<String, Integer>();
 		wordFrequencies = new TreeMap<String, Integer>();
@@ -205,6 +236,16 @@ public class EbookContentData implements Serializable
 	}
 	
 	/**
+	 * Returns the frequencies for hyperonyms that have been counted on the base of this e-book's text
+	 * 
+	 * @return A sorted map with the hyperonym String as the key and the frequency as the value
+	 */
+	public SortedMap<String, Integer> getHyperonymFrequencies()
+	{
+		return hyperonymFrequencies;
+	}
+	
+	/**
 	 * Get the number of imperative main verbs, divided by the number of tokens in this ebook text.
 	 * @return The verbs-to-tokens ratio
 	 */
@@ -240,6 +281,11 @@ public class EbookContentData implements Serializable
 		return calculatePosTokenRatio(new String[] {"PWS", "PWAT", "PWAV"});
 	}
 	
+	/**
+	 * The language code of this e-book, as provided by the EPUB's OPF metadata
+
+	 * @return A two-digit ISO language code
+	 */
 	public String getLanguage()
 	{
 		if(null != epubFile)
@@ -252,21 +298,51 @@ public class EbookContentData implements Serializable
 		}
 	}
 	
+	/**
+	 * Returns the lemma frequencies, as counted by a lemmatizing TextPreprocessor
+	 * 
+	 * @return A sorted map with the lemma as the key String and the frequency as its value
+	 */
 	public SortedMap<String, Integer> getLemmaFrequencies()
 	{
 		return lemmaFrequencies;
 	}
 	
+	/**
+	 * Returns lemmatized sentences of this ebook's text.
+	 * 
+	 * @return A two-dimensional String array with the first dimension holding all the sentences and the second dimension a sentence's lemmas
+	 */
 	public String[][] getLemmas()
 	{
 		return lemmatizedSentences;
 	}
 	
 	/**
+	 * Returns a single String representation of the lemmatized text, as opposed to getLemmas()
+	 * 
+	 * @return A string representation of the lemmas in original document order
+	 */
+	public String getLemmatizedText()
+	{
+		return lemmasToString(true);
+	}
+
+	/**
+	 * Returns a single String representation of the lemmatized text, omitting those lemmas which have been labelled as foreign material
+	 * 
+	 * @return A string representation of the lemmas in original document order
+	 */
+	public String getLemmatizedTextWithoutForeignWords()
+	{
+		return lemmasToString(false);
+	}
+
+	/**
 	 * Get the number of main verbs in perfect participle form, divided by the number of tokens in this ebook text.
 	 * @return The verbs-to-tokens ratio
 	 */
-	public double 	getMainVerbPerfectParticiplesRatio()
+	public double getMainVerbPerfectParticiplesRatio()
 	{
 		return calculatePosTokenRatio("VVPP");
 	}
@@ -298,6 +374,12 @@ public class EbookContentData implements Serializable
 		return calculatePosTokenRatio("PTKNEG");
 	}
 	
+	/**
+	 * A normalized lemma frequency is the frequency of the given lemma divided by the overall number of lemmas contained in this book
+	 * 
+	 * @param lemma The lemma whose normalized frequency is to be retrieved
+	 * @return The normalized lemma frequency
+	 */
 	public double getNormalizedLemmaFrequency(String lemma)
 	{
 		int lemmaFrequency = null != getLemmaFrequencies().get(lemma) ? getLemmaFrequencies().get(lemma) : 0;
@@ -314,6 +396,21 @@ public class EbookContentData implements Serializable
 		return calculatePosTokenRatio("NN");
 	}
 	
+	/**
+	 * The number of chapters contained in the e-book file. Usually counted by the number of spine-elements in the EPUB file's table of contents
+	 * 
+	 * @return The overall number of chapters (top level only)
+	 */
+	public int getNumberOfChapters()
+	{
+		return epubFile.getNumberOfChapters();
+	}
+	
+	/**
+	 * The number of images that this e-book contains, usually counted through the metadata contained in an EPUB file's OPF manifest
+	 * 
+	 * @return The number of contained image files
+	 */
 	public int getNumberOfImages()
 	{
 		return epubFile.getNumberOfImages();
@@ -384,6 +481,24 @@ public class EbookContentData implements Serializable
 		return counter;
 	}
 	
+	/**
+	 * The overall number of chapters contained in the e-book file. Usually counted by the number of spine-elements in the EPUB file's table of contents
+	 * 
+	 * @return The overall number of chapters (all levels)
+	 */
+	public int getNumberOfTocItems()
+	{
+		return epubFile.getNumberOfTocItems();
+	}
+	
+	/**
+	 * The overall number of tokens after a tokenizing TextPreprocessor has tokenized this e-book's plain text.
+	 * The number of tokens is cached, so that several calls to this function don't have to calculate it several times.
+	 * Note that if you change the tokens of an EbookContentData object after calling getNumberOfTokens(), you will get
+	 * the outdated cached amount, not the updated count
+	 * 
+	 * @return The number of tokens contained in this e-book
+	 */
 	public int getNumberOfTokens()
 	{
 		if(0 == numberOfTokens)
@@ -405,10 +520,26 @@ public class EbookContentData implements Serializable
 		return numberOfWords;
 	}
 	
+	/**
+	 * The parts of speech of this e-book, as determined by a part of speech tagger
+	 * 
+	 * @return A two-dimensional array with a structure identical to the structure of getLemmas(): First dimension holds all sentences, 
+	 *    second dimension a sentence's parts of speech in word order.
+	 */
 	public String[][] getPartsOfSpeech()
 	{
 		return partsOfSpeech;
-	}	
+	}
+
+	/**
+	 * Returns the part of speech frequencies after they have been set by a POS-counting TextPreprocessor.
+	 * 
+	 * @return A sorted map with the POS as the key String and the corresponding frequency as the value
+	 */
+	public SortedMap<String, Integer> getPartsOfSpeechFrequencies()
+	{
+		return partsOfSpeechFrequencies;
+	}
 	
 	/**
 	 * Get the number of personal pronouns, divided by the number of tokens in this ebook text.
@@ -419,31 +550,16 @@ public class EbookContentData implements Serializable
 		return calculatePosTokenRatio(new String[]{"PPER", "PRF"});
 	}
 	
+	/**
+	 * The plain text this e-book.
+	 * 
+	 * @return
+	 */
 	public String getPlainText()
 	{
 		return plainText;
 	}
 	
-	public String getLemmatizedText()
-	{
-		return lemmasToString(true);
-	}
-	
-	public String getLemmatizedTextWithoutForeignWords()
-	{
-		return lemmasToString(false);
-	}
-	
-	public int getNumberOfChapters()
-	{
-		return epubFile.getNumberOfChapters();
-	}
-
-	public int getNumberOfTocItems()
-	{
-		return epubFile.getNumberOfTocItems();
-	}
-
 	/**
 	 * Get the number of pronominal adverbs, divided by the number of tokens in this ebook text.
 	 * @return The pronoun-to-tokens ratio
@@ -453,14 +569,14 @@ public class EbookContentData implements Serializable
 		return calculatePosTokenRatio(new String[] { "PROAV", "PAV" });
 	}
 	
+	/**
+	 * Returns the sentences of this e-book, as determined by a sentence detecting TextPreprocessor
+	 * 
+	 * @return A String array with one sentence per array index
+	 */
 	public String[] getSentences()
 	{
 		return sentences;
-	}
-	
-	public String[][] getTokens()
-	{
-		return tokenizedSentences;
 	}
 	
 	/**
@@ -509,6 +625,34 @@ public class EbookContentData implements Serializable
 	}
 	
 	/**
+	 * Returns the target class of this e-book, which is the class meant to be learnt by a machine learning algorithm
+	 * 
+	 * @return the target class as a String
+	 */
+	public String getTargetClass()
+	{
+		// we might want to map some target class codes onto a common code, so we don't return the actual code, but go through a map
+		if(warengruppenMap.containsKey(targetClass))
+		{
+			return warengruppenMap.get(targetClass);
+		}
+		else
+		{
+			return targetClass;
+		}
+	}
+	
+	/**
+	 * Returns the tokens that have been set by the tokenizing TextPreprocessor
+	 * 
+	 * @return A two-dimensional array of tokens, with the first dimension representing the sentences of the e-book's text, the second dimension the sentence's tokens
+	 */
+	public String[][] getTokens()
+	{
+		return tokenizedSentences;
+	}
+	
+	/**
 	 * Get the unique number of non-lemmatized words. Note that this function only returns accurate values after all words have been passed to the countWord() function
 	 * @return The unique number of words.
 	 */
@@ -526,28 +670,35 @@ public class EbookContentData implements Serializable
 	{
 		return (double)numberOfWords / (double)getUniqueNumberOfWords();
 	}
-	
-	public String getWarengruppe()
+
+	/**
+	 * A method to be called by a hyperonym counting TextPreprocessor to set the counting results
+	 * 
+	 * @param A sorted map with the hyperonym String as the key and the frequency as the value
+	 */
+	public void setHyperonymFrequencies(SortedMap<String, Integer> hyperonymFrequencies)
 	{
-		// we might want to map some Warengruppe codes onto a common code, so we don't return the actual code, but go through a map
-		if(warengruppenMap.containsKey(warengruppe))
-		{
-			return warengruppenMap.get(warengruppe);
-		}
-		else
-		{
-			return warengruppe;
-		}
+		this.hyperonymFrequencies = hyperonymFrequencies;
 	}
 	
-	public SortedMap<String, Integer> getPartsOfSpeechFrequencies()
+	public void setLemmas(final String[][] lemmas)
 	{
-		return partsOfSpeechFrequencies;
+		this.lemmatizedSentences = lemmas;
 	}
 	
 	public void setNumberOfTokens(final int tokenCount)
 	{
 		numberOfTokens = tokenCount;
+	}
+	
+	public void setPartsOfSpeech(final String[][] partsOfSpeech)
+	{
+		this.partsOfSpeech = partsOfSpeech;
+	}
+
+	public void setPlainText(final String plainText)
+	{
+		this.plainText = plainText;
 	}
 	
 	public void setSentences(final String[] sentences)
@@ -558,21 +709,6 @@ public class EbookContentData implements Serializable
 	public void setTokens(final String[][] tokens)
 	{
 		this.tokenizedSentences = tokens;
-	}
-
-	public void setLemmas(final String[][] lemmas)
-	{
-		this.lemmatizedSentences = lemmas;
-	}
-
-	public void setPartsOfSpeech(final String[][] partsOfSpeech)
-	{
-		this.partsOfSpeech = partsOfSpeech;
-	}
-
-	public void setPlainText(final String plainText)
-	{
-		this.plainText = plainText;
 	}
 	
 	private double calculatePosTokenRatio(final String posToken)
@@ -649,37 +785,4 @@ public class EbookContentData implements Serializable
 		
 		return stringbuilder.toString();
 	}
-	
-	public SortedMap<String, Integer> getHyperonymFrequencies()
-	{
-		return hyperonymFrequencies;
-	}
-
-	public void setHyperonymFrequencies(SortedMap<String, Integer> hyperonymFrequencies)
-	{
-		this.hyperonymFrequencies = hyperonymFrequencies;
-	}
-
-	private static final long serialVersionUID = 3022250504362756894L;
-	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
-	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
-	
-	private Logger logger;
-	
-	private EpubFile epubFile;
-
-	private String plainText;
-	private String[] sentences;
-	private String warengruppe;
-	private String[][] tokenizedSentences;
-	private String[][] lemmatizedSentences;
-	private String[][] partsOfSpeech;
-	private SortedMap<String, Integer> lemmaFrequencies;
-	private SortedMap<String, Integer> hyperonymFrequencies;
-	private SortedMap<String, Integer> wordFrequencies;
-	private SortedMap<String, Integer> partsOfSpeechFrequencies;
-	private int numberOfTokens;
-	private int numberOfWords;
-	private final Map<String, String> warengruppenMap;
-	private long wordLength;
 }
