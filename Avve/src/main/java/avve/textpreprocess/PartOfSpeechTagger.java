@@ -17,6 +17,13 @@ import avve.extractor.CommandLineArguments;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 
+/**
+ * This class populates an EbookContentData object's part of speech statistics (via setPartsOfSpeech()). It required a tokenized input text
+ * (from EbookContentData object's getTokens()).
+ * 
+ * @author Kai Weber
+ *
+ */
 public class PartOfSpeechTagger implements TextPreprocessor
 {
 	private static final ResourceBundle errorMessageBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
@@ -80,6 +87,7 @@ public class PartOfSpeechTagger implements TextPreprocessor
 		
 		if(ebookContentData.getTokens() == null || ebookContentData.getTokens().length == 0)
 		{
+			ebookContentData.setPartsOfSpeech(new String[0][0]);
 			this.logger.error(String.format(errorMessageBundle.getString("avve.textpreprocess.noTokensAvailable"), "PartOfSpeechTagger.process()"));
 		}
 		else
@@ -109,6 +117,7 @@ public class PartOfSpeechTagger implements TextPreprocessor
 			}
 			ebookContentData.setPartsOfSpeech(partsOfSpeech);
 			
+			// this counting is only done for logging purposes
 			SortedMap<String, Integer> posMap = ebookContentData.getPartsOfSpeechFrequencies();
 			
 			for(String[] sentence : ebookContentData.getPartsOfSpeech())

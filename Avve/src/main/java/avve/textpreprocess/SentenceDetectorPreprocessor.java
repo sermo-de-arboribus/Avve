@@ -12,6 +12,13 @@ import org.apache.logging.log4j.Logger;
 
 import avve.epubhandling.EbookContentData;
 
+/**
+ * This is merely a wrapper class which delegates sentence detection to OpenNLP's maximum entropy sentence detector
+ * It works on EbookContentData object's plain text and populates its sentences object (via setSentences())
+ * 
+ * @author Kai Weber
+ *
+ */
 public class SentenceDetectorPreprocessor implements TextPreprocessor
 {	
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());

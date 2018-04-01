@@ -8,6 +8,12 @@ import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Helper class for handling access properties for the OpenThesaurus MySQL database. Used by the HyperonymPreprocessor class.
+ * 
+ * @author Kai Weber
+ *
+ */
 public class HyperonymProperties
 {
 	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());

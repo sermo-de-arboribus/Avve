@@ -7,6 +7,13 @@ import org.apache.logging.log4j.Logger;
 
 import avve.epubhandling.EbookContentData;
 
+/**
+ * This preprocessor works on tokenized data from EbookContentData and replaces typographic ligatures (e. g. ﬁ) with corresponding
+ * single characters (e. g. fi)
+ * 
+ * @author Kai Weber
+ *
+ */
 public class ReplaceLigaturesPreprocessor  implements TextPreprocessor
 {
 	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());

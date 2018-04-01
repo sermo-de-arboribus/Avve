@@ -6,6 +6,13 @@ import org.apache.logging.log4j.Logger;
 
 import avve.epubhandling.EbookContentData;
 
+/**
+ * This class cleans up punctuation that is left over after the tokenization process. It works on the EbookContentData's tokens (via 
+ * getTokens()) and modifies them (via setTokens())
+ * 
+ * @author Kai Weber
+ *
+ */
 public class RemovePunctuationPreprocessor implements TextPreprocessor
 {
 	private static final ResourceBundle errorMessagesBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());

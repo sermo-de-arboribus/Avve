@@ -9,6 +9,16 @@ import org.apache.logging.log4j.Logger;
 
 import avve.epubhandling.EbookContentData;
 
+/**
+ * This class replaces all URLs which can be found with the following regular expression:
+ * 
+ * (http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?
+ * 
+ * It works on EbookContentData's plain text only. It leaves the protocol name http / ftp / https in the text and removes all following characters
+ * 
+ * @author Kai Weber
+ *
+ */
 public class UrlNormalizer implements TextPreprocessor
 {
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());

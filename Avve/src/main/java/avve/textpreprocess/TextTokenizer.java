@@ -11,6 +11,14 @@ import avve.epubhandling.EbookContentData;
 import avve.textpreprocess.TextPreprocessor;
 import opennlp.tools.tokenize.*;
 
+/**
+ * This is merely a wrapper class which delegates token detection to OpenNLP's maximum entropy token detector
+ * It works on EbookContentData object's sentences (via getSentences()) and populates its token object (via setTokens()).
+ * It also takes care of counting tokens and setting the EbookContentData object's setNumberOfTokens().
+ * 
+ * @author Kai Weber
+ *
+ */
 public class TextTokenizer implements TextPreprocessor
 {
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());

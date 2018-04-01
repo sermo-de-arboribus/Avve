@@ -2,6 +2,14 @@ package avve.textpreprocess;
 
 import avve.epubhandling.EbookContentData;
 
+/**
+ * The NumberProcessor replaces all digits in an EbookContentData's plain text (via getPlainText()) and within the tokenized
+ * text (via getTokens()) with a #-symbol (via setPlainText().
+ * It should therefore run before other activities are executed on the plain text.
+ * 
+ * @author Kai Weber
+ *
+ */
 public class NumberProcessor implements TextPreprocessor
 {
 	@Override

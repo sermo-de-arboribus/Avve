@@ -6,6 +6,8 @@ import java.util.Map;
 
 /**
  * Copied from https://stackoverflow.com/questions/4570751/what-tag-set-is-used-in-opennlps-german-maxent-model
+ * Just for reference purposes
+ * 
  * @author "Prine"
  *
  */
@@ -14,8 +16,8 @@ public enum POSGermanTag
     ADJA("Attributives Adjektiv"),
     ADJD("Adverbiales oder pr√§dikatives Adjektiv"),
     ADV("Adverb"),
-    APPR("Pr√§position; Zirkumposition links"),
-    APPRART("Pr√§position mit Artikel"),
+    APPR("Pr‰position; Zirkumposition links"),
+    APPRART("Pr‰position mit Artikel"),
     APPO("Postposition"),
     APZR("Zirkumposition rechts"),
     ART("Bestimmer oder unbestimmer Artikel"),

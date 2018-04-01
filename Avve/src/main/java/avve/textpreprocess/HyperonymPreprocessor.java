@@ -9,6 +9,16 @@ import avve.epubhandling.EbookContentData;
 import avve.textpreprocess.hyperonym.HyperonymProperties;
 import avve.textpreprocess.hyperonym.HyperonymPropertyName;
 
+/**
+ * This class uses a MySQL database connection to try retrieving hyperonyms for all (non-lemmatized) words of an EbookContentData's text.
+ * The database connection properties are handled through the helper classes in the avve.textpreprocess.hyperonym package.
+ * 
+ * The algorithm used for hyperonym retrieval is based on:
+ * Bloehdorn / Hotho: Boosting for Text Classification with Semantic Features, in: B. Mobasher et al. (Eds.): WebKDD 2004, LNAI 3932, pp. 149-166
+ * 
+ * @author Kai Weber
+ *
+ */
 public class HyperonymPreprocessor implements TextPreprocessor
 {
 	private static final ResourceBundle errorMessageBundle = ResourceBundle.getBundle("ErrorMessagesBundle", Locale.getDefault());
@@ -59,7 +69,7 @@ public class HyperonymPreprocessor implements TextPreprocessor
 		{
 			SortedMap<String, Integer> hyperonymFrequencies = new TreeMap<String, Integer>();
 			SortedMap<String, Integer> terms = new TreeMap<String, Integer>();
-			// A memory cache to reduce number of DB lookups
+			// An in-memory cache to reduce number of DB lookups
 			HashSet<String> termCache = new HashSet<String>();
 			
 			Connection dbConnection = getMysqlDbConnnection();
@@ -75,7 +85,7 @@ public class HyperonymPreprocessor implements TextPreprocessor
 				
 				for(String[] sentence : contentData.getTokens())
 				{
-					// this part is based on an algorithm published in Bloehdorn / Hotho: Boosting for Text Classification with Semantic Features, in: B. Mobasher et al. (Eds.): WebKDD 2004, LNAI 3932, pp. 149–166.
+					// this part is based on an algorithm published in Bloehdorn / Hotho: Boosting for Text Classification with Semantic Features, in: B. Mobasher et al. (Eds.): WebKDD 2004, LNAI 3932, pp. 149-166.
 					int i = 1;
 					while(i < sentence.length)
 					{

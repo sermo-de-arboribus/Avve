@@ -1276,6 +1276,8 @@ abfederte	VVFIN	abfedern
 abflusswege	NN	abflussweg
 abgelutschtes	ADJA	abgelutscht
 abgetrenntem	ADJA	abgetrennt
+abhandenkommt	VVFIN	abhandenkommen
+abholst	VVFIN	abholen
 abknieten	VVINF	abknien
 abnützt	VVFIN	abnützen
 absagst	VVFIN	absagen
@@ -1285,6 +1287,8 @@ abtaubenden	ADJA	abtaubend
 açaíaçaíaçaí	ITJ	açaí
 achttürigen	ADJA	achttürig
 -adduktoren	NN	adduktor
+adelig	ADJA	adlig
+adelig	ADJD	adlig
 ääääääh	ITJ	äh
 affairs	FM	affair
 affenstarke	ADJA	affenstark
@@ -1293,6 +1297,7 @@ ahhhber	KON	aber
 ahhhhhh	ITJ	ah
 akklimatisierten	ADJD	akklimatisiert
 akkommodative	ADJA	akkommodativ
+alberte	VVFIN	albern
 albertos	NE	alberto
 alicse	NE	alice
 alien-abduktionen	NN	alien-abduktion
@@ -1362,6 +1367,7 @@ aufsäßig	ADJA	aufsässig
 aufsäßig	ADJD	aufsässig
 aufwendigstes	ADJA	aufwendig
 augenheilkd	NN	augenheilkunde
+ausdruckstiefen	ADJA	ausdruckstief
 auserkoren	VVPP	auserkiesen
 auserküren	VVPP	auserkiesen
 ausgabeaufschläge	NN	ausgabeaufschlag
@@ -1453,6 +1459,7 @@ bleeder	ADV	bleed
 bleichen	ADJA	bleich
 bleigrauer	ADJA	bleigrau
 blixens	NE	blixen
+bluebeards	NE	bluebeard
 blühten	VVFIN	blühen
 blutdurstige	ADJA	blutdurstig
 boaaaahs	NN	boah
@@ -1641,6 +1648,7 @@ fernbläuliches	ADJA	fernbläulich
 fernster	ADJA	fern
 fertigkriegte	VVFIN	fertigkriegen
 fertiltiy	FM	fertility
+festsäßest	VVFIN	festsitzen
 festzusitzen	VVIZU	festsitzen
 fiera-actionfiguren	NN	fiera-actionfigur
 files	FM	file
@@ -1775,6 +1783,8 @@ herabstufungen	NN	herabstufung
 heraussprudelte	VVFIN	heraussprudeln
 herrrrrrrrrrriiiimmmmmhiimmmmmmmmellll	ITJ	herrimhimmel
 herschaute	VVFIN	herschauen
+herumalberte	VVFIN	herumalbern
+herumalberten	VVFIN	herumalbern
 hervorsah	VVFIN	hervorsehen
 herzl	ADJD	herzlich
 heud	ADV	heute
@@ -2014,6 +2024,7 @@ makedonische	ADJA	makedonisch
 makedonischen	ADJA	makedonisch
 makedonischen	NN	makedonische
 malos	FM	malo
+manœuvres	FM	manœuvre
 marin	NN	marine
 marnies	NE	marnie
 massenschlafplätzen	NN	massenschlafplatz
@@ -2065,6 +2076,7 @@ muslimischen	ADJA	muslimisch
 myrten	NN	myrte
 naaaa	ITJ	na
 naaf	PAV	hinauf
+nachblickten	VVFIN	nachblicken
 nachtaktivitäten	NN	nachtaktivität
 nachtdunkle	ADJA	nachtdunkel
 näääähe	NN	nähe
@@ -2108,6 +2120,7 @@ oaaahhh	ITJ	oah
 octopussys	NN	octopussy
 oculomotorii	FM	oculomotorius
 ökologischer	ADJA	ökologisch
+œuvres	FM	œuvre
 ohhhhhhhhhhhhhhhhhhhhhhh	ITJ	oh
 ohrmuschelplastiken	NN	ohrmuschelplastik
 ok-aaaay	ITJ	okay
@@ -2301,6 +2314,12 @@ scrubbed	FM	scrub
 second-hand-bücher	NN	second-hand-buch
 seems	FM	seem
 seh	VVFIN	sehen
+sehnsuchtsvoller	ADJA	sehnsuchtsvoll
+sehnsuchtsvoller	ADJD	sehnsuchtsvoll
+sehnsuchtsvoller	ADV	sehnsuchtsvoll
+sehnsuchtsvollere	ADJA	sehnsuchtsvoll
+sehnsuchtsvolleren	ADJA	sehnsuchtsvoll
+sehnsuchtsvoll-innigen	ADJA	sehnsuchtsvoll-innig
 seiest	VAFIN	sein
 seiten	NN	seite
 selbstbewußter	ADJD	selbstbewusst
@@ -2513,6 +2532,8 @@ volksrevolutionen	NN	volksrevolution
 vollgelogen	VVPP	volllügen
 vollschperrung	NN	vollsperrung
 vooooolaaaaare	FM	volare
+vorbeifloss	VVFIN	vorbeifließen
+vorbeiflossen	VVFIN	vorbeifließen
 vorhabe	VVFIN	vorhaben
 vorhätten	VVFIN	vorhaben
 vorhofaktionen	NN	vorhofaktion

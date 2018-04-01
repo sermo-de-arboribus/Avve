@@ -681,6 +681,8 @@ aben-hamed	NN	NE
 aberrance	$.	FM
 abetalipoproteinämie	NE	NN
 abglühte	ADV	VVFIN
+abhandenkommt	PTKVZ	VVFIN
+abholst	ADV	VVFIN
 abkäschn	ADJA	VVINF
 able	ADJA	FM
 about	ADV	FM
@@ -747,6 +749,7 @@ aim	NE	FM
 aiso	NE	ITJ
 akbar	ADJD	FM
 alaaf	APPR	ITJ
+alberte	ADJD	VVFIN
 aldo	NN	NE
 ale	ADJA	FM
 alive	ADJA	FM
@@ -980,6 +983,7 @@ blablablablabla	ART	ITJ
 bleed	NE	FM
 blixen	NN	NE
 blixens	NN	NE
+bluebeards	NN	NE
 blutdrucklangzeitmessung	NE	NN
 boats	$(	FM
 bollocks	NE	FM
@@ -1018,6 +1022,7 @@ but	NE	FM
 came	ADJA	FM
 cañada	ADV	FM
 capillary	XY	FM
+capriccio	NE	NN
 carabyn	NN	NE
 careful	NE	FM
 cassie	FM	NE
@@ -1319,6 +1324,7 @@ feel	ADJD	FM
 felsen	NE	NN
 fertiltiy	NN	FM
 fest	VAFIN	ADJA|NN
+festsäßest	PTKVZ	VVFIN
 few	ADJD	FM
 few	VVFIN	FM
 files	ADJA	FM
@@ -1330,6 +1336,7 @@ fire	VVINF	FM
 firmamento	VVFIN	FM
 first	VVFIN	NN|FM
 fish	APPR	FM
+fis-moll	NE	NN
 fjortoft	NN	NE
 flexed	$,	FM
 flöcht	PPOSAT	VVFIN
@@ -1386,6 +1393,7 @@ genial	NN	ADJD
 genügen	ADJA	VVFIN|VVINF
 gerad	KOKOM	ADV
 geralt	NN	NE
+geraschel	NE	NN
 gerate	ADV	VVFIN
 gereedschap	ADJD	FM
 geringe	NE	ADJA
@@ -1513,6 +1521,7 @@ herpes	ADJA	NN
 herpes	NE	NN
 herpeß	ADJA	XY
 herrrrrrrrrrriiiimmmmmhiimmmmmmmmellll	NN	ITJ
+herumalberte	ADJA	VVFIN
 herumfuhr	ADV	VVFIN
 hervorbrach	ADV	VVFIN
 herzinsuffizienz	NE	NN
@@ -1813,6 +1822,7 @@ machst	NN	VVFIN
 machter	$.	VVFIN
 määääääh	NE	ITJ
 männer	ART	NN
+männliche	$,	ADJA
 maagiier	NE	NN
 madame	NE	NN
 magnusson	NN	NE
@@ -1826,6 +1836,7 @@ mamalaadnaamerla	NE	NN
 management	NE	NN
 managing	NE	FM
 mannmannmannmannmann	PIS	ITJ
+manœuvres	NN	FM
 many	NE	FM
 many	PIS	FM
 mariés	PRELS	FM
@@ -1943,6 +1954,7 @@ naaion	ADJA	NN
 naaion	ADJD	NN
 naaion	ADV	NN
 naam	VVFIN	FM
+nachblickten	$.	VVFIN
 nachhilfestunde	APPR	NN
 nachzuahmen	APPR	VVIZU
 nacionalidad	APPR	FM
@@ -2029,6 +2041,7 @@ oculomotorius	APPR	FM
 oculomotorius	NE	FM
 öfters	APPRART	ADV
 öfters	NN	ADV
+œuvres	ADJA	FM
 of	NE	FM
 often	ADJA	FM
 og	VVFIN	FM
@@ -2408,6 +2421,7 @@ sth	PPER	FM
 stop	$,	FM|NN|VVFIN
 storm	NN	FM|NE
 stormy	$(	FM
+stort	NN	NE
 strange	ADJA	FM
 street	VVFIN	FM|NE
 streets	VVINF	FM
@@ -2609,6 +2623,8 @@ volkspartij	NN	NE
 vonnöten	ART	ADJD
 vooooolaaaaare	NN	FM
 voor	APPR	FM
+vorbeifloss	APPR	VVFIN
+vorbeifloss	VVPP	VVFIN
 vorstellte	ADJA	VVFIN
 vorüber	APPR	ADV
 vorüberkamen	ADJA	VVFIN

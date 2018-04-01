@@ -8,7 +8,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import meka.classifiers.multilabel.BR;
+import meka.classifiers.multilabel.CC;
 import meka.classifiers.multilabel.Evaluation;
+import meka.classifiers.multilabel.MultiLabelClassifier;
+import meka.classifiers.multilabel.ProblemTransformationMethod;
 import meka.core.MLUtils;
 import meka.core.Result;
 
@@ -17,6 +20,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import weka.classifiers.AbstractClassifier;
+import weka.classifiers.SingleClassifierEnhancer;
+import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.SMO;
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -112,9 +118,9 @@ public class ThemaTrainer
 		    	j++;
 		    }
 		    
-		    Instances filteredTrainingSet = filterClassAttributes("Avve multiclass training dataset", trainingInstances, indicesOfRetainedClassesInTrainingSet, true);
+		    Instances filteredTrainingSet = filterClassAttributes("Avve multilabel training dataset", trainingInstances, indicesOfRetainedClassesInTrainingSet, true);
 		    
-		    Instances filteredTestingSet = filterClassAttributes("Avve multiclass test dataset", testInstances, indicesOfRetainedClassesInTestingSet, true);
+		    Instances filteredTestingSet = filterClassAttributes("Avve multilabel test dataset", testInstances, indicesOfRetainedClassesInTestingSet, true);
 		    
 			// Are both sets compatible with each other, with respect to the attribute sets?
 		    String msg = filteredTrainingSet.equalHeadersMsg(filteredTestingSet);
@@ -215,8 +221,8 @@ public class ThemaTrainer
 		    combinedWordVectorizedSet.clear();
 		                                                                                                         
     		// instantiate an attribute filter         
-    		removeTrainingSetFlag("Avve multiclass training set", wordVectorizedTrainingSet);
-    		removeTrainingSetFlag("Avve multiclass testing set", wordVectorizedTestingSet);                                                                 
+    		removeTrainingSetFlag("Avve multilabel training set", wordVectorizedTrainingSet);
+    		removeTrainingSetFlag("Avve multilabel testing set", wordVectorizedTestingSet);                                                                 
     		                    
 		    // Dump cleaned training and test set files
 		    ArffSaver saver = new ArffSaver();
@@ -227,18 +233,21 @@ public class ThemaTrainer
 			DataSink.write(saver, wordVectorizedTestingSet);
 
 		    // Train
-			BR brClassifier = new BR();
-			//RAkELd rakeldClassifier = new RAkELd();
-			SMO smoClassifier = new SMO();
-			brClassifier.setClassifier(smoClassifier);
-			//rakeldClassifier.setClassifier(smoClassifier);
-			brClassifier.buildClassifier(wordVectorizedTrainingSet);
-			//rakeldClassifier.buildClassifier(wordVectorizedTrainingSet);
-		    
+			//SingleClassifierEnhancer classifier = new CC();
+			SingleClassifierEnhancer classifier = new BR();
+			//AbstractClassifier innerClassifier = new SMO();
+			AbstractClassifier innerClassifier = new NaiveBayes();
+			innerClassifier.setDebug(false);
+			classifier.setDebug(true);
+			classifier.setClassifier(innerClassifier);
+			
+			logger.info(infoMessagesBundle.getString("avve.meka.buildingClassifier"));
+			
+			// Classifier will be built by Evaluation.evaluateModel brClassifier.buildClassifier(wordVectorizedTrainingSet);
+			
 		    // Evaluate
-			Result result = Evaluation.evaluateModel(brClassifier, wordVectorizedTrainingSet, wordVectorizedTestingSet, "PCut1", "5");
-			//Result result = Evaluation.evaluateModel(rakeldClassifier, wordVectorizedTrainingSet, wordVectorizedTestingSet, "PCut1", "5");
-			logger.info(brClassifier.getModel());
+			Result result = Evaluation.evaluateModel((MultiLabelClassifier) classifier, wordVectorizedTrainingSet, wordVectorizedTestingSet, "PCutL", "6");
+			logger.info(((ProblemTransformationMethod) classifier).getModel());
 			logger.info(result);
 
 		}
@@ -270,6 +279,9 @@ public class ThemaTrainer
 			int attributeIndex = instances.attribute(attributeName).index();
 			stringToWordVector.setAttributeIndicesArray(new int[] { attributeIndex });
 			stringToWordVector.setAttributeNamePrefix(prefix);
+			stringToWordVector.setDoNotOperateOnPerClassBasis(true); // this has to be switched off, as Weka's StringToWordVector doesn't know about Meka's multi-label class system
+			stringToWordVector.setWordsToKeep(15000); // thresholding of words to keep already is assumed to take place when generating the original Arff files, so keep this value high
+			stringToWordVector.setMinTermFreq(2);
 			stringToWordVector.setInputFormat(instances);
 			filteredInstances = Filter.useFilter(instances, stringToWordVector);
 		}

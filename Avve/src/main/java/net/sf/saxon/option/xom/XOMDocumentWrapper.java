@@ -198,7 +198,8 @@ public class XOMDocumentWrapper extends XOMNodeWrapper implements TreeInfo {
      *         information is not available then an empty iterator is returned
      */
 
-    public Iterator<String> getUnparsedEntityNames() {
+    @SuppressWarnings("unchecked")
+	public Iterator<String> getUnparsedEntityNames() {
         return Collections.EMPTY_LIST.iterator();
     }
 
@@ -241,7 +242,7 @@ public class XOMDocumentWrapper extends XOMNodeWrapper implements TreeInfo {
      *              removes the existing value for the property.
      */
 
-    public void setUserData(String key, Object value) {
+	public void setUserData(String key, Object value) {
         if (userData == null) {
             userData = new HashMap(4);
         }

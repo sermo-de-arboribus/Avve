@@ -2,7 +2,7 @@ package avve.extractor;
 
 /**
  * A typical call:
- * -folder "/home/kai/Dokumente/E-Books/Trainingsmenge" -lc -pc -wvs 100 -cv "/home/kai/git/Avve/Avve/src/main/resources/controlledvocabulary/vlb_wg_cv.txt"
+ * -folder "/home/kai/Dokumente/E-Books/Trainingsmenge" -lc -pc -wvs 1000 -cv "/home/kai/git/Avve/Avve/src/main/resources/controlledvocabulary/vlb_wg_cv.txt"
  */
 import java.util.Locale;
 import java.util.ResourceBundle;

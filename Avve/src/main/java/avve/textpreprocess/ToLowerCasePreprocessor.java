@@ -7,6 +7,12 @@ import org.apache.logging.log4j.Logger;
 
 import avve.epubhandling.EbookContentData;
 
+/**
+ * This class transforms an EbookContentData object's plain text to all lower-case characters
+ * 
+ * @author Kai Weber
+ *
+ */
 public class ToLowerCasePreprocessor implements TextPreprocessor
 {
 	private static final ResourceBundle infoMessagesBundle = ResourceBundle.getBundle("InfoMessagesBundle", Locale.getDefault());
