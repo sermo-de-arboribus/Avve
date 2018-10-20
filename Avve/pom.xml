@@ -83,19 +83,19 @@
 		<dependency>
 		    <groupId>org.apache.lucene</groupId>
 		    <artifactId>lucene-core</artifactId>
-		    <version>6.6.0</version>
+		    <version>7.2.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-common -->
 		<dependency>
 		    <groupId>org.apache.lucene</groupId>
 		    <artifactId>lucene-analyzers-common</artifactId>
-		    <version>6.6.0</version>
+		    <version>7.2.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-suggest -->
 		<dependency>
 		    <groupId>org.apache.lucene</groupId>
 		    <artifactId>lucene-suggest</artifactId>
-		    <version>6.6.0</version>
+		    <version>7.2.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.maven/maven-core -->
 		<dependency>
